@@ -2,12 +2,13 @@
 
 import subprocess
 import sys, getopt
-from fq_pattern import *
-#from utils import parser
 import utils
+from fq_pattern import *
 
 # gspan command:
 # ./gspan -file [file_name] -support [support: float] &> log
+# eclat command:
+# ./eclat [options] infile [outfile]
 
 class Mining(object):
     """Abstract class"""
@@ -22,7 +23,7 @@ class Mining(object):
 
 class gSpan(Mining):
     """Use gSpan to mining frequent subgraphs"""
-    
+
     def __init__(self, datafile, output, support):
         Mining.__init__(self, datafile, output)
         self.support = support

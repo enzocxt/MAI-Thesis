@@ -17,7 +17,7 @@ class Node():
         self.label = None
         self.edges = []
 
-class Graph():
+class Graph(Pattern):
     def __init__(self, nsupport=None):
         self.id = None
         self.edges = []
@@ -30,3 +30,6 @@ class Graph():
     def add_edge(self, edge):
         self.edges.append(edge)
 
+class Itemset(Pattern):
+    def __init__(self):
+        Pattern.__init__()
