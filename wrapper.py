@@ -70,7 +70,7 @@ if __name__ == "__main__":
             output = arg
         elif opt in ('-s', '--support'):
             support = arg
-    
+
     gspan = gSpan(datafile, output, support)
     gspan.mining()
     gspan.parser()
