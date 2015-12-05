@@ -3,78 +3,53 @@
 import subprocess
 import sys, getopt
 import utils
-from fq_pattern import *
+from fqPattern import *
+from method import *
 
-# gspan command:
-# ./gspan -file [file_name] -support [support: float] &> log
-# eclat command:
-# ./eclat [options] infile [outfile]
 
-class Mining(object):
-    """Abstract class"""
+# Method for mining frequent patterns
+def fpMining(inputs):
+    method = Mining()
+    if inputs['type'] == 'graph':
+        method = gSpan()    # TO DO
+    elif inputs['type'] == 'itemset':
+        method = eclat(inputs['datafile'], inputs['output'])    # Use default support
 
-    def __init__(self, datafile, output):
-        self.datafile = datafile
-        self.output = output
-        self.patternSet = None
+    method.mining()
+    patterns = method.parser()
+    return patterns
 
-    def mining(self):
-        abstract
-
-class gSpan(Mining):
-    """Use gSpan to mining frequent subgraphs"""
-
-    def __init__(self, datafile, output, support):
-        Mining.__init__(self, datafile, output)
-        self.support = support
-        #self.patternSet = None
-
-    def mining(self):
-        child = subprocess.Popen(['./gspan', '-file', self.datafile, '-support', self.support, '&>', self.output], stdout=subprocess.PIPE)
-        fout = open(self.output, 'w')
-        fout.write(child.stdout.read())
-        fout.close()
-
-    def parser(self):
-        self.patternSet = utils.parser(self.output)
-
-class eclat(Mining):
-    """Use eclat to mining frequent itemsets"""
-
-    def __init__(self, datafile, output, nsupport):
-        Mining.__init__(self, datafile, output)
-        self.support = nsupport
-
-    def mining(self):
-        pass
-
-    def parser(self):
-        pass
 
 if __name__ == "__main__":
     method = sys.argv[1]
-    datafile = ''
-    output = ''
-    support = 0
+    inputs = {}     # Dict to store input parameters
 
+    # Parse the parameters
+    # Currently, could only dealt with --type, --infile, --outfile
     try:
-        opts, args = getopt.getopt(sys.argv[2:], 'i:s:o:', ['infile=', 'support=', 'outfile='])
+        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:o:s:', ['type=', 'matching', 'constraint=', 'dominance', 'infile=', 'support=', 'outfile='])
     except getopt.GetoptError:
-        print 'wrapper.py gSpan -i [infile_name] -s [support:float] -o [outfile_name]'
+        print 'wrapper.py -T [graph] -M [exact] -C [frequency] -D [closed] \
+              -i [infile_name] -s [support:float] -o [outfile_name]'
         sys.exit(2)
 
     for opt, arg in opts:
-        if opt in ('-i', '--infile'):
-            datafile = arg
+        if opt in ('-T', '--type'):
+            inputs['type'] = arg
+        elif opt in ('-M', '--matching'):
+            inputs['matching'] = arg
+        elif opt in ('-C', '--constraint'):
+            inputs['constraint'] = arg
+        elif opt in ('-D', '--dominance'):
+            inputs['dominance'] = arg
+        elif opt in ('-i', '--infile'):
+            inputs['datafile'] = arg
         elif opt in ('-o', '--outfile'):
-            output = arg
+            inputs['output'] = arg
         elif opt in ('-s', '--support'):
-            support = arg
+            inputs['support'] = arg
 
-    gspan = gSpan(datafile, output, support)
-    gspan.mining()
-    gspan.parser()
-    print len(gspan.patternSet)
-
-    #child = subprocess.Popen([gspan_path, "-file", datafile, "-support", support, ">", outfile], stdout=subprocess.PIPE)
-    #child.wait()
+    output = fpMining(inputs)
+    print "\n*************************************"
+    print "Number of frequent patterns: %s" % len(output)
+    print "*************************************"
