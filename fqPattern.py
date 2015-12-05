@@ -1,8 +1,11 @@
 #!/usr/bin/python
 
+# Pattern abstract class
 class Pattern(object):
     def __init__(self):
         self.id = None
+        self.support = None
+
 
 class Edge():
     def __init__(self):
@@ -30,6 +33,20 @@ class Graph(Pattern):
     def add_edge(self, edge):
         self.edges.append(edge)
 
+
 class Itemset(Pattern):
-    def __init__(self):
+    def __init__(self, itemset=None, support=None):
+        #Pattern.__init__()
+        self.itemset = itemset
+        self.support = support
+
+    def isValid(self):
+        pass
+
+    def isClosed(self):
+        pass
+
+class Sequence(Pattern):
+    def __init__(self, sequence=None):
         Pattern.__init__()
+        self.sequence = sequence

@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-from fq_pattern import *
+from fqPattern import *
+from method import *
 
-def parser(path):
+def parserGraph(path):
     fg = open(path, 'r')
     graphs = []
     lines = fg.readlines()
@@ -43,3 +44,26 @@ def parser(path):
 
     fg.close()
     return graphs
+
+def parserItemset(path):
+    fin = open(path, 'r')
+    itemsets = []
+    for line in fin.readlines():
+        line.rstrip('\n')
+        items = line.split(' ')
+        if '(' in items[-1]:
+            support = items.pop()
+            itemset = Itemset(items, support)
+            itemsets.append(itemset)
+    fin.close()
+
+    return itemsets
+
+def parser(method):
+    patterns = None
+    if isinstance(method, gSpan):
+        patterns = parserGraph(method.output)
+    elif isinstance(method, eclat):
+        patterns = parserItemset(method.output)
+
+    return patterns
