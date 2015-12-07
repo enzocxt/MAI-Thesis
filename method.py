@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import platform
 import subprocess
 import utils
 
@@ -46,7 +47,11 @@ class eclat(Mining):
         self.support = nsupport
 
     def mining(self):
-        child = subprocess.Popen(['./eclat', '-s', self.datafile, self.output], stdout=subprocess.PIPE)
+        if platform.system() == "Linux":
+          eclat = "./eclatLinux"
+        else:
+          eclat = "./eclat"
+        child = subprocess.Popen([eclat, '-s', self.datafile, self.output], stdout=subprocess.PIPE)
         fout = open(self.output, 'w')
         fout.write(child.stdout.read())
         fout.close()
