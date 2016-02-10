@@ -71,11 +71,11 @@ class eclat(Mining):
           eclat = "./exec/eclat"
         else:
           eclat = "./exec/eclat"
-          options = ""
-          if self.dominance == 'max':
-              options += '-tm'
-          elif self.dominance == 'closed':
-              options += '-tc'
+        options = ""
+        if self.dominance == 'max':
+            options += '-tm'
+        elif self.dominance == 'closed':
+            options += '-tc'
         child = subprocess.Popen([eclat, options, self.datafile, self.output], stdout=subprocess.PIPE)
         fout = open(self.output, 'w')
         fout.write(child.stdout.read())
