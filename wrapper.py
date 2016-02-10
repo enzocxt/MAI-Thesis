@@ -57,7 +57,7 @@ if __name__ == "__main__":
         elif opt in ('-s', '--support'):
             inputs['support'] = arg
 
-    output = fpMining(inputs)
+    patterns = fpMining(inputs)
     print "\n*************************************"
-    print "Number of frequent patterns: %s" % len(output)
+    print "Number of frequent patterns: %s" % len(patterns)
     print "*************************************"
