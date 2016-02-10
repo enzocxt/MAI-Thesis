@@ -2,18 +2,23 @@
 
 import subprocess
 import sys, getopt
-import utils
-from fqPattern import *
-from method import *
+import solver.utils
+from solver.fqPattern import *
+from solver.method import *
 
 
 # Method for mining frequent patterns
 def fpMining(inputs):
-    method = Mining()
+    method = Mining(inputs)
     if inputs['type'] == 'graph':
         method = gSpan()    # TO DO
     elif inputs['type'] == 'itemset':
-        method = eclat(inputs['datafile'], inputs['output'])    # Use default support
+        method = eclat(inputs)    # Use default support
+    elif inputs['type'] == 'sequence':
+        method = sequence()     # TO DO
+    else:
+        print 'Does not support "type == %s"!' % inputs['type']
+        sys.exit(2)
 
     method.mining()
     patterns = method.parser()
@@ -21,13 +26,16 @@ def fpMining(inputs):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print 'Needs parameters!'
+        sys.exit(2)
     method = sys.argv[1]
     inputs = {}     # Dict to store input parameters
 
     # Parse the parameters
     # Currently, could only dealt with --type, --infile, --outfile
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:o:s:', ['type=', 'matching', 'constraint=', 'dominance', 'infile=', 'support=', 'outfile='])
+        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:s:o:', ['type=', 'matching', 'constraints=', 'dominance=', 'infile=', 'support=', 'outfile='])
     except getopt.GetoptError:
         print 'wrapper.py -T [graph] -M [exact] -C [frequency] -D [closed] \
               -i [infile_name] -s [support:float] -o [outfile_name]'
