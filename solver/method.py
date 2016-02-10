@@ -77,6 +77,7 @@ class eclat(Mining):
         elif self.dominance == 'closed':
             options += '-tc'
         child = subprocess.Popen([eclat, options, self.datafile, self.output], stdout=subprocess.PIPE)
+	print eclat, options, self.datafile, self.output
         fout = open(self.output, 'w')
         fout.write(child.stdout.read())
         fout.close()
