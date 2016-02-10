@@ -46,6 +46,19 @@ class Itemset(Pattern):
     def isClosed(self):
         pass
 
+    def subsetOf(self, itemset):
+        if len(self.itemset) >= len(itemset):
+            return False
+        for i in range(len(self.itemset)):
+            tmp = self.itemset[i]
+            for j in range(len(itemset)):
+                if tmp == itemset[j]: break
+                else: continue
+            if j == len(itemset) - 1:
+                return False
+        if i == len(self.itemset):
+            return True
+
 class Sequence(Pattern):
     def __init__(self, sequence=None):
         Pattern.__init__()
