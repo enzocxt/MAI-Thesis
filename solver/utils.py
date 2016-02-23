@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
+import time
 from fqPattern import *
 from method import *
 
-def parserGraph(path):
+def parserGraph(textOutput, path):
     fg = open(path, 'r')
     graphs = []
     lines = fg.readlines()
@@ -45,25 +46,43 @@ def parserGraph(path):
     fg.close()
     return graphs
 
-def parserItemset(path):
-    fin = open(path, 'r')
+def parserItemset(stdOutput, path):
+    """
+    If path == "" or path == "-",
+    means that do not write results into a file
+    """
+    if path == "" or path == "-":
+        result = stdOutput.split('\n')
+    else:
+        fin = open(path, 'r')
+        result = fin.readlines()
+        fin.close()
     itemsets = []
-    for line in fin.readlines():
-        line.rstrip('\n')
+    for line in result:
+        line.strip('\n')
         items = line.split(' ')
+        if not items[0].isdigit():
+            continue
         if '(' in items[-1]:
             support = items.pop()
+            support = float(support[1:-2])
             itemset = Itemset(items, support)
             itemsets.append(itemset)
-    fin.close()
 
     return itemsets
 
-def parser(method):
+def parser(method, stdOutput, path):
     patterns = None
     if isinstance(method, gSpan):
-        patterns = parserGraph(method.output)
+        patterns = parserGraph(stdOutput, path)
     elif isinstance(method, eclat):
-        patterns = parserItemset(method.output)
+        patterns = parserItemset(stdOutput, path)
 
     return patterns
+
+def checkClosed(itemset, itemsetList):
+    # check if there is a superset of itemset in itemsetList
+    for it in itemsetList:
+        if itemset.subsetOf(it):
+            return False
+    return True
