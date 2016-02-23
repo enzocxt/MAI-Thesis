@@ -39,6 +39,7 @@ class Itemset(Pattern):
         #Pattern.__init__()
         self.itemset = itemset
         self.support = support
+        self.size = len(itemset)
 
     def isValid(self):
         pass
@@ -47,17 +48,19 @@ class Itemset(Pattern):
         pass
 
     def subsetOf(self, itemset):
-        if len(self.itemset) >= len(itemset):
+        if self.size >= itemset.size:
             return False
-        for i in range(len(self.itemset)):
+        for i in range(self.size):
             tmp = self.itemset[i]
-            for j in range(len(itemset)):
-                if tmp == itemset[j]: break
+            for j in range(itemset.size):
+                if tmp == itemset.itemset[j]: break
                 else: continue
-            if j == len(itemset) - 1:
+            if j == itemset.size - 1:
                 return False
-        if i == len(self.itemset):
-            return True
+        return True
+
+    def printItemset(self):
+        print self.itemset
 
 class Sequence(Pattern):
     def __init__(self, sequence=None):

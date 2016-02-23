@@ -11,18 +11,22 @@ from solver.method import *
 def fpMining(inputs):
     method = Mining(inputs)
     if inputs['type'] == 'graph':
-        method = gSpan()    # TO DO
+        method = gSpan(inputs)    # TO DO
+    elif inputs['type'] == 'sequence':
+        method = sequence(inputs)     # TO DO
     elif inputs['type'] == 'itemset':
         method = eclat(inputs)    # Use default support
-    elif inputs['type'] == 'sequence':
-        method = sequence()     # TO DO
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
-    method.mining()
+    t1 = method.mining()
     patterns = method.parser()
-    return patterns
+    #method.closedMining()
+    closedPatterns, t2 = method.closedMining()
+    if not closedPatterns:
+        closedPatterns = [1]
+    return patterns, t1, closedPatterns, t2
 
 
 if __name__ == "__main__":
@@ -35,7 +39,7 @@ if __name__ == "__main__":
     # Parse the parameters
     # Currently, could only dealt with --type, --infile, --outfile
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:s:o:', ['type=', 'matching', 'constraints=', 'dominance=', 'infile=', 'support=', 'outfile='])
+        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:s:o:', ['type=', 'matching', 'constraint=', 'dominance=', 'infile=', 'support=', 'outfile='])
     except getopt.GetoptError:
         print 'wrapper.py -T [graph] -M [exact] -C [frequency] -D [closed] \
               -i [infile_name] -s [support:float] -o [outfile_name]'
@@ -57,7 +61,10 @@ if __name__ == "__main__":
         elif opt in ('-s', '--support'):
             inputs['support'] = arg
 
-    patterns = fpMining(inputs)
+    patterns, t1, closedPatterns, t2 = fpMining(inputs)
     print "\n*************************************"
     print "Number of frequent patterns: %s" % len(patterns)
+    print "Time cost by closed eclat is: %s" % t1
+    print "Number of closed frequent patterns: %s" % len(closedPatterns)
+    print "Time cost by python post-processing is: %s" % t2
     print "*************************************"
