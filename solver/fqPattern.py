@@ -37,7 +37,8 @@ class Graph(Pattern):
 class Itemset(Pattern):
     def __init__(self, itemset=None, support=None):
         #Pattern.__init__()
-        self.itemset = itemset
+        #self.itemset = itemset
+        self.itemset = set(itemset)
         self.support = support
         self.size = len(itemset)
 

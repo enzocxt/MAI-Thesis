@@ -121,8 +121,16 @@ class eclat(Mining):
         # itemsets of the same list have same support
         itemsets = {}
         stdOutput = stdOutput.split('\n')
+        # pass the description lines
+        tmp = stdOutput.pop()
+        tmpList = tmp.split(' ')
+        while not tmpList[0].isdigit():
+            tmp = stdOutput.pop()
+            tmpList = tmp.split(' ')
+        stdOutput.append(tmp)
+
         for line in stdOutput:
-            line.rstrip('\n')
+            line.strip('\n')
             items = line.split(' ')
             if not items[0].isdigit():
                 continue
@@ -134,10 +142,14 @@ class eclat(Mining):
                 # add this itemset to that list
                 # else add this itemset as a new itemset list
                 if itemsets.has_key(itemset.support):
-                    for i in range(len(itemsets[itemset.support])):
+                    i = 0
+                    while i < len(itemsets[itemset.support]):
                         if itemsets[itemset.support][i].size >= itemset.size:
                             itemsets[itemset.support].insert(i, itemset)
                             break
+                        i += 1
+                    if i == len(itemsets[itemset.support]):
+                        itemsets[itemset.support].append(itemset)
                 else:
                     itemsets[itemset.support] = [itemset]
 
