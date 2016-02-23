@@ -83,6 +83,7 @@ def parser(method, stdOutput, path):
 def checkClosed(itemset, itemsetList):
     # check if there is a superset of itemset in itemsetList
     for it in itemsetList:
-        if itemset.subsetOf(it):
+        #if itemset.subsetOf(it):
+        if itemset.itemset < it.itemset:
             return False
     return True
