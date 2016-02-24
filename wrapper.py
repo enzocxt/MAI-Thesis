@@ -22,10 +22,7 @@ def fpMining(inputs):
 
     t1 = method.mining()
     patterns = method.parser()
-    #method.closedMining()
     closedPatterns, t2 = method.closedMining()
-    if not closedPatterns:
-        closedPatterns = [1]
     return patterns, t1, closedPatterns, t2
 
 
@@ -62,9 +59,19 @@ if __name__ == "__main__":
             inputs['support'] = arg
 
     patterns, t1, closedPatterns, t2 = fpMining(inputs)
+
+    # Just for test
+    #fout = open('./output/time_cost.dat', 'a')
+    #s = 10
+    #while s <= 50:
+    #    inputs['support'] = s
+    #    patterns, t1, closedPatterns, t2 = fpMining(inputs)
+    #    fout.write('%s\t%s\t%s\n' % (s, t1*1000, t2*1000))
+    #    s += 2
+    #fout.close()
     print "\n*************************************"
-    print "Number of frequent patterns: %s" % len(patterns)
+    print "Number of closed frequent patterns (eclat): %s" % len(patterns)
     print "Time cost by closed eclat is: %s" % t1
-    print "Number of closed frequent patterns: %s" % len(closedPatterns)
+    print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
     print "Time cost by python post-processing is: %s" % t2
     print "*************************************"
