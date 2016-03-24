@@ -13,7 +13,7 @@ default_parameters = 'config.ini'
 def fpMining(inputs):
     method = Mining(inputs)
     if inputs['type'] == 'graph':
-        method = gSpan(inputs)    # TO DO
+        method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         method = sequence(inputs)     # TO DO
     elif inputs['type'] == 'itemset':
@@ -22,10 +22,12 @@ def fpMining(inputs):
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
-    t1 = method.mining()
-    patterns = method.parser()
-    closedPatterns, t2 = method.closedMining()
-    return patterns, t1, closedPatterns, t2
+    #t1 = method.mining()
+    result = method.mining()
+    patterns = method.parser(result)
+    return patterns
+    #closedPatterns, t2 = method.closedMining()
+    #return patterns, t1, closedPatterns, t2
 
 
 if __name__ == "__main__":
@@ -68,7 +70,8 @@ if __name__ == "__main__":
     print params
 
 
-    patterns, t1, closedPatterns, t2 = fpMining(params)
+    #patterns, t1, closedPatterns, t2 = fpMining(params)
+    patterns = fpMining(params)
 
     # Just for test
     #fout = open('./output/time_cost.dat', 'a')
@@ -80,7 +83,7 @@ if __name__ == "__main__":
     #    s += 2
     #fout.close()
     print "\n*************************************"
-    #print "Number of closed frequent patterns (eclat): %s" % len(patterns)
+    print "Number of closed frequent patterns: %s" % len(patterns)
     #print "Time cost by closed eclat is: %s" % t1
     #print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
     #print "Time cost by python post-processing is: %s" % t2

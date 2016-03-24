@@ -4,10 +4,14 @@ import time
 from fqPattern import *
 from method import *
 
-def parserGraph(textOutput, path):
-    fg = open(path, 'r')
+def parserGraph(stdOutput, path=None):
+    if not path:
+        lines = stdOutput.split('\n')
+    else:
+        fg = open(path, 'r')
+        lines = fg.readlines()
+        fg.close()
     graphs = []
-    lines = fg.readlines()
     i = 0
     while i < len(lines):
         line = lines[i]
@@ -43,7 +47,6 @@ def parserGraph(textOutput, path):
         else:
             i += 1
 
-    fg.close()
     return graphs
 
 def parserItemset(stdOutput, path):
@@ -71,7 +74,7 @@ def parserItemset(stdOutput, path):
 
     return itemsets
 
-def parser(method, stdOutput, path):
+def parser(method, stdOutput, path=None):
     patterns = None
     if isinstance(method, gSpan):
         patterns = parserGraph(stdOutput, path)

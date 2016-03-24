@@ -7,7 +7,8 @@ import utils
 from fqPattern import Itemset
 
 # gSpan command:
-# ./gspan -file [file_name] -support [support: float] &> log
+# ./gSpan -file [file_name] -support [support: float] &> log
+
 # eclat command:
 # ./eclat [options] infile [outfile]
 
@@ -54,20 +55,37 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "./exec/gSpan"
+            gSpan = "/home/enzo/Thesis/MAI-Thesis/exec/gspan"
         else:
-            gSpan = "gSpan"
+            gSpan = "gspan"
         options = ''
         if self.support:
-            options = ''.join('-s%s' % self.support)
+            options = ''.join('-support %s' % self.support)
 
-        child = subprocess.Popen([gSpan, options, self.datafile, "-"], stdout=subprocess.PIPE)
-        fout = open(self.output, 'w')
+        #print("%s -file %s %s" % (gSpan, self.datafile, options))
+        print([gSpan, "-file", self.datafile, options])
+        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&> ", self.output], stdout=subprocess.PIPE)
+        try:
+            output = subprocess.check_output([gSpan, "-file", self.datafile, options])
+            returncode = 0
+        except subprocess.CalledProcessError as e:
+            output = e.output
+            returncode = e.returncode
+        print(output)
+        print(returncode)
+
         result = child.stdout.read()
-        fout.close()
+        print result
+        #self.parser(result)
+        #fout = open(self.output, 'w')
+        #fout.write(result)
+        #fout.close()
+        return result
 
-    def parser(self):
-        self.patternSet = utils.parser(self)
+    def parser(self, stdOutput, path=None):
+        self.patternSet = utils.parser(self, stdOutput)
+        self.patternSet = utils.parser(self, None, self.output)
+        return self.patternSet
 
 class eclat(Mining):
     """Use eclat to mining frequent itemsets"""
