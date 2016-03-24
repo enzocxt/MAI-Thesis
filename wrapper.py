@@ -2,10 +2,12 @@
 
 import subprocess
 import sys, getopt
+import ConfigParser
 import solver.utils
 from solver.fqPattern import *
 from solver.method import *
 
+default_parameters = 'config.ini'
 
 # Method for mining frequent patterns
 def fpMining(inputs):
@@ -28,37 +30,45 @@ def fpMining(inputs):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print 'Needs parameters!'
+        print 'Needs input file\n<wrapper.py -h> for help!'
         sys.exit(2)
-    method = sys.argv[1]
-    inputs = {}     # Dict to store input parameters
 
-    # Parse the parameters
-    # Currently, could only dealt with --type, --infile, --outfile
+    config_file = default_parameters        # config file path
+    params = {}     # Dict to store input parameters
+
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'T:M:C:D:i:s:o:', ['type=', 'matching', 'constraint=', 'dominance=', 'infile=', 'support=', 'outfile='])
+        opts, args = getopt.getopt(sys.argv[1:], 'hc:i:o:', ['help=', 'config=', 'infile=', 'outfile='])
     except getopt.GetoptError:
-        print 'wrapper.py -T [graph] -M [exact] -C [frequency] -D [closed] \
-              -i [infile_name] -s [support:float] -o [outfile_name]'
+        print('wrapper.py -c <configfile> -i <inputfile> -o <outputfile>')
         sys.exit(2)
-
     for opt, arg in opts:
-        if opt in ('-T', '--type'):
-            inputs['type'] = arg
-        elif opt in ('-M', '--matching'):
-            inputs['matching'] = arg
-        elif opt in ('-C', '--constraint'):
-            inputs['constraint'] = arg
-        elif opt in ('-D', '--dominance'):
-            inputs['dominance'] = arg
+        if opt in ('-h', '--help'):
+            print 'wrapper.py -c <configfile> -i <inputfile> -o <outputfile>'
+            sys.exit(2)
         elif opt in ('-i', '--infile'):
-            inputs['datafile'] = arg
+            params['datafile'] = arg
         elif opt in ('-o', '--outfile'):
-            inputs['output'] = arg
-        elif opt in ('-s', '--support'):
-            inputs['support'] = arg
+            params['output'] = arg
+        elif opt in ('-c', '--config'):
+            config_file = arg
 
-    patterns, t1, closedPatterns, t2 = fpMining(inputs)
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+    sections = config.sections()
+    section = 'Parameters'
+    options = config.options(section)
+    for option in options:
+        try:
+            params[option] = config.get(section, option)
+            if params[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            params[option] = None
+    print params
+
+
+    patterns, t1, closedPatterns, t2 = fpMining(params)
 
     # Just for test
     #fout = open('./output/time_cost.dat', 'a')
@@ -70,8 +80,8 @@ if __name__ == "__main__":
     #    s += 2
     #fout.close()
     print "\n*************************************"
-    print "Number of closed frequent patterns (eclat): %s" % len(patterns)
-    print "Time cost by closed eclat is: %s" % t1
-    print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
-    print "Time cost by python post-processing is: %s" % t2
+    #print "Number of closed frequent patterns (eclat): %s" % len(patterns)
+    #print "Time cost by closed eclat is: %s" % t1
+    #print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
+    #print "Time cost by python post-processing is: %s" % t2
     print "*************************************"

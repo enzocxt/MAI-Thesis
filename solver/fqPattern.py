@@ -34,6 +34,12 @@ class Graph(Pattern):
         self.edges.append(edge)
 
 
+class Sequence(Pattern):
+    def __init__(self, sequence=None):
+        Pattern.__init__()
+        self.sequence = sequence
+
+
 class Itemset(Pattern):
     def __init__(self, itemset=None, support=None):
         #Pattern.__init__()
@@ -63,7 +69,3 @@ class Itemset(Pattern):
     def printItemset(self):
         print self.itemset
 
-class Sequence(Pattern):
-    def __init__(self, sequence=None):
-        Pattern.__init__()
-        self.sequence = sequence

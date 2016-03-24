@@ -53,9 +53,17 @@ class gSpan(Mining):
         Mining.__init__(self, inputs)
 
     def mining(self):
-        child = subprocess.Popen(['./gspan', '-file', self.datafile, '-support', self.support, '&>', self.output], stdout=subprocess.PIPE)
+        if platform.system() == "Linux":
+            gSpan = "./exec/gSpan"
+        else:
+            gSpan = "gSpan"
+        options = ''
+        if self.support:
+            options = ''.join('-s%s' % self.support)
+
+        child = subprocess.Popen([gSpan, options, self.datafile, "-"], stdout=subprocess.PIPE)
         fout = open(self.output, 'w')
-        fout.write(child.stdout.read())
+        result = child.stdout.read()
         fout.close()
 
     def parser(self):
@@ -73,13 +81,14 @@ class eclat(Mining):
           eclat = "./exec/eclat"
         else:
           eclat = "eclat"
-        options = ""
+        options = ''
         if self.support:
             options += '-s%s' % self.support
         if self.dominance == 'max':
             options += 'tm'
         elif self.dominance == 'closed':
             options += 'tc'
+
         t0 = time.time()
         #child = subprocess.Popen([eclat, options, self.datafile, self.output], stdout=subprocess.PIPE)
         child = subprocess.Popen([eclat, options, self.datafile, "-"], stdout=subprocess.PIPE)
@@ -205,7 +214,7 @@ class eclat(Mining):
         stdOutput = stdOutput.split('\n')
         # pass the description lines
         tmp = stdOutput.pop()
-        tmpList = tmp.split(' ')
+        tmpList = tmp.split()
         while not tmpList[0].isdigit():
             tmp = stdOutput.pop()
             tmpList = tmp.split(' ')
