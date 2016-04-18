@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import os, sys, time
 import platform
 import subprocess
@@ -64,7 +62,7 @@ class gSpan(Mining):
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
         print([gSpan, "-file", self.datafile, options])
-        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&> ", self.output], stdout=subprocess.PIPE)
+        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&> ", self.output], shell=False, stdout=subprocess.PIPE)
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, options])
             returncode = 0
@@ -74,7 +72,8 @@ class gSpan(Mining):
         print(output)
         print(returncode)
 
-        result = child.stdout.read()
+        #result = child.stdout.read()
+        result = child.communicate()[0]
         print result
         #self.parser(result)
         #fout = open(self.output, 'w')
