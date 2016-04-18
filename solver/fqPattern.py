@@ -33,9 +33,21 @@ class Graph(Pattern):
 
 
 class Sequence(Pattern):
-    def __init__(self, sequence=None):
+    def __init__(self, sequence=None, support=None):
         Pattern.__init__()
         self.sequence = sequence
+        self.support = support
+        PLACE_HOLDER = '_'
+
+    def append(self, p):
+        if p.sequence[0][0] == PLACE_HOLDER:
+            first_e = p.sequence[0]
+            first_e.remove(PLACE_HOLDER)
+            self.sequence[-1].extend(first_e)
+            self.sequence.extend(p.sequence[1:])
+        else:
+            self.sequence.extend(p.sequence)
+        self.support = min(self.support, p.support)
 
 
 class Itemset(Pattern):
