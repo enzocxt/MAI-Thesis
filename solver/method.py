@@ -4,17 +4,22 @@ import subprocess
 import utils
 from fqPattern import Itemset
 
+# ----------------------------------------------------------
 # gSpan command:
 # ./gSpan -file [file_name] -support [support: float] &> log
 
+# prefixSpan command:
+# ./exec/pspan [options] input.txt
+
 # eclat command:
 # ./eclat [options] infile [outfile]
+# ----------------------------------------------------------
 
 class Mining(object):
     """Abstract class"""
 
     def __init__(self, inputs):
-        # inputs{'type': 'itemset', 'matching': 'exact', 'constraints': 'frequency', 'dominance': 'max'}
+        # example: inputs{'type': 'itemset', 'matching': 'exact', 'constraints': 'frequency', 'dominance': 'max'}
         #self.inputs = inputs
         self.type = inputs['type']
         if inputs.has_key('matching'): self.matching = inputs['matching']
