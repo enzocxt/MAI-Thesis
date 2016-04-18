@@ -9,7 +9,7 @@ from fqPattern import Itemset
 # ./gSpan -file [file_name] -support [support: float] &> log
 
 # prefixSpan command:
-# ./exec/pspan [options] input.txt
+# ./exec/cpsm [options] [[dataset] [minimum frequency threshold]]
 
 # eclat command:
 # ./eclat [options] infile [outfile]
@@ -90,6 +90,36 @@ class gSpan(Mining):
         self.patternSet = utils.parser(self, stdOutput)
         self.patternSet = utils.parser(self, None, self.output)
         return self.patternSet
+
+    def getPatterns(self):
+        return self.patternSet
+
+
+class prefixSpan(Mining):
+    """Use prefixSpan to mining frequent sequences"""
+
+    def __init__(self, inputs):
+        Mining.__init__(self, inputs)
+
+    def mining(self):
+        """Mining frequent sequences by prefixSpan"""
+        if platform.system() == "Linux":
+            prefixSpan = "./exec/cpsm"
+        else:
+            prefixSpan = "prefixSpan"
+        options = ''
+
+        child = subprocess.Popen([prefixSpan, options, self.datafile, ''.join(self.support)], stdout=subprocess.PIPE)
+        result = child.communicate()[0]
+        return result
+
+    def parser(self, stdOutput, path=None)
+        self.patternSet = utils.parser(self, stdOutput)
+        return patterSet
+
+    def getPatterns(self):
+        return self.patternSet
+
 
 class eclat(Mining):
     """Use eclat to mining frequent itemsets"""
@@ -280,3 +310,6 @@ class eclat(Mining):
         #print "checkClosedTime : %s" % (checkClosedTime1 - checkClosedTime0)
 
         return closedItemset, t1
+
+    def getPatterns(self):
+        return self.patternSet
