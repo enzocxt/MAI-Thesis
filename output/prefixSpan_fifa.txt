@@ -1,0 +1,14 @@
+Absolute minsup threshold: 8180
+Pattern : 30 
+Pattern : 18 
+Pattern : 13 
+Pattern : 90 
+Pattern : 2 
+
+Search statistics:
+PROPS 95286
+SOLS  5
+FAIL  0
+NODE  11
+DEPTH 2
+Number of solutions: 5
