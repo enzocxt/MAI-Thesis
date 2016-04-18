@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # Pattern abstract class
 class Pattern(object):
     def __init__(self):
