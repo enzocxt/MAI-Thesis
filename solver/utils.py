@@ -49,10 +49,22 @@ def parserGraph(stdOutput, path=None):
 
     return graphs
 
+def parserSequence(stdOutput, path):
+    """
+        If path == "" or path == None,
+        means that do not write results into a file
+    """
+    if path == "" or not path:
+        result = stdOutput.split('\n')
+    else:
+        fin = open(paht, 'r')
+        result = fin.readlines()
+        fin.close()
+
 def parserItemset(stdOutput, path):
     """
-    If path == "" or path == "-",
-    means that do not write results into a file
+        If path == "" or path == "-",
+        means that do not write results into a file
     """
     if path == "" or path == "-":
         result = stdOutput.split('\n')
@@ -78,6 +90,8 @@ def parser(method, stdOutput, path=None):
     patterns = None
     if isinstance(method, gSpan):
         patterns = parserGraph(stdOutput, path)
+    elif isinstance(method, prefixSpan):
+        patterns = parserSequence(stdOutput, path)
     elif isinstance(method, eclat):
         patterns = parserItemset(stdOutput, path)
 
