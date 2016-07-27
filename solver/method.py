@@ -2,7 +2,7 @@ import os, sys, time
 import platform
 import subprocess
 import utils
-from fqPattern import Itemset
+from Pattern import *
 
 # ----------------------------------------------------------
 # gSpan command:
@@ -113,12 +113,30 @@ class prefixSpan(Mining):
         result = child.communicate()[0]
         return result
 
-    def parser(self, stdOutput, path=None)
+    def parser(self, stdOutput, path=None):
         self.patternSet = utils.parser(self, stdOutput)
-        return patterSet
+        return self.patternSet
 
     def getPatterns(self):
         return self.patternSet
+
+
+class prefixSpan_py(Mining):
+    """python version of prefixSpan"""
+
+    def __init__(self, inputs):
+        Mining.__init__(self, inputs)
+
+    def mining(self):
+        """Mining frequent sequences by prefixSpan"""
+        S = utils.read_csv(self.datafile)
+        self.patternSet = utils.prefixSpan(S, Sequence([], sys.maxint), self.support)
+
+    def getPatterns(self):
+        return self.patternSet
+
+    def print_patterns(self):
+        utils.print_patterns(self.patternSet)
 
 
 class eclat(Mining):
@@ -126,13 +144,15 @@ class eclat(Mining):
 
     def __init__(self, inputs):
         Mining.__init__(self, inputs)
+        self.eclat_exec = None
 
     def mining(self):
         """Mining frequent itemsets by (closed) eclat"""
         if platform.system() == "Linux":
-          eclat = "./exec/eclat"
+            self.eclat_exec = "./exec/eclat"
         else:
-          eclat = "eclat"
+            self.eclat_exec = "eclat"
+
         options = ''
         if self.support:
             options += '-s%s' % self.support
@@ -141,10 +161,12 @@ class eclat(Mining):
         elif self.dominance == 'closed':
             options += 'tc'
 
+        # check time cost
         t0 = time.time()
-        #child = subprocess.Popen([eclat, options, self.datafile, self.output], stdout=subprocess.PIPE)
-        child = subprocess.Popen([eclat, options, self.datafile, "-"], stdout=subprocess.PIPE)
+        #child = subprocess.Popen([self.eclat_exec, options, self.datafile, self.output], stdout=subprocess.PIPE)
+        child = subprocess.Popen([self.eclat_exec, options, self.datafile, "-"], stdout=subprocess.PIPE)
         t1 = time.time()
+
         result = child.stdout.read()
         if self.output == "" or self.output == "-":
             fout = open("output/closed_eclat.txt", 'w')
@@ -165,17 +187,13 @@ class eclat(Mining):
         else:
             eclat = "eclat"
 
-        t0 = time.time()
         child = subprocess.Popen([eclat, "-s%s" % self.support, self.datafile, ""], stdout=subprocess.PIPE)
-        t1 = time.time()
         result = child.stdout.read()
-        #print "time cost of eclat : %s" % (t1-t0)
         if self.dominance == 'max':
             self.maxParser(result)
         elif self.dominance == 'closed':
-            #closedPatterns, t1 = self.closedParser_old(result)
-            closedPatterns, t1 = self.closedParser_New(result)
-            return closedPatterns, t1-t0
+            closedPatterns = self.closedParser(result)
+            return closedPatterns
 
     def parser(self):
         self.patternSet = utils.parser(self, None, "output/closed_eclat.txt")
@@ -185,74 +203,7 @@ class eclat(Mining):
         """For maximal item sets"""
         pass
 
-    def closedParser_old(self, stdOutput):
-        """For closed item sets"""
-        # itemsets: a dictionary of itemset list
-        # itemsets of the same list have same support
-        itemsets = {}
-        stdOutput = stdOutput.split('\n')
-        # pass the description lines
-        tmp = stdOutput.pop()
-        tmpList = tmp.split(' ')
-        while not tmpList[0].isdigit():
-            tmp = stdOutput.pop()
-            tmpList = tmp.split(' ')
-        stdOutput.append(tmp)
-
-        for line in stdOutput:
-            line.strip('\n')
-            items = line.split(' ')
-            support = items.pop()
-            support = float(support[1:-1])
-            itemset = Itemset(items, support)
-
-            # if itemsets dictionary has support of this itemset
-            # add this itemset to that list
-            # else add this itemset as a new itemset list
-
-            # old way: add itemset to list in the ascending order of size
-            # if itemsets.has_key(itemset.support):
-                #i = 0
-                #while i < len(itemsets[itemset.support]):
-                    #if itemsets[itemset.support][i].size >= itemset.size:
-                    #    itemsets[itemset.support].insert(i, itemset)
-                    #    break
-                #    i += 1
-                #if i == len(itemsets[itemset.support]):
-                #    itemsets[itemset.support].append(itemset)
-
-            # new way to insert itemset, regarless of order
-            if itemsets.has_key(itemset.support):
-                itemsets[itemset.support].append(itemset)
-            else:
-                itemsets[itemset.support] = [itemset]
-
-        # find closed itemset
-        closedItemset = []
-        # old way: itemsets stored in order
-        # for list in itemsets.values():
-        #    for i in range(len(list)-1):
-        #        if utils.checkClosed(list[i], list[i+1:]):
-        #            closedItemset.append(list[i])
-        #    closedItemset.append(list[-1])
-
-        # new way: itemsets stored by appending
-        for list in itemsets.values():
-            for i in range(len(list)):
-                if utils.checkClosed(list[i], list):
-                    closedItemset.append(list[i])
-        t1 = time.time()
-
-        # not necessary, just write the result to file for check
-        fout = open('output/python_process.txt', 'w')
-        for itemset in closedItemset:
-            fout.write("%s%s\n" % (itemset.itemset, itemset.support))
-        fout.close()
-
-        return closedItemset, t1
-
-
-    def closedParser_New(self, stdOutput):
+    def closedParser(self, stdOutput):
         """
         For closed item sets
         Directly check closed itemsets
@@ -287,9 +238,6 @@ class eclat(Mining):
             else:
                 itemsets[itemset[0]] = [itemset[1]]
 
-        #closedParserTime1 = time.time()
-        #print "closedParserTime : %s" % (closedParserTime1 - closedParserTime0)
-
         def checkClosed(itemset, itemsetList):
             for it in itemsetList:
                 if len(itemset) >= len(it):
@@ -299,17 +247,13 @@ class eclat(Mining):
             return True
 
         # find closed itemset
-        #checkClosedTime0 = time.time()
         closedItemset = []
         for list in itemsets.values():
             for i in range(len(list)):
                 if checkClosed(list[i], list):
                     closedItemset.append(list[i])
-        t1 = time.time()
-        #checkClosedTime1 = time.time()
-        #print "checkClosedTime : %s" % (checkClosedTime1 - checkClosedTime0)
 
-        return closedItemset, t1
+        return closedItemset
 
     def getPatterns(self):
         return self.patternSet

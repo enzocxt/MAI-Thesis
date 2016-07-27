@@ -1,11 +1,18 @@
-import subprocess
-import sys, getopt
+"""
+    author: Tao Chen
+"""
+
+import getopt
 import ConfigParser
-import solver.utils
-from solver.fqPattern import *
 from solver.method import *
 
-default_parameters = 'config.ini'
+default_parameters = 'config_seq.ini'
+
+
+# Debug print
+def DebugPrint(s):
+    print s
+
 
 # Method for mining frequent patterns
 def fpMining(inputs):
@@ -13,9 +20,26 @@ def fpMining(inputs):
     if inputs['type'] == 'graph':
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
-        method = sequence(inputs)     # TO DO
+        method = prefixSpan(inputs)
     elif inputs['type'] == 'itemset':
         method = eclat(inputs)    # Use default support
+    else:
+        print 'Does not support "type == %s"!' % inputs['type']
+        sys.exit(2)
+
+    result = method.mining()
+    patterns = method.parser(result)
+    return patterns
+
+
+def test(inputs):
+    method = Mining(inputs)
+    if inputs['type'] == 'graph':
+        method = gSpan(inputs)
+    elif inputs['type'] == 'sequence':
+        method = prefixSpan(inputs)
+    elif inputs['type'] == 'itemset':
+        method = eclat(inputs)
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
@@ -68,7 +92,7 @@ if __name__ == "__main__":
     print params
 
 
-    #patterns, t1, closedPatterns, t2 = fpMining(params)
+    #patterns, t1, closedPatterns, t2 = test(params)
     patterns = fpMining(params)
 
     # Just for test

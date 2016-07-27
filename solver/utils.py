@@ -1,8 +1,8 @@
-import time
-from fqPattern import *
+from Pattern import *
 from method import *
 
 PLACE_HOLDER = '_'
+
 
 def parserGraph(stdOutput, path=None):
     if not path:
@@ -15,7 +15,7 @@ def parserGraph(stdOutput, path=None):
     i = 0
     while i < len(lines):
         line = lines[i]
-        if 't #' in line:                   # t # 0 * 45
+        if 't #' in line:  # t # 0 * 45
             t = line.split(' ')
             graph = Graph(t[4])
             graph.id = t[2]
@@ -23,14 +23,14 @@ def parserGraph(stdOutput, path=None):
             while i < len(lines):
                 line = lines[i]
                 if 'v ' in line:
-                    v = line.split(' ')     # v 0 2
+                    v = line.split(' ')  # v 0 2
                     node = Node()
                     node.id = v[1]
                     node.label = v[2]
                     graph.add_node(node)
                     i += 1
                 elif 'e ' in line:
-                    e = line.split(' ')     # e 0 1 0
+                    e = line.split(' ')  # e 0 1 0
                     edge = Edge()
                     edge.fromnode = e[1]
                     edge.tonode = e[2]
@@ -49,17 +49,26 @@ def parserGraph(stdOutput, path=None):
 
     return graphs
 
+
 def parserSequence(stdOutput, path):
     """
         If path == "" or path == None,
         means that do not write results into a file
     """
+    patterns = []
     if path == "" or not path:
-        result = stdOutput.split('\n')
+        output = stdOutput.split('\n')
+        for line in output:
+            if 'Pattern' in line:
+                patterns.append(line.split()[2:])
     else:
-        fin = open(paht, 'r')
-        result = fin.readlines()
-        fin.close()
+        with open(path, 'r') as fin:
+            for line in fin:
+                if 'Pattern' in line:
+                    patterns.append(line.split()[2:])
+
+    return patterns
+
 
 def parserItemset(stdOutput, path):
     """
@@ -86,6 +95,7 @@ def parserItemset(stdOutput, path):
 
     return itemsets
 
+
 def parser(method, stdOutput, path=None):
     patterns = None
     if isinstance(method, gSpan):
@@ -97,23 +107,59 @@ def parser(method, stdOutput, path=None):
 
     return patterns
 
+
 def checkClosed(itemset, itemsetList):
     # check if there is a superset of itemset in itemsetList
     for it in itemsetList:
         if itemset.size >= it.size:
             continue
-        #if itemset.subsetOf(it):
+        # if itemset.subsetOf(it):
         elif itemset.itemset < it.itemset:
             return False
     return True
 
 
+# -------------------------------------------------------------------
+import csv
+
+
+def read_csv(filename):
+    csv_input = file(filename, 'rb')
+    reader = csv.reader(csv_input)
+    customs = []
+    for line in reader:
+        baskets = []
+        for term in line:
+            item = term.split(',')
+            items = []
+            for sth in item:
+                items.append(sth)
+            baskets.append(item)
+        customs.append(baskets)
+    return customs
+
+
 # ---------------------------prefixSpan------------------------------
+# modify from "https://github.com/Princever/DM_Prefixspan"
+
+def prefixSpan(S, pattern, threshold):
+    patterns = []
+    f_list = frequent_items(S, pattern, threshold)
+
+    for i in f_list:
+        p = Sequence(pattern.sequence, pattern.support)
+        p.append(i)
+        patterns.append(p)
+
+        p_S = build_projected_database(S, p)
+        p_patterns = prefixSpan(p, p_S, threshold)
+        patterns.extend(p_patterns)
+
+    return patterns
+
 
 def frequent_items(S, pattern, threshold):
-    items = {}
-    _items = {}
-    f_list = []
+    items, _items, f_list = {}, {}, []
     if S is None or len(S) == 0:
         return []
     if len(pattern.sequence) != 0:
@@ -129,8 +175,8 @@ def frequent_items(S, pattern, threshold):
                 break
         if is_prefix and len(last_e) > 0:
             index = s[0].index(last_e[-1])
-            if index < len(s[0])-1:
-                for item in s[0][index+1:]:
+            if index < len(s[0]) - 1:
+                for item in s[0][index + 1:]:
                     if item in _items:
                         _items[item] += 1
                     else:
@@ -154,14 +200,15 @@ def frequent_items(S, pattern, threshold):
                     else:
                         items[item] = 1
 
-    f_list.extend([SquencePattern([[PLACE_HOLDER, k]], v)
+    f_list.extend([Sequence([[PLACE_HOLDER, k]], v)
                    for k, v in _items.iteritems()
                    if v >= threshold])
-    f_list.extend([SquencePattern([[k]], v)
+    f_list.extend([Sequence([[k]], v)
                    for k, v in items.iteritems()
                    if v >= threshold])
     sorted_list = sorted(f_list, key=lambda p: p.support)
     return sorted_list
+
 
 def build_projected_database(S, pattern):
     """
@@ -188,9 +235,9 @@ def build_projected_database(S, pattern):
 
             if is_prefix:
                 e_index = s.index(element)
-                i_ind    = element.index(last_item)
+                i_index = element.index(last_item)
                 if i_index == len(element) - 1:
-                    p_s = s[e_index+1:]
+                    p_s = s[e_index + 1:]
                 else:
                     p_s = s[e_index:]
                     index = element.index(last_item)
@@ -203,19 +250,65 @@ def build_projected_database(S, pattern):
 
     return p_S
 
-def prefixSpan(pattern, S, threshold):
-    patterns = []
-    f_list = frequent_items(S, pattern, threshold)
 
-    for i in f_list:
-        p = SquencePattern(pattern.sequence, pattern.support)
-        p.append(i)
-        patterns.append(p)
+def print_patterns(patterns):
+    for p in patterns:
+        name = '['
+        for each in p.sequence:
+            aitem = '['
+            flag = False
+            for item in each:
+                if flag:
+                    aitem += '&'
+                aitem += item
+                flag = True
+            aitem += ']'
+            name += aitem
+            name += ']'
+        print("pattern:{0}, support:{1}".format(name, p.support))
+        print >> ff,("pattern:{0}, support:{1}".format(name, p.support))
 
-        p_S = build_projected_database(S, p)
-        p_patterns = prefixSpan(p, p_S, threshold)
-        patterns.extend(p_patterns)
 
-    return patterns
+# ------------------------------main--------------------------------
+if __name__ == "__main__":
+    ff = open('../output/test_prefixSpan.txt', 'w')
+    S = read_csv("../data/prefixSpanData/gxyseq.csv")
+    min_supp = 0.01
+    count = len(S)
 
-# -------------------------------------------------------------------
+    patterns = prefixSpan(S, Sequence([], sys.maxint), min_supp * count)
+    print_patterns(patterns)
+
+    """
+    seqNums = []
+    for each in patterns:
+        seqNums.append(each.squence)
+    maxSeqs = u.maxSeq(seqNums)
+    print("The sequential patterns :")
+    for i in maxSeqs:
+        for sth in i:
+            print "[",
+            for ssth in sth:
+                print ssth,
+            print "]",
+        print ""
+    print >> ff, "The sequential patterns :"
+    for i in maxSeqs:
+        for sth in i:
+            print >> ff, "[",
+            for ssth in sth:
+                print >> ff, ssth,
+            print >> ff, "]",
+        print >> ff, ""
+    ff.close()
+    flitedSeqs = u.fliter(maxSeqs)
+    expandedSeqs = u.expand(maxSeqs)
+    maxStages = u.genPlotDatas(maxSeqs)
+    flitedStages = u.genPlotDatas(flitedSeqs)
+    expandedStages = u.genPlotDatas(expandedSeqs)
+    allStages = []
+    allStages += [maxStages]
+    allStages += [flitedStages]
+    allStages += [expandedStages]
+    u.drawStages(allStages)
+    """
