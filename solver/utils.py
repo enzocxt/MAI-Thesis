@@ -3,7 +3,7 @@ from method import *
 
 PLACE_HOLDER = '_'
 
-
+'''
 def parserGraph(stdOutput, path=None):
     if not path:
         lines = stdOutput.split('\n')
@@ -106,6 +106,7 @@ def parser(method, stdOutput, path=None):
         patterns = parserItemset(stdOutput, path)
 
     return patterns
+'''
 
 
 def checkClosed(itemset, itemsetList):

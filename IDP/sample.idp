@@ -1,0 +1,33 @@
+vocabulary V{
+    type index isa nat
+    type itemIndex isa nat
+    type item isa nat
+    type frequency isa nat
+    type boolean isa int
+
+    itemset(index,item)
+    support(index,frequency)
+    subset(index,index)
+    dominated(index)
+    output(index)
+}
+
+theory T:V{
+    ! i1,i2 :  subset(i1,i2) <=> !e: itemset(i1,e) => itemset(i2,e) & i1 ~= i2.
+
+    {
+        !i1,i2,s: dominated(i1) <- support(i1,s) & support(i2,s) & subset(i1,i2) & i1 ~= i2.
+        !i:       output(i)     <- ~dominated(i).
+    }
+}
+
+Structure S:V{
+    index={1..10}
+    frequency={1..142}
+    itemset={(1,20);(2,32);(2,20);(3,32);(4,22);(4,20);(5,22);(5,32);(5,20);(6,22);(6,32);(7,22);(8,17);(8,20);(9,17);(9,32);(9,20);(10,32)}
+    support={(1,93);(2,81);(3,88);(4,77);(5,66);(6,72);(7,84);(8,79);(9,67);(10,71)}
+}
+
+procedure main(){
+    printmodels(modelexpand(T,S))
+}

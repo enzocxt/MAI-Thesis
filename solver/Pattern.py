@@ -8,6 +8,10 @@ class Pattern(object):
         self.support = None
 
 
+    def __str__(self):
+        pass
+
+
 # Edge class for Graph
 class Edge(object):
     def __init__(self):
@@ -60,9 +64,10 @@ class Sequence(Pattern):
 
 
 class Itemset(Pattern):
-    def __init__(self, itemset=None, support=None):
+    def __init__(self, id=None, itemset=None, support=None):
         # Pattern.__init__()
         # self.itemset = itemset
+        self.id = id
         self.itemset = set(itemset)
         self.support = support
         self.size = len(itemset)
@@ -89,3 +94,11 @@ class Itemset(Pattern):
 
     def printItemset(self):
         print self.itemset
+
+
+    def __str__(self):
+        output = str(self.id) + ':'
+        for i in self.itemset:
+            output += ''.join(i) + ' '
+        output = output[:-1] + ':%s' % self.support
+        return output
