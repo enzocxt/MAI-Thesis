@@ -5,8 +5,9 @@
 import getopt
 import ConfigParser
 from solver.method import *
+from solver.generator import *
 
-default_parameters = 'config_seq.ini'
+default_parameters = 'config.ini'
 
 
 # Debug print
@@ -16,19 +17,24 @@ def DebugPrint(s):
 
 # Method for mining frequent patterns
 def fpMining(inputs):
-    method = Mining(inputs)
     if inputs['type'] == 'graph':
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         method = prefixSpan(inputs)
     elif inputs['type'] == 'itemset':
-        method = eclat(inputs)    # Use default support
+        if 'dominance' in inputs:
+            eclat_inputs = dict()
+            for key in inputs:
+                eclat_inputs[key] = inputs[key]
+            eclat_inputs['dominance'] = ''
+        method = eclat(eclat_inputs)
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
-    result = method.mining()
-    patterns = method.parser(result)
+    output = method.mining()
+    #print('\n\nOutput of eclat:\n%s' % output)
+    patterns = method.parser(output)
     return patterns
 
 
@@ -53,6 +59,7 @@ def test(inputs):
 
 
 if __name__ == "__main__":
+    # deal with command parameters
     if len(sys.argv) < 2:
         print 'Needs input file\n<wrapper.py -h> for help!'
         sys.exit(2)
@@ -89,24 +96,38 @@ if __name__ == "__main__":
         except:
             print("exception on %s!" % option)
             params[option] = None
-    print params
+    print('Parameters: %s' % params)
 
-
-    #patterns, t1, closedPatterns, t2 = test(params)
+    # frequent pattern mining
     patterns = fpMining(params)
+    print "\n*************************************"
+    if patterns:
+        print "Number of closed patterns: %s" % len(patterns)
+        #for p in patterns:
+        #    print p
+    print "*************************************\n"
+
+    # generate IDP code
+    idp_gen = IDPGenerator(params)
+    idp_program_name = '{0}_itemset_zoo'.format(params['dominance'])
+    idp_gen.gen_IDP_code(patterns, idp_program_name)
+    idp_output = idp_gen.run_IDP(idp_program_name)
+    indices = set(idp_gen.parser_from_stdout(idp_output))
+    print "\n*************************************"
+    print "Number of closed frequent patterns: %s" % len(indices)
+    for p in patterns:
+        if p.id in indices:
+            print p
 
     # Just for test
-    #fout = open('./output/time_cost.dat', 'a')
-    #s = 10
-    #while s <= 50:
-    #    inputs['support'] = s
-    #    patterns, t1, closedPatterns, t2 = fpMining(inputs)
-    #    fout.write('%s\t%s\t%s\n' % (s, t1*1000, t2*1000))
-    #    s += 2
-    #fout.close()
+    '''
     print "\n*************************************"
-    print "Number of closed frequent patterns: %s" % len(patterns)
+    if patterns:
+        print "Number of closed frequent patterns: %s" % len(patterns)
+        #for i in range(10):
+        #    print patterns[i]
     #print "Time cost by closed eclat is: %s" % t1
     #print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
     #print "Time cost by python post-processing is: %s" % t2
     print "*************************************"
+    '''
