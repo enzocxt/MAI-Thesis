@@ -57,7 +57,7 @@ def parserSequence(stdOutput, path):
     if path == "" or not path:
         result = stdOutput.split('\n')
     else:
-        fin = open(paht, 'r')
+        fin = open(path, 'r')
         result = fin.readlines()
         fin.close()
 
