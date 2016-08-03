@@ -87,7 +87,7 @@ class gSpan(Mining):
         return result
 
     def parser(self, stdOutput, path=None):
-        self.patternSet = utils.parser(self, stdOutput)
+        //self.patternSet = utils.parser(self, stdOutput)
         self.patternSet = utils.parser(self, None, self.output)
         return self.patternSet
 
@@ -115,7 +115,7 @@ class prefixSpan(Mining):
 
     def parser(self, stdOutput, path=None)
         self.patternSet = utils.parser(self, stdOutput)
-        return patterSet
+        return self.patterSet
 
     def getPatterns(self):
         return self.patternSet
