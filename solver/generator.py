@@ -34,7 +34,7 @@ class IDPGenerator:
         class_file.writelines(lines)
         class_file.close()
 
-        print('\nGenerate idp file %s over. ~ ~\n' % file_path)
+        # print('\nGenerate idp file %s over. ~ ~\n' % file_path)
 
 
     def gen_IDP_code(self, patterns, filename):

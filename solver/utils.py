@@ -1,5 +1,6 @@
 from Pattern import *
 from method import *
+from functools import wraps
 
 PLACE_HOLDER = '_'
 
@@ -109,6 +110,22 @@ def parser(method, stdOutput, path=None):
 '''
 
 
+# -------------------------------------------------------------------
+def logger(fn):
+    @wraps(fn)
+    def timer(*args, **kwargs):
+        ts = time.time()
+        result = fn(*args, **kwargs)
+        te = time.time()
+        print "function      = {0}".format(fn.__name__)
+        print "    arguments = {0} {1}".format(args, kwargs)
+        # print "    return    = {0}".format(result)
+        print "    time      = %.6f sec" % (te-ts)
+        return result
+    return timer
+
+
+# -------------------------------------------------------------------
 def checkClosed(itemset, itemsetList):
     # check if there is a superset of itemset in itemsetList
     for it in itemsetList:
@@ -273,7 +290,7 @@ def print_patterns(patterns):
 # ------------------------------main--------------------------------
 if __name__ == "__main__":
     ff = open('../output/test_prefixSpan.txt', 'w')
-    S = read_csv("../data/prefixSpanData/gxyseq.csv")
+    S = read_csv("../data/prefixSpan/gxyseq.csv")
     min_supp = 0.01
     count = len(S)
 

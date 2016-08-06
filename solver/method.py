@@ -13,7 +13,7 @@ from Pattern import *
 
 # eclat command:
 # ./eclat [options] infile [outfile]
-# ./eclat -s10 ./output/eclatData/zoo-1.txt
+# ./eclat -s10 ./output/eclat/zoo-1.txt
 # ----------------------------------------------------------
 
 class Mining(object):
@@ -296,7 +296,6 @@ class eclat(Mining):
             if '(' in items[-1]:
                 support = items.pop().strip()
                 # e.g.: 22 32 20 (46)
-                # support = int(round(float(support[1:-1])*0.01*101))
                 support = int(support[1:-1])
                 itemset = Itemset(i+1, items, support)
                 itemsets.append(itemset)

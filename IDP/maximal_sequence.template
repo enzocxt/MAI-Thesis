@@ -1,10 +1,11 @@
 vocabulary V{
     type index isa nat
+    type itemIndex isa nat
     type item isa nat
     type frequency isa nat
     type boolean isa int
 
-    sequence(index,item)
+    sequence(index,itemIndex,item)
     support(index,frequency)
     subset(index,index)
     dominated(index)
@@ -13,16 +14,16 @@ vocabulary V{
 
 theory T:V{
     // i1 is a subset of i2
-    ! i1,i2 :  subset(i1,i2) <=> !e: itemset(i1,e) => itemset(i2,e).
+    ! i1,i2 :  subset(i1,i2) <=> !j,e: sequence(i1,j,e) => sequence(i2,j,e).
 
     {
-        !i1,i2,s: dominated(i1) <- support(i1,s) & support(i2,s) & subset(i1,i2) & i1 ~= i2.
+        !i1,i2: dominated(i1) <- subset(i1,i2) & i1 ~= i2.
         !i:       output(i)     <- ~dominated(i).
     }
 }
 
 Structure S:V{
-    itemset={${ITEMSET}}
+    sequence={${SEQUENCE}}
     support={${SUPPORT}}
 }
 

@@ -6,6 +6,7 @@ import getopt
 import ConfigParser
 from solver.method import *
 from solver.generator import *
+from solver.utils import logger
 
 default_parameters = 'config.ini'
 
@@ -33,7 +34,6 @@ def fpMining(inputs):
         sys.exit(2)
 
     output = method.mining()
-    #print('\n\nOutput of eclat:\n%s' % output)
     patterns = method.parser(output)
     return patterns
 
@@ -56,6 +56,61 @@ def test(inputs):
     return patterns
     #closedPatterns, t2 = method.closedMining()
     #return patterns, t1, closedPatterns, t2
+
+
+@logger
+def fpMining_pure(inputs):
+    if inputs['type'] == 'graph':
+        method = gSpan(inputs)
+    elif inputs['type'] == 'sequence':
+        method = prefixSpan(inputs)
+    elif inputs['type'] == 'itemset':
+        method = eclat(inputs)
+    else:
+        print 'Does not support "type == %s"!' % inputs['type']
+        sys.exit(2)
+
+    output = method.mining()
+    patterns = method.parser(output)
+    return patterns
+
+
+@logger
+def fpMining_IDP(inputs):
+    if inputs['type'] == 'graph':
+        method = gSpan(inputs)
+    elif inputs['type'] == 'sequence':
+        method = prefixSpan(inputs)
+    elif inputs['type'] == 'itemset':
+        if 'dominance' in inputs:
+            eclat_inputs = dict()
+            for key in inputs:
+                eclat_inputs[key] = inputs[key]
+            eclat_inputs['dominance'] = ''
+        method = eclat(eclat_inputs)
+    else:
+        print 'Does not support "type == %s"!' % inputs['type']
+        sys.exit(2)
+
+    output = method.mining()
+    patterns = method.parser(output)    # frequent patterns, not closed
+    print "\nNumber of frequent patterns: {0}\n".format(len(patterns))
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['datafile'])
+    idp_program_name = '{0}_itemset_{1}'.format(params['dominance'], filename.split('.')[0])
+    idp_gen.gen_IDP_code(patterns, idp_program_name)
+    idp_output = idp_gen.run_IDP(idp_program_name)
+    indices = set(idp_gen.parser_from_stdout(idp_output))
+
+    closed_patterns = []
+    for p in patterns:
+        if p.id in indices:
+            closed_patterns.append(p)
+    print "\nNumber of {0} frequent patterns: {1}\n".format(params['dominance'], len(closed_patterns))
+
+    return closed_patterns
 
 
 if __name__ == "__main__":
@@ -99,35 +154,15 @@ if __name__ == "__main__":
     print('Parameters: %s' % params)
 
     # frequent pattern mining
-    patterns = fpMining(params)
-    print "\n*************************************"
-    if patterns:
-        print "Number of closed patterns: %s" % len(patterns)
-        #for p in patterns:
-        #    print p
-    print "*************************************\n"
+    patterns = fpMining_pure(params)
+    closed_patterns = fpMining_IDP(params)
 
-    # generate IDP code
-    idp_gen = IDPGenerator(params)
-    idp_program_name = '{0}_itemset_zoo'.format(params['dominance'])
-    idp_gen.gen_IDP_code(patterns, idp_program_name)
-    idp_output = idp_gen.run_IDP(idp_program_name)
-    indices = set(idp_gen.parser_from_stdout(idp_output))
-    print "\n*************************************"
-    print "Number of closed frequent patterns: %s" % len(indices)
-    for p in patterns:
-        if p.id in indices:
-            print p
-
-    # Just for test
     '''
     print "\n*************************************"
-    if patterns:
-        print "Number of closed frequent patterns: %s" % len(patterns)
-        #for i in range(10):
-        #    print patterns[i]
-    #print "Time cost by closed eclat is: %s" % t1
-    #print "Number of closed frequent patterns (python): %s" % len(closedPatterns)
-    #print "Time cost by python post-processing is: %s" % t2
-    print "*************************************"
+    print "Number of frequent patterns: {0}".format(len(patterns))
+    for p in patterns:
+        print p
+    print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
+    for p in closed_patterns:
+        print p
     '''
