@@ -1,0 +1,32 @@
+vocabulary V{
+    type index isa nat
+    type itemIndex isa nat
+    type item isa nat
+    type frequency isa nat
+    type boolean isa int
+
+    sequence(index,itemIndex,item)
+    support(index,frequency)
+    subset(index,index)
+    dominated(index)
+    output(index)
+}
+
+theory T:V{
+    // i1 is a subset of i2
+    ! i1,i2 :  subset(i1,i2) <=> !j,k,e: j =< k & sequence(i1,j,e) => sequence(i2,k,e).
+
+    {
+        !i1,i2,s: dominated(i1) <- support(i1,s) & support(i2,s) & subset(i1,i2) & i1 ~= i2.
+        !i:       output(i)     <- ~dominated(i).
+    }
+}
+
+Structure S:V{
+    sequence={${SEQUENCE}}
+    support={${SUPPORT}}
+}
+
+procedure main(){
+    printmodels(modelexpand(T,S))
+}
