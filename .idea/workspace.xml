@@ -2,9 +2,58 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81d5d915-d4eb-438c-87db-15c2f74ccb73" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output/prefixSpan_fifa.txt" afterPath="$PROJECT_DIR$/output/prefixSpan_fifa.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/prefixSpan/gxyseq.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/kbs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_itemset.template" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_itemset_zoo-1.idp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_sequence.template" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_itemset.template" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_itemset_zoo.idp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_sequence.template" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/sample.idp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/seq_sample.idp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_20.ini" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_25.ini" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_30.ini" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_40.ini" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_seq.ini" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/idp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/test.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exp.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output/performance.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output/test_prefixSpan.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/solver/generator.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/anneal.txt" afterPath="$PROJECT_DIR$/data/eclat/anneal.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/audiology.txt" afterPath="$PROJECT_DIR$/data/eclat/audiology.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/australian-credit.txt" afterPath="$PROJECT_DIR$/data/eclat/australian-credit.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/german-credit.txt" afterPath="$PROJECT_DIR$/data/eclat/german-credit.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/heart-cleveland.txt" afterPath="$PROJECT_DIR$/data/eclat/heart-cleveland.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/hepatitis.txt" afterPath="$PROJECT_DIR$/data/eclat/hepatitis.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/hypothyroid.txt" afterPath="$PROJECT_DIR$/data/eclat/hypothyroid.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/kr-vs-kp.txt" afterPath="$PROJECT_DIR$/data/eclat/kr-vs-kp.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/lymph.txt" afterPath="$PROJECT_DIR$/data/eclat/lymph.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/mushroom.txt" afterPath="$PROJECT_DIR$/data/eclat/mushroom.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/primary-tumor.txt" afterPath="$PROJECT_DIR$/data/eclat/primary-tumor.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/soybean.txt" afterPath="$PROJECT_DIR$/data/eclat/soybean.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/splice-1.txt" afterPath="$PROJECT_DIR$/data/eclat/splice-1.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/tic-tac-toe.txt" afterPath="$PROJECT_DIR$/data/eclat/tic-tac-toe.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/vote.txt" afterPath="$PROJECT_DIR$/data/eclat/vote.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/zoo-1.txt" afterPath="$PROJECT_DIR$/data/eclat/zoo-1.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/Chemical_340" afterPath="$PROJECT_DIR$/data/gspan/Chemical_340" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/Compound_422" afterPath="$PROJECT_DIR$/data/gspan/Compound_422" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/graph.data" afterPath="$PROJECT_DIR$/data/gspan/graph.data" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/fifa.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/fifa.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/iprg_neg.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/iprg_neg.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/iprg_pos.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/iprg_pos.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/jmlr.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/jmlr.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/unix_users_neg.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/unix_users_neg.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/unix_users_pos.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/unix_users_pos.dat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/solver/fqPattern.py" afterPath="$PROJECT_DIR$/solver/Pattern.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.ini" afterPath="$PROJECT_DIR$/config.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/method.py" afterPath="$PROJECT_DIR$/solver/method.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/utils.py" afterPath="$PROJECT_DIR$/solver/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapper.py" afterPath="$PROJECT_DIR$/wrapper.py" />
     </list>
     <ignored path="MAI-Thesis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -19,20 +68,38 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="MAI-Thesis" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.5715649">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="wrapper.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="wrapper.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/wrapper.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+                <state vertical-scroll-proportion="0.4830287">
+                  <caret line="106" column="52" selection-start-line="106" selection-start-column="52" selection-end-line="106" selection-end-column="52" />
                   <folding>
-                    <element signature="e#0#17#0" expanded="true" />
+                    <element signature="e#303#884#0" expanded="false" />
+                    <element signature="e#909#1441#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/solver/utils.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#92#3139#1" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -41,51 +108,36 @@
           <file leaf-file-name="method.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/solver/method.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.62278104">
-                  <caret line="116" column="21" selection-start-line="116" selection-start-column="21" selection-end-line="116" selection-end-column="21" />
+                <state vertical-scroll-proportion="0.7075718">
+                  <caret line="192" column="48" selection-start-line="192" selection-start-column="48" selection-end-line="192" selection-end-column="48" />
                   <folding>
-                    <element signature="e#0#20#0" expanded="true" />
-                    <element signature="e#532#1627#0" expanded="false" />
-                    <element signature="e#1659#1663#0" expanded="false" />
-                    <element signature="e#1695#1699#0" expanded="false" />
-                    <element signature="e#1812#1841#0" expanded="false" />
-                    <element signature="e#1873#2905#0" expanded="false" />
-                    <element signature="e#2959#3103#0" expanded="false" />
-                    <element signature="e#3140#3162#0" expanded="false" />
-                    <element signature="e#4028#4057#0" expanded="false" />
-                    <element signature="e#4089#5094#0" expanded="false" />
-                    <element signature="e#5132#5938#0" expanded="false" />
-                    <element signature="e#5970#6070#0" expanded="false" />
-                    <element signature="e#6116#6156#0" expanded="false" />
-                    <element signature="e#6209#8683#0" expanded="false" />
-                    <element signature="e#8737#10742#0" expanded="false" />
+                    <element signature="e#1825#4826#0" expanded="false" />
+                    <element signature="e#1972#3004#0" expanded="false" />
+                    <element signature="e#3315#4767#0" expanded="false" />
+                    <element signature="e#5011#5539#0" expanded="false" />
+                    <element signature="e#7376#8499#0" expanded="false" />
+                    <element signature="e#8537#9163#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="fqPattern.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/solver/fqPattern.py">
+          <file leaf-file-name="config_seq.ini" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/config_seq.ini">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+                  <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/solver/utils.py">
+          <file leaf-file-name="generator.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/solver/generator.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.35207102">
-                  <caret line="92" column="40" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
-                  <folding>
-                    <element signature="e#0#11#0" expanded="true" />
-                  </folding>
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -101,7 +153,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/solver/utils.py" />
+        <option value="$PROJECT_DIR$/config.ini" />
+        <option value="$PROJECT_DIR$/config_seq.ini" />
+        <option value="$PROJECT_DIR$/solver/Pattern.py" />
         <option value="$PROJECT_DIR$/solver/method.py" />
+        <option value="$PROJECT_DIR$/wrapper.py" />
       </list>
     </option>
   </component>
@@ -182,24 +238,6 @@
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="prefixSpanData" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MAI-Thesis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MAI-Thesis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -210,7 +248,24 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.wrapper">
+    <configuration default="false" name="wrapper" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="MAI-Thesis" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wrapper.py" />
+      <option name="PARAMETERS" value="-c config_seq.ini -i data/prefixSpan/fifa.dat  -o output/test_prefixSpan.txt" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -333,6 +388,14 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Python.wrapper" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Python.wrapper" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnConfiguration">
@@ -340,22 +403,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1215" height="776" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1568792" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12080537" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3899557" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -374,10 +437,83 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/prefixSpanData/fifa.dat">
+    <entry file="file://$PROJECT_DIR$/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="73" column="36" selection-start-line="73" selection-start-column="36" selection-end-line="73" selection-end-column="36" />
+          <folding>
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <element signature="e#92#3139#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="165" column="20" selection-start-line="165" selection-start-column="20" selection-end-line="165" selection-end-column="20" />
+          <folding>
+            <element signature="e#1825#4826#0" expanded="false" />
+            <element signature="e#1972#3004#0" expanded="false" />
+            <element signature="e#3315#4767#0" expanded="false" />
+            <element signature="e#5011#5539#0" expanded="false" />
+            <element signature="e#7376#8499#0" expanded="false" />
+            <element signature="e#8537#9163#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_seq.ini">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="115" column="14" selection-start-line="115" selection-start-column="14" selection-end-line="115" selection-end-column="14" />
+          <folding>
+            <element signature="e#1825#4826#0" expanded="false" />
+            <element signature="e#1972#3004#0" expanded="false" />
+            <element signature="e#3315#4767#0" expanded="false" />
+            <element signature="e#5011#5539#0" expanded="false" />
+            <element signature="e#7376#8499#0" expanded="false" />
+            <element signature="e#8537#9163#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#92#3139#1" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -386,49 +522,121 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/solver/fqPattern.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/solver/method.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.62278104">
+        <state vertical-scroll-proportion="0.0">
           <caret line="116" column="21" selection-start-line="116" selection-start-column="21" selection-end-line="116" selection-end-column="21" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#532#1627#0" expanded="false" />
-            <element signature="e#1659#1663#0" expanded="false" />
-            <element signature="e#1695#1699#0" expanded="false" />
-            <element signature="e#1812#1841#0" expanded="false" />
-            <element signature="e#1873#2905#0" expanded="false" />
-            <element signature="e#2959#3103#0" expanded="false" />
-            <element signature="e#3140#3162#0" expanded="false" />
-            <element signature="e#4028#4057#0" expanded="false" />
-            <element signature="e#4089#5094#0" expanded="false" />
-            <element signature="e#5132#5938#0" expanded="false" />
-            <element signature="e#5970#6070#0" expanded="false" />
-            <element signature="e#6116#6156#0" expanded="false" />
-            <element signature="e#6209#8683#0" expanded="false" />
-            <element signature="e#8737#10742#0" expanded="false" />
+            <element signature="e#1825#4826#0" expanded="false" />
+            <element signature="e#1972#3004#0" expanded="false" />
+            <element signature="e#3315#4767#0" expanded="false" />
+            <element signature="e#5011#5539#0" expanded="false" />
+            <element signature="e#7376#8499#0" expanded="false" />
+            <element signature="e#8537#9163#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/solver/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35207102">
-          <caret line="92" column="40" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#92#3139#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/prefix_fifa_03.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32692307">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="18" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/prefix_fifa_02.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/prefix_fifa_01.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <element signature="e#92#3139#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.053412464">
+          <caret line="2" column="11" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_seq.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/Pattern.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.3028722">
+          <caret line="49" column="20" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7075718">
+          <caret line="192" column="48" selection-start-line="192" selection-start-column="48" selection-end-line="192" selection-end-column="48" />
+          <folding>
+            <element signature="e#1825#4826#0" expanded="false" />
+            <element signature="e#1972#3004#0" expanded="false" />
+            <element signature="e#3315#4767#0" expanded="false" />
+            <element signature="e#5011#5539#0" expanded="false" />
+            <element signature="e#7376#8499#0" expanded="false" />
+            <element signature="e#8537#9163#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4830287">
+          <caret line="106" column="52" selection-start-line="106" selection-start-column="52" selection-end-line="106" selection-end-column="52" />
+          <folding>
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
           </folding>
         </state>
       </provider>

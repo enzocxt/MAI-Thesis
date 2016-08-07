@@ -1,0 +1,31 @@
+vocabulary V{
+    type index isa nat
+    type item isa nat
+    type frequency isa nat
+    type boolean isa int
+
+    itemset(index,item)
+    support(index,frequency)
+    subset(index,index)
+    dominated(index)
+    output(index)
+}
+
+theory T:V{
+    // i1 is a subset of i2
+    ! i1,i2 :  subset(i1,i2) <=> !e: itemset(i1,e) => itemset(i2,e).
+
+    {
+        !i1,i2,s: dominated(i1) <- support(i1,s) & support(i2,s) & subset(i1,i2) & i1 ~= i2.
+        !i:       output(i)     <- ~dominated(i).
+    }
+}
+
+Structure S:V{
+    itemset={${ITEMSET}}
+    support={${SUPPORT}}
+}
+
+procedure main(){
+    printmodels(modelexpand(T,S))
+}
