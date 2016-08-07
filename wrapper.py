@@ -107,7 +107,8 @@ def fpMining_IDP(inputs):
     path, filename = os.path.split(params['datafile'])
     idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
     idp_gen.gen_IDP_code(patterns, idp_program_name)
-    idp_output = idp_gen.run_IDP(idp_program_name)
+    sys.exit(2)
+    #idp_output = idp_gen.run_IDP(idp_program_name)
     indices = set(idp_gen.parser_from_stdout(idp_output))
 
     closed_patterns = []

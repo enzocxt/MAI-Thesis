@@ -2,57 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81d5d915-d4eb-438c-87db-15c2f74ccb73" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/prefixSpan/gxyseq.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/kbs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_itemset.template" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_itemset_zoo-1.idp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/closed_sequence.template" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_itemset.template" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_itemset_zoo.idp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/maximal_sequence.template" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/sample.idp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IDP/seq_sample.idp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_20.ini" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_25.ini" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_30.ini" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_40.ini" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config_seq.ini" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/idp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exec/test.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exp.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output/performance.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output/test_prefixSpan.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/solver/generator.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/anneal.txt" afterPath="$PROJECT_DIR$/data/eclat/anneal.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/audiology.txt" afterPath="$PROJECT_DIR$/data/eclat/audiology.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/australian-credit.txt" afterPath="$PROJECT_DIR$/data/eclat/australian-credit.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/german-credit.txt" afterPath="$PROJECT_DIR$/data/eclat/german-credit.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/heart-cleveland.txt" afterPath="$PROJECT_DIR$/data/eclat/heart-cleveland.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/hepatitis.txt" afterPath="$PROJECT_DIR$/data/eclat/hepatitis.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/hypothyroid.txt" afterPath="$PROJECT_DIR$/data/eclat/hypothyroid.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/kr-vs-kp.txt" afterPath="$PROJECT_DIR$/data/eclat/kr-vs-kp.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/lymph.txt" afterPath="$PROJECT_DIR$/data/eclat/lymph.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/mushroom.txt" afterPath="$PROJECT_DIR$/data/eclat/mushroom.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/primary-tumor.txt" afterPath="$PROJECT_DIR$/data/eclat/primary-tumor.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/soybean.txt" afterPath="$PROJECT_DIR$/data/eclat/soybean.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/splice-1.txt" afterPath="$PROJECT_DIR$/data/eclat/splice-1.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/tic-tac-toe.txt" afterPath="$PROJECT_DIR$/data/eclat/tic-tac-toe.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/vote.txt" afterPath="$PROJECT_DIR$/data/eclat/vote.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/eclatData/zoo-1.txt" afterPath="$PROJECT_DIR$/data/eclat/zoo-1.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/Chemical_340" afterPath="$PROJECT_DIR$/data/gspan/Chemical_340" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/Compound_422" afterPath="$PROJECT_DIR$/data/gspan/Compound_422" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/gspanData/graph.data" afterPath="$PROJECT_DIR$/data/gspan/graph.data" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/fifa.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/fifa.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/iprg_neg.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/iprg_neg.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/iprg_pos.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/iprg_pos.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/jmlr.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/jmlr.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/unix_users_neg.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/unix_users_neg.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/data/prefixSpanData/unix_users_pos.dat" afterPath="$PROJECT_DIR$/data/prefixSpan/unix_users_pos.dat" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/solver/fqPattern.py" afterPath="$PROJECT_DIR$/solver/Pattern.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.ini" afterPath="$PROJECT_DIR$/config.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/method.py" afterPath="$PROJECT_DIR$/solver/method.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/utils.py" afterPath="$PROJECT_DIR$/solver/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config_seq.ini" afterPath="$PROJECT_DIR$/config_seq.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapper.py" afterPath="$PROJECT_DIR$/wrapper.py" />
     </list>
     <ignored path="MAI-Thesis.iws" />
@@ -76,15 +27,25 @@
     <splitter split-orientation="horizontal" split-proportion="0.5715649">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="wrapper.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="wrapper.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/wrapper.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.4830287">
-                  <caret line="106" column="52" selection-start-line="106" selection-start-column="52" selection-end-line="106" selection-end-column="52" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="109" column="15" selection-start-line="109" selection-start-column="15" selection-end-line="109" selection-end-column="15" />
                   <folding>
                     <element signature="e#303#884#0" expanded="false" />
                     <element signature="e#909#1441#0" expanded="false" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="maximal_sequence_fifa.idp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/IDP/maximal_sequence_fifa.idp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-0.7049608">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -105,10 +66,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="method.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="method.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/solver/method.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.7075718">
+                <state vertical-scroll-proportion="0.0">
                   <caret line="192" column="48" selection-start-line="192" selection-start-column="48" selection-end-line="192" selection-end-column="48" />
                   <folding>
                     <element signature="e#1825#4826#0" expanded="false" />
@@ -122,11 +83,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="config_seq.ini" pinned="false" current-in-tab="false">
+          <file leaf-file-name="config_seq.ini" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/config_seq.ini">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.09399478">
+                  <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
                   <folding />
                 </state>
               </provider>
@@ -154,10 +115,10 @@
       <list>
         <option value="$PROJECT_DIR$/solver/utils.py" />
         <option value="$PROJECT_DIR$/config.ini" />
-        <option value="$PROJECT_DIR$/config_seq.ini" />
         <option value="$PROJECT_DIR$/solver/Pattern.py" />
         <option value="$PROJECT_DIR$/solver/method.py" />
         <option value="$PROJECT_DIR$/wrapper.py" />
+        <option value="$PROJECT_DIR$/config_seq.ini" />
       </list>
     </option>
   </component>
@@ -192,7 +153,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -239,8 +199,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MAI-Thesis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MAI-Thesis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IDP" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -403,22 +378,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1215" height="776" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12080537" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22651006" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3899557" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3899557" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -437,6 +412,58 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="106" column="52" selection-start-line="106" selection-start-column="52" selection-end-line="106" selection-end-column="52" />
+          <folding>
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <element signature="e#92#3139#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#1825#4826#0" expanded="false" />
+            <element signature="e#1972#3004#0" expanded="false" />
+            <element signature="e#3315#4767#0" expanded="false" />
+            <element signature="e#5011#5539#0" expanded="false" />
+            <element signature="e#7376#8499#0" expanded="false" />
+            <element signature="e#8537#9163#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_seq.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wrapper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -591,14 +618,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config_seq.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solver/generator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -611,13 +630,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.3028722">
           <caret line="49" column="20" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="109" column="15" selection-start-line="109" selection-start-column="15" selection-end-line="109" selection-end-column="15" />
+          <folding>
+            <element signature="e#303#884#0" expanded="false" />
+            <element signature="e#909#1441#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/IDP/maximal_sequence_fifa.idp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.7049608">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/solver/method.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7075718">
+        <state vertical-scroll-proportion="0.0">
           <caret line="192" column="48" selection-start-line="192" selection-start-column="48" selection-end-line="192" selection-end-column="48" />
           <folding>
             <element signature="e#1825#4826#0" expanded="false" />
@@ -630,14 +667,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wrapper.py">
+    <entry file="file://$PROJECT_DIR$/config_seq.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4830287">
-          <caret line="106" column="52" selection-start-line="106" selection-start-column="52" selection-end-line="106" selection-end-column="52" />
-          <folding>
-            <element signature="e#303#884#0" expanded="false" />
-            <element signature="e#909#1441#0" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.09399478">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
