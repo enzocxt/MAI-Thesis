@@ -12,7 +12,7 @@ def test_perf(config_file):
     input_path = './data/eclat/'
     output_path = './output/eclat/'
     input_files = os.listdir(input_path)
-    perfFin = open('./output/performance.txt', 'a')
+    perfFin = open('./output/performance_max.txt', 'a')
 
     files = ['hepatitis.txt', 'lymph.txt', 'primary-tumor.txt', 'soybean.txt', 'zoo-1.txt']
     files = ['zoo-1.txt']
@@ -30,6 +30,6 @@ def test_perf(config_file):
 
 
 if __name__ == '__main__':
-    configs = ['config_40.ini', 'config_30.ini', 'config_25.ini', 'config_20.ini']
+    configs = ['config_max_25.ini', 'config_max_20.ini']
     for f in configs:
         test_perf(f)

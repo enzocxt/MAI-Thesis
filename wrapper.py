@@ -96,9 +96,11 @@ def fpMining_IDP(inputs):
 
     output = method.mining()
     patterns = method.parser(output)    # frequent patterns, not closed
+    '''
     print "\nNumber of frequent patterns: {0}\n".format(len(patterns))
     for p in patterns:
         print p
+    '''
 
     # closed pattern mining by generated IDP code
     idp_gen = IDPGenerator(params)
