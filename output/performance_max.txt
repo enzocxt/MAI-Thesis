@@ -1,0 +1,24 @@
+Parameters: {'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.25', 'dominance': 'maximal'}
+Number of frequent sequences: 1638
+function      = fpMining_pure
+    arguments = ({'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.25', 'dominance': 'maximal'},) {}
+    time      = 0.015473 sec
+generating itemset idp code...
+
+Number of maximal frequent patterns: 81
+
+function      = fpMining_IDP
+    arguments = ({'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.25', 'dominance': 'maximal'},) {}
+    time      = 6.108174 sec
+Parameters: {'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.20', 'dominance': 'maximal'}
+Number of frequent sequences: 8329
+function      = fpMining_pure
+    arguments = ({'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.20', 'dominance': 'maximal'},) {}
+    time      = 0.044922 sec
+generating itemset idp code...
+
+Number of maximal frequent patterns: 102
+
+function      = fpMining_IDP
+    arguments = ({'output': './output/eclat/zoo-1.txt', 'datafile': './data/eclat/zoo-1.txt', 'type': 'itemset', 'support': '0.20', 'dominance': 'maximal'},) {}
+    time      = 215.082246 sec

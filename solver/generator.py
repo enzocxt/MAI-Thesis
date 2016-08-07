@@ -1,34 +1,107 @@
 __author__ = 'enzo'
 
 
-import os
+import os, sys
 import platform
 import subprocess
 from string import Template
+from Pattern import *
 
 
 class IDPGenerator:
     def __init__(self, inputs):
         self.idp_path = os.getcwd() + '/IDP/'
+        self.type = inputs['type']
         if 'dominance' in inputs:
             self.dominance = inputs['dominance']
         else:
             self.dominance = ''
 
-    def generate(self, itemsets, supports, filename):
+    def gen_IDP_code(self, patterns, filename):
+        if len(patterns) == 0:
+            print 'No result patterns!'
+            sys.exit(2)
+        if isinstance(patterns[0], Itemset):
+            self.gen_IDP_itemset(patterns, filename)
+        elif isinstance(patterns[0], Sequence):
+            self.gen_IDP_sequence(patterns, filename)
+        elif isinstance(patterns[0], Graph):
+            self.gen_IDP_graph(patterns, filename)
+        else:
+            print 'Do not support this type!'
+            sys.exit(2)
+
+    def gen_IDP_itemset(self, itemsets, filename):
+        print 'generating itemset idp code...'
+        idp_itemsets, supports = '', ''
+
+        for itemset in itemsets:
+            index, items, support = str(itemset).split(':')
+            supports += '({0},{1});'.format(index, support)
+            items = items.split()
+            idp_items = ''
+            for i in items:
+                idp_items += '({0},{1});'.format(index, i)
+            idp_itemsets += idp_items
+
+        # eleminate the last ';' in supports
+        supports = supports[:-1]
+        idp_itemsets = idp_itemsets[:-1]
+        self.generate(idp_itemsets, supports, filename)
+
+    def gen_IDP_sequence(self, sequences, filename):
+        idp_sequences, supports = '', ''
+
+        for sequence in sequences:
+            index, items, support = str(sequence).split(':')
+            supports += '({0},{1});'.format(index, support)
+            items = items.split()
+            idp_items = ''
+            for i in items:
+                idp_items += '({0},{1});'.format(index, i)
+            idp_sequences += idp_items
+
+        # eleminate the last ';' in supports
+        supports = supports[:-1]
+        idp_sequences = idp_sequences[:-1]
+        self.generate(idp_sequences, supports, filename)
+
+    def gen_IDP_graph(self, graphs, filename):
+        pass
+
+    def generate(self, patterns, supports, filename):
         file_path = os.getcwd() + '/IDP/%s.idp' % filename
         class_file = open(file_path, 'w')
         lines = []
 
-        # template file
-        template_file = open(os.getcwd() + '/IDP/{0}_itemset.template'.format(self.dominance), 'r')
-        tmpl = Template(template_file.read())
+        if self.type == 'itemset':
+            # template file
+            template_file = open(os.getcwd() + '/IDP/{0}_itemset.template'.format(self.dominance), 'r')
+            tmpl = Template(template_file.read())
 
-        # template substitute
-        lines.append(tmpl.substitute(
-                    ITEMSET=itemsets,
-                    SUPPORT=supports
-                    ))
+            # template substitute
+            lines.append(tmpl.substitute(
+                        ITEMSET=patterns,
+                        SUPPORT=supports
+                        ))
+        elif self.type == 'sequence':
+            template_file = open(os.getcwd() + '/IDP/{0}_sequence.template'.format(self.dominance), 'r')
+            tmpl = Template(template_file.read())
+
+            # template substitute
+            lines.append(tmpl.substitute(
+                        SEQUENCE=patterns,
+                        SUPPORT=supports
+                        ))
+        elif self.type == 'graph':
+            template_file = open(os.getcwd() + '/IDP/{0}_graph.template'.format(self.dominance), 'r')
+            tmpl = Template(template_file.read())
+
+            # template substitute
+            lines.append(tmpl.substitute(
+                        GRAPH=patterns,
+                        SUPPORT=supports
+                        ))
 
         # write code to file
         class_file.writelines(lines)
@@ -36,23 +109,6 @@ class IDPGenerator:
 
         # print('\nGenerate idp file %s over. ~ ~\n' % file_path)
 
-
-    def gen_IDP_code(self, patterns, filename):
-        itemsets, supports = '', ''
-
-        for itemset in patterns:
-            index, items, support = str(itemset).split(':')
-            supports += '({0},{1});'.format(index, support)
-            items = items.split()
-            idp_items = ''
-            for i in items:
-                idp_items += '({0},{1});'.format(index, i)
-            itemsets += idp_items
-
-        # eleminate the last ';' in supports
-        supports = supports[:-1]
-        itemsets = itemsets[:-1]
-        self.generate(itemsets, supports, filename)
 
 
     def run_IDP(self, filename):
