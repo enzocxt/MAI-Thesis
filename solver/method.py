@@ -68,16 +68,16 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "/home/enzo/Thesis/MAI-Thesis/exec/gspan"
+            gSpan = "./exec/gspan"
         else:
-            gSpan = "gspan"
+            gSpan = "./exec/gspan"
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
         print([gSpan, "-file", self.datafile, options])
-        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&> ", self.output], shell=False, stdout=subprocess.PIPE)
+        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, options])
             returncode = 0
