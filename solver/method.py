@@ -39,8 +39,8 @@ class Mining(object):
             self.support = float(inputs['support'])
         else:
             self.support = 0.1
-        if 'datafile' in inputs:
-            self.datafile = os.getcwd() + '/' + inputs['datafile']
+        if 'data' in inputs:
+            self.data = os.getcwd() + '/' + inputs['data']
             #self.datafile = inputs['datafile']
         else:
             print 'Need input data file!'
@@ -68,16 +68,16 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "./exec/gspan"
+            gSpan = "./exec/gSpan"
         else:
-            gSpan = "./exec/gspan"
+            gSpan = "./exec/gSpan"
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print([gSpan, "-file", self.datafile, options])
-        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
+        print([gSpan, "-file", self.data, options])
+        child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, options])
             returncode = 0
@@ -166,9 +166,9 @@ class prefixSpan(Mining):
         options = ''
 
         if options == '':
-            child = subprocess.Popen([prefixSpan, self.datafile, str(self.support)], stdout=subprocess.PIPE)
+            child = subprocess.Popen([prefixSpan, self.data, str(self.support)], stdout=subprocess.PIPE)
         else:
-            child = subprocess.Popen([prefixSpan, options, self.datafile, str(self.support)], stdout=subprocess.PIPE)
+            child = subprocess.Popen([prefixSpan, options, self.data, str(self.support)], stdout=subprocess.PIPE)
         result = child.communicate()[0]
         return result
 
@@ -249,7 +249,7 @@ class eclat(Mining):
         options += 'v (%a)'
 
         #child = subprocess.Popen([self.eclat_exec, options, self.datafile, self.output], stdout=subprocess.PIPE)
-        child = subprocess.Popen([self.eclat_exec, options, self.datafile, "-"], stdout=subprocess.PIPE)
+        child = subprocess.Popen([self.eclat_exec, options, self.data, "-"], stdout=subprocess.PIPE)
 
         stdOutput = child.stdout.read()
         if self.output == "" or self.output == "-":
