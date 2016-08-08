@@ -9,7 +9,10 @@ from Pattern import *
 # ./gSpan -file [file_name] -support [support: float] &> log
 
 # prefixSpan command:
-# ./exec/cpsm [options] [[dataset] [minimum frequency threshold]]
+# Mac OS:
+# ./exec/prefixspan [options] dataset
+# Linux:
+# ./exec/pspan6
 
 # eclat command:
 # ./eclat [options] infile [outfile]
@@ -159,17 +162,19 @@ class prefixSpan(Mining):
 
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
-        if platform.system() == "Linux":
-            prefixSpan = "./exec/cpsm"
-        else:
-            prefixSpan = "prefixSpan"
         options = ''
-
-        if options == '':
-            child = subprocess.Popen([prefixSpan, self.data, str(self.support)], stdout=subprocess.PIPE)
+        if platform.system() == "Linux":
+            prefixSpan = "./exec/pspan"
         else:
-            child = subprocess.Popen([prefixSpan, options, self.data, str(self.support)], stdout=subprocess.PIPE)
+            prefixSpan = "./exec/prefixspan"
+            if self.support < 1:
+                fin = open(self.data, 'r')
+                options += '-min_sup {0}'.format(int(self.support * len(fin.readlines())))
+                fin.close()
+            child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
+
         result = child.communicate()[0]
+        print result[:1000]
         return result
 
     def parser(self, stdOutput, path=None):
