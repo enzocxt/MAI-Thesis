@@ -71,7 +71,7 @@ def fpMining_pure(inputs):
         sys.exit(2)
 
     output = method.mining()
-    # print 'Pure prefixSpan output:\n%s' % output
+    print 'Pure gSpan output:\n%s' % output
     patterns = method.parser(output)
     print 'Number of frequent sequences: %s' % len(patterns)
     return patterns
