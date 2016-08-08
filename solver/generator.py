@@ -57,8 +57,8 @@ class IDPGenerator:
             supports += '({0},{1});'.format(index, support)
             items = items.split()
             idp_items = ''
-            for i in items:
-                idp_items += '({0},{1});'.format(index, i)
+            for i, it in enumerate(items):
+                idp_items += '({0},{1},{2});'.format(index, i, it)
             idp_sequences += idp_items
 
         # eleminate the last ';' in supports
