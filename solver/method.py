@@ -9,7 +9,10 @@ from Pattern import *
 # ./gSpan -file [file_name] -support [support: float] &> log
 
 # prefixSpan command:
-# ./exec/cpsm [options] [[dataset] [minimum frequency threshold]]
+# Mac OS:
+# ./exec/prefixspan [options] dataset
+# Linux:
+# ./exec/pspan6
 
 # eclat command:
 # ./eclat [options] infile [outfile]
@@ -39,8 +42,8 @@ class Mining(object):
             self.support = float(inputs['support'])
         else:
             self.support = 0.1
-        if 'datafile' in inputs:
-            self.datafile = os.getcwd() + '/' + inputs['datafile']
+        if 'data' in inputs:
+            self.data = os.getcwd() + '/' + inputs['data']
             #self.datafile = inputs['datafile']
         else:
             print 'Need input data file!'
@@ -68,17 +71,19 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "./exec/gspan"
+            gSpan = "./exec/gSpan"
         else:
-            gSpan = "./exec/gspan"
+            gSpan = "./exec/gSpan"
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print('Command:\n%s -file %s -output %s %s' % (gSpan, self.datafile, self.output, options))
-        child = subprocess.Popen([gSpan, "-file", self.datafile, "-output", self.output, options], stdout=subprocess.PIPE)
+        print('Command:\n%s -file %s -output %s %s' % (gSpan, self.data, self.output, options))
+        child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
         '''
+        print([gSpan, "-file", self.data, options])
+        child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, "-output", self.output, options])
             returncode = 0
@@ -160,17 +165,26 @@ class prefixSpan(Mining):
 
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
-        if platform.system() == "Linux":
-            prefixSpan = "./exec/cpsm"
-        else:
-            prefixSpan = "prefixSpan"
         options = ''
-
-        if options == '':
-            child = subprocess.Popen([prefixSpan, self.datafile, str(self.support)], stdout=subprocess.PIPE)
+        if platform.system() == "Linux":
+            prefixSpan = "./exec/pspan"
+            if self.support <= 1:
+                options += '--minsup {0}'.format(int(self.support*100))
+            else:
+                options += '-S {0}'.format(self.support)
+            print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
+            child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
         else:
-            child = subprocess.Popen([prefixSpan, options, self.datafile, str(self.support)], stdout=subprocess.PIPE)
+            prefixSpan = "./exec/prefixspan"
+            if self.support < 1:
+                fin = open(self.data, 'r')
+                options += '-min_sup {0}'.format(int(self.support * len(fin.readlines())))
+                fin.close()
+            child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
+
         result = child.communicate()[0]
+        print result[:1000]
+        sys.exit(2)
         return result
 
     def parser(self, stdOutput, path=None):
@@ -250,7 +264,7 @@ class eclat(Mining):
         options += 'v (%a)'
 
         #child = subprocess.Popen([self.eclat_exec, options, self.datafile, self.output], stdout=subprocess.PIPE)
-        child = subprocess.Popen([self.eclat_exec, options, self.datafile, "-"], stdout=subprocess.PIPE)
+        child = subprocess.Popen([self.eclat_exec, options, self.data, "-"], stdout=subprocess.PIPE)
 
         stdOutput = child.stdout.read()
         if self.output == "" or self.output == "-":
