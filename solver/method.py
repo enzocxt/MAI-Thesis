@@ -76,16 +76,17 @@ class gSpan(Mining):
             options = ''.join('-support %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print([gSpan, "-file", self.datafile, options])
-        child = subprocess.Popen([gSpan, "-file", self.datafile, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
+        print('Command:\n%s -file %s -output %s %s' % (gSpan, self.datafile, self.output, options))
+        child = subprocess.Popen([gSpan, "-file", self.datafile, "-output", self.output, options], stdout=subprocess.PIPE)
+        '''
         try:
-            output = subprocess.check_output([gSpan, "-file", self.datafile, options])
+            output = subprocess.check_output([gSpan, "-file", self.datafile, "-output", self.output, options])
             returncode = 0
         except subprocess.CalledProcessError as e:
             output = e.output
             returncode = e.returncode
-        print(output)
-        print(returncode)
+        '''
+        #print(returncode)
 
         #result = child.stdout.read()
         result = child.communicate()[0]
