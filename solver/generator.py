@@ -17,14 +17,17 @@ class IDPGenerator:
         else:
             self.dominance = ''
 
-    def gen_IDP_code(self, patterns, filename):
+    def gen_IDP_code(self, patterns, filename, index=None):
         if len(patterns) == 0:
             print 'No result patterns!'
             sys.exit(2)
         if isinstance(patterns[0], Itemset):
-            self.gen_IDP_itemset(patterns, filename)
+            if index:
+                self.gen_IDP_itemset_iterative(patterns, filename, index)
+            else:
+                self.gen_IDP_itemset(patterns, filename)
         elif isinstance(patterns[0], Sequence):
-            self.gen_IDP_sequence(patterns, filename)
+            self.gen_IDP_sequence(patterns, filename, index)
         elif isinstance(patterns[0], Graph):
             self.gen_IDP_graph(patterns, filename)
         else:
@@ -49,7 +52,25 @@ class IDPGenerator:
         idp_itemsets = idp_itemsets[:-1]
         self.generate(idp_itemsets, supports, filename)
 
-    def gen_IDP_sequence(self, sequences, filename):
+    def gen_IDP_itemset_iterative(self, itemsets, filename, index):
+        idp_itemsets, supports = '', ''
+        patternIndex = index
+
+        for itemset in itemsets:
+            index, items, support = str(itemset).split(':')
+            supports += '({0},{1});'.format(index, support)
+            items = items.split()
+            idp_items = ''
+            for i in items:
+                idp_items += '({0},{1});'.format(index, i)
+            idp_itemsets += idp_items
+
+        # eleminate the last ';' in supports
+        supports = supports[:-1]
+        idp_itemsets = idp_itemsets[:-1]
+        self.generate(idp_itemsets, supports, filename, patternIndex)
+
+    def gen_IDP_sequence(self, sequences, filename, index):
         idp_sequences, supports = '', ''
 
         for sequence in sequences:
@@ -64,12 +85,12 @@ class IDPGenerator:
         # eleminate the last ';' in supports
         supports = supports[:-1]
         idp_sequences = idp_sequences[:-1]
-        self.generate(idp_sequences, supports, filename)
+        self.generate(idp_sequences, supports, filename, index)
 
     def gen_IDP_graph(self, graphs, filename):
         pass
 
-    def generate(self, patterns, supports, filename):
+    def generate(self, patterns, supports, filename, index=None):
         file_path = os.getcwd() + '/IDP/%s.idp' % filename
         class_file = open(file_path, 'w')
         lines = []
@@ -80,7 +101,14 @@ class IDPGenerator:
             tmpl = Template(template_file.read())
 
             # template substitute
-            lines.append(tmpl.substitute(
+            if not index:
+                lines.append(tmpl.substitute(
+                        ITEMSET=patterns,
+                        SUPPORT=supports
+                        ))
+            else:
+                lines.append(tmpl.substitute(
+                        INDEX=index,
                         ITEMSET=patterns,
                         SUPPORT=supports
                         ))
@@ -90,6 +118,7 @@ class IDPGenerator:
 
             # template substitute
             lines.append(tmpl.substitute(
+                        INDEX=index,
                         SEQUENCE=patterns,
                         SUPPORT=supports
                         ))
@@ -108,7 +137,6 @@ class IDPGenerator:
         class_file.close()
 
         # print('\nGenerate idp file %s over. ~ ~\n' % file_path)
-
 
 
     def run_IDP(self, filename):

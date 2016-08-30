@@ -4,6 +4,8 @@
 
 import getopt
 import ConfigParser
+import collections
+from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
@@ -92,6 +94,38 @@ def fpMining_IDP(inputs):
         print p
     '''
 
+    if params['type'] == 'itemset':
+        indices = itemset_idp(params, patterns)
+        #indices = itemset_idp_iterative(params, patterns)
+    elif params['type'] == 'sequence':
+        indices = sequence_idp(params, patterns)
+    elif params['type'] == 'graph':
+        #indices = graph_idp(params)
+        pass
+    '''
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+    # generate idp code for finding pattern with constraints
+    idp_gen.gen_IDP_code(patterns, idp_program_name)
+    # run generated idp code
+    idp_output = idp_gen.run_IDP(idp_program_name)
+    # parser the idp output
+    indices = set(idp_gen.parser_from_stdout(idp_output))
+    '''
+
+    closed_patterns = []
+    for p in patterns:
+        if p.id in indices:
+            closed_patterns.append(p)
+    print "\n*************************************"
+    print "\nNumber of {0} frequent patterns: {1}\n".format(params['dominance'], len(closed_patterns))
+
+    return closed_patterns
+
+
+def itemset_idp(params, patterns):
     # closed pattern mining by generated IDP code
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
@@ -103,14 +137,73 @@ def fpMining_IDP(inputs):
     # parser the idp output
     indices = set(idp_gen.parser_from_stdout(idp_output))
 
-    closed_patterns = []
-    for p in patterns:
-        if p.id in indices:
-            closed_patterns.append(p)
-    print "\n*************************************"
-    print "\nNumber of {0} frequent patterns: {1}\n".format(params['dominance'], len(closed_patterns))
+    return indices
 
-    return closed_patterns
+
+def itemset_idp_iterative(params, patterns):
+    indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    groups = collections.defaultdict(list)
+    # group itemset with same support to different groups
+    for p in patterns:
+        groups[p.support].append(p)
+    groups = list(groups.values())
+    for i in tqdm(range(len(groups))):
+        group = groups[i]
+        print 'Number of itemsets with support {0}: {1}'.format(group[0].support, len(group))
+        idp_gen.gen_IDP_code(group, idp_program_name)
+        idp_output = idp_gen.run_IDP(idp_program_name)
+        '''
+        for itemset in group:
+            # generate idp code for finding pattern with constraints
+            idp_gen.gen_IDP_code(group, idp_program_name, itemset.id)
+            idp_output = idp_gen.run_IDP(idp_program_name)
+            if 'Unsatisfiable' in idp_output:
+                indices.append(itemset.id)
+        '''
+        indices.union(set(idp_gen.parser_from_stdout(idp_output)))
+
+    return indices
+
+
+def itemset_idp_iterative_old(params, patterns):
+    indices = []
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+    for i in tqdm(range(len(patterns))):
+        itemset = patterns[i]
+        # generate idp code for finding pattern with constraints
+        idp_gen.gen_IDP_code(patterns, idp_program_name, itemset.id)
+        idp_output = idp_gen.run_IDP(idp_program_name)
+        if 'Unsatisfiable' in idp_output:
+            indices.append(itemset.id)
+
+    return indices
+
+
+def sequence_idp(params, patterns):
+    indices = []
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+    for seq in patterns:
+        # generate idp code for finding pattern with constraints for this seq
+        idp_gen.gen_IDP_code(patterns, idp_program_name, seq.id)
+        idp_output = idp_gen.run_IDP(idp_program_name)
+        if 'Unsatisfiable' in idp_output:
+            indices.append(seq.id)
+
+    return indices
 
 
 if __name__ == "__main__":
@@ -159,11 +252,12 @@ if __name__ == "__main__":
     patterns = fpMining_pure(params)
     closed_patterns = fpMining_IDP(params)
 
-    '''
+
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
-    for p in patterns:
-        print p
+    #for p in patterns:
+    #    print p
+    '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
     for p in closed_patterns:
         print p

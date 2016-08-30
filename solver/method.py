@@ -2,6 +2,7 @@ import os, sys, time
 import platform
 import subprocess
 import utils
+from tqdm import tqdm
 from Pattern import *
 
 # ----------------------------------------------------------
@@ -176,28 +177,52 @@ class prefixSpan(Mining):
             child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
         else:
             prefixSpan = "./exec/prefixspan"
-            if self.support < 1:
+            if self.support <= 1:
                 fin = open(self.data, 'r')
-                options += '-min_sup {0}'.format(int(self.support * len(fin.readlines())))
+                supp = int(self.support * len(fin.readlines()))
+                #options += '-min_sup {0}'.format(supp)
+                options += '-min_sup'
                 fin.close()
-            child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
+            else:
+                #options += '-min_sup {0}'.format(self.support)
+                options += '-min_sup'
+            print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
+            command = '{0} {1} {2}'.format(prefixSpan, options, self.data)
+            print r'%s' % command
+            child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
+            #child = subprocess.Popen([command], stdout=subprocess.PIPE)
 
-        result = child.communicate()[0]
-        print result[:1000]
-        sys.exit(2)
+        result = child.stdout.read()
         return result
 
     def parser(self, stdOutput, path=None):
-        stdOutput = stdOutput.split('\n')
-        description, stdOutput = stdOutput[0], stdOutput[1:]
-        if self.support < 1:
-            self.support = int(description.strip().split(' ')[-1])
+        #stdOutput = stdOutput.split('\n')
+        #description, stdOutput = stdOutput[0], stdOutput[1:]
+        #if self.support < 1:
+        #    self.support = int(description.strip().split(' ')[-1])
 
         #self.patternSet = utils.parser(self, stdOutput)
         self.patternSet = self.parserSequence(stdOutput)
         return self.patternSet
 
     def parserSequence(self, stdOutput, path=None):
+        patterns = []
+
+        if path == "" or not path:
+            lines = stdOutput.split('\n')
+            index = 1
+            for i in tqdm(range(0, len(lines)/2)):
+                if lines[2*i] == '':
+                    continue
+                freq = lines[2*i+1].strip().split(':')[-1].strip()
+                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq)))
+                index += 1
+        else:
+            with open(path, 'r') as fin:
+                pass
+        return patterns
+
+    def parserSequence_cpsm(self, stdOutput, path=None):
         """
             If path == "" or path == None,
             means that do not write results into a file
