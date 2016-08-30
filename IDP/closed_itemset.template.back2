@@ -1,0 +1,31 @@
+vocabulary V{
+    type index isa nat
+    type item isa nat
+    type frequency isa nat
+
+    itemset(index,item)
+    support(index,frequency)
+    //subset(index,index)
+    selected_itemset(index)
+    embedded_itemset(index)
+    selected_index(index)
+}
+
+theory T:V{
+    ? selected_id: ?1 id: ? s: embedded_itemset(id) & selected_itemset(selected_id) & support(id,s) & support(selected_id,s) & id ~= selected_id.
+    ! e, embedded_id, selected_id: embedded_itemset(embedded_id) & selected_itemset(selected_id) & itemset(selected_id,e) => itemset(embedded_id,e).
+
+    {
+        ! v, id, i: selected_index(i) <- selected_itemset(id) & itemset(id,v).
+    }
+}
+
+Structure S:V{
+    selected_itemset={${INDEX}}
+    itemset={${ITEMSET}}
+    support={${SUPPORT}}
+}
+
+procedure main(){
+    printmodels(modelexpand(T,S))
+}
