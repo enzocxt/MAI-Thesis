@@ -1,0 +1,7 @@
+* Make up-to-date examples how to run the code  
+* Explanation what is supported in the configurations
+* How does cost constraint can be passed?
+* Can you characterize the bottle neck, what actually takes so long? Profile or measure
+* How and where we improve the code? # Discussion point
+
+
