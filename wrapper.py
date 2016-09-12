@@ -95,8 +95,8 @@ def fpMining_IDP(inputs):
     '''
 
     if params['type'] == 'itemset':
-        indices = itemset_idp(params, patterns)
-        #indices = itemset_idp_iterative(params, patterns)
+        #indices = itemset_idp(params, patterns)
+        indices = itemset_idp_iterative(params, patterns)
     elif params['type'] == 'sequence':
         indices = sequence_idp(params, patterns)
     elif params['type'] == 'graph':
@@ -171,6 +171,7 @@ def itemset_idp_iterative(params, patterns):
     return indices
 
 
+# this method is not used now
 def itemset_idp_iterative_old(params, patterns):
     indices = []
 
