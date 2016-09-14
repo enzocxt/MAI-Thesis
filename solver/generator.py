@@ -142,7 +142,7 @@ class IDPGenerator:
     def run_IDP(self, filename):
         '''run IDP program to get closed patterns from frequent patterns'''
         if platform.system() == 'Linux':
-            idpBin = '/Users/enzo/Projects/Thesis/idp-Linux/bin/idp'
+            idpBin = 'idp' # don't hardcode the absolute paths, it never ends well, let's say IDP must be installed and found in PATH variable?
         else:
             idpBin = '/Users/enzo/Projects/Thesis/idp-3.5.0-Mac-OSX/bin/idp'
         idpProgram = '{0}{1}.idp'.format(self.idp_path, filename)
