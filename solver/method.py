@@ -168,13 +168,16 @@ class prefixSpan(Mining):
         """Mining frequent sequences by prefixSpan"""
         options = ''
         if platform.system() == "Linux":
-            prefixSpan = "./exec/pspan"
+            prefixSpan = "./exec/prefixspan"
             if self.support <= 1:
-                options += '--minsup {0}'.format(int(self.support*100))
+                fin = open(self.data, 'r')
+                supp = int(self.support * len(fin.readlines()))
+                options += '-min_sup'
+                fin.close()
             else:
                 options += '-S {0}'.format(self.support)
             print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
-            child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
+            child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
         else:
             prefixSpan = "./exec/prefixspan"
             if self.support <= 1:
