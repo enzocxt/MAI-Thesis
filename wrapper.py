@@ -9,7 +9,7 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import group_by_len
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support
 
 default_parameters = 'config.ini'
 
@@ -198,15 +198,25 @@ def sequence_idp(params, patterns):
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
     idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    mapping = group_by_len(patterns)
-    print(mapping)
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    mapping = make_attribute_mapping(patterns)
     
-    for seq in patterns:
-        # generate idp code for finding pattern with constraints for this seq
-        idp_gen.gen_IDP_code(patterns, idp_program_name, seq.id)
-        idp_output = idp_gen.run_IDP(idp_program_name)
-        if 'Unsatisfiable' in idp_output:
-            indices.append(seq.id)
+
+    for seq in tqdm(patterns):
+        patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
+        if patterns_to_check:
+          # generate idp code for finding pattern with constraints for this seq
+          idp_gen.gen_IDP_code(patterns_to_check, idp_program_name, seq.id)
+          idp_output = idp_gen.run_IDP(idp_program_name)
+          if 'Unsatisfiable' in idp_output:
+              indices.append(seq.id)
+        else:
+              indices.append(seq.id)
 
     return indices
 
@@ -260,10 +270,29 @@ if __name__ == "__main__":
 
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
-    #for p in patterns:
-    #    print p
+
+    freq = set([p for p in patterns])
+    closed = set([p for p in closed_patterns])
+    not_closed = freq- closed
+    with open('tmp/test_output', "w") as test_out:
+      test_out.write("------not_closed------"+"\n")
+      for p in not_closed:
+    # for p in patterns:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      test_out.write("------frequent------"+"\n")
+      for p in patterns:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      
+    # test_out.write("------closed------"+"\n")
+    # for p in closed_patterns:
+    #   test_out.write("id: "+str(p.id)+"\n")
+    #   test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+    #   test_out.write("support: " + str(p.get_support())+"\n")
+
     '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
-    for p in closed_patterns:
-        print p
     '''

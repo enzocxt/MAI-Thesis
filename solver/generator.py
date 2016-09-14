@@ -151,8 +151,15 @@ class IDPGenerator:
         else:
             idpBin = '/Users/enzo/Projects/Thesis/idp-3.5.0-Mac-OSX/bin/idp'
         idpProgram = '{0}{1}.idp'.format(self.idp_path, filename)
-        child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE)
-        stdOutput = child.stdout.read()
+        idp_tmp_output = "tmp/idp_out"
+        command = "{idp} {program} > {idp_tmp_output}".format(idp=idpBin, program=idpProgram,idp_tmp_output=idp_tmp_output)
+    #   print "executing IDP command: " +  command
+        os.system(command)
+      # child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE)
+      # stdOutput = child.stdout.read()
+        with open(idp_tmp_output,"r") as idp_tmp_file:
+          stdOutput = idp_tmp_file.read()
+
         return stdOutput
 
 
