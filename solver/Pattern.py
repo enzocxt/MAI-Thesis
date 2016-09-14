@@ -72,6 +72,9 @@ class Sequence(Pattern):
         output = output[:-1] + ':%s' % self.support
         return output
 
+    def __repr__(self):
+      return "seq_"+str(self.id)
+
     def get_support(self):
       return self.support
 
