@@ -9,6 +9,7 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
+from solver.data_structures import group_by_len
 
 default_parameters = 'config.ini'
 
@@ -197,6 +198,9 @@ def sequence_idp(params, patterns):
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
     idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+    mapping = group_by_len(patterns)
+    print(mapping)
+    
     for seq in patterns:
         # generate idp code for finding pattern with constraints for this seq
         idp_gen.gen_IDP_code(patterns, idp_program_name, seq.id)
