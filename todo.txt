@@ -11,6 +11,9 @@ http://sites.uclouvain.be/cp4dm/spm/
 
 * check the conflict in utils
 
+*  The Class Sequence: 54 self.sequence.append(list(s)) # WHY?
+
+
 * Make up-to-date examples how to run the code  
 * Explanation what is supported in the configurations
 * How does cost constraint can be passed?

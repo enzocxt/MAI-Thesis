@@ -73,13 +73,18 @@ class IDPGenerator:
     def gen_IDP_sequence(self, sequences, filename, index):
         idp_sequences, supports = '', ''
 
-        for sequence in sequences:
+        for seq_i, sequence in enumerate(sequences):
             index, items, support = str(sequence).split(':')
             supports += '({0},{1});'.format(index, support)
+            if seq_i % 5 == 0:
+              supports += "\n"
+              idp_sequences += "\n"
             items = items.split()
             idp_items = ''
             for i, it in enumerate(items):
                 idp_items += '({0},{1},{2});'.format(index, i, it)
+                if i % 5 == 0:
+                  idp_items += "\n"
             idp_sequences += idp_items
 
         # eleminate the last ';' in supports
