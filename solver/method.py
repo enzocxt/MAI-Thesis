@@ -183,7 +183,6 @@ class prefixSpan(Mining):
             with open(tmp_output,"r") as seq_out:
                 result = seq_out.read()
           # child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
-            
         else:
             prefixSpan = "./exec/prefixspan"
             if self.support <= 1:
