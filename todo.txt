@@ -9,6 +9,8 @@ http://sites.uclouvain.be/cp4dm/spm/
 
 * for sequences Maximal IDP program is wrong: it simply uses old code
 
+* check the conflict in utils
+
 * Make up-to-date examples how to run the code  
 * Explanation what is supported in the configurations
 * How does cost constraint can be passed?
