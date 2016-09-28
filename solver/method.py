@@ -169,16 +169,21 @@ class prefixSpan(Mining):
         """Mining frequent sequences by prefixSpan"""
         options = ''
         if platform.system() == "Linux":
-            prefixSpan = "./exec/prefixspan"
+     #      prefixSpan = "./exec/pspan" # it segfaults on my computer
+            prefixSpan = "./exec/prefixspan_linux_64" # compiled for 64bit Linux, tried on Ubuntu 14.04
             if self.support <= 1:
                 fin = open(self.data, 'r')
                 supp = int(self.support * len(fin.readlines()))
-                options += '-min_sup'
-                fin.close()
+                options += '-min_sup {0}'.format(supp)
             else:
                 options += '-S {0}'.format(self.support)
-            print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
-            child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
+            tmp_output = "tmp/seq_out"
+            command = '{0} {1} {2} > {3}'.format(prefixSpan, options, self.data, tmp_output) # MARKER_FOR_LOOKUP
+            print(command) 
+            os.system(command)
+            with open(tmp_output,"r") as seq_out:
+                result = seq_out.read()
+          # child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
         else:
             prefixSpan = "./exec/prefixspan"
             if self.support <= 1:
@@ -195,8 +200,8 @@ class prefixSpan(Mining):
             print r'%s' % command
             child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
             #child = subprocess.Popen([command], stdout=subprocess.PIPE)
-
-        result = child.stdout.read()
+            result = child.stdout.read()
+            
         return result
 
     def parser(self, stdOutput, path=None):

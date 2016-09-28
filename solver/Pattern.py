@@ -49,9 +49,11 @@ class Sequence(Pattern):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
+        self.attributes = sequence
         for s in sequence:
-            self.sequence.append(list(s))
+            self.sequence.append(list(s)) # WHY?
         self.support = support
+        self.number_of_attributes = len(sequence)
 
     def append(self, p):
         if p.sequence[0][0] == PLACE_HOLDER:
@@ -69,6 +71,18 @@ class Sequence(Pattern):
             output += ''.join(i) + ' '
         output = output[:-1] + ':%s' % self.support
         return output
+
+    def __repr__(self):
+      return "seq_"+str(self.id)
+
+    def get_support(self):
+      return self.support
+
+    def get_attributes(self):
+      return self.attributes
+    
+    def get_pattern_len(self):
+      return self.number_of_attributes
 
 
 class Itemset(Pattern):
