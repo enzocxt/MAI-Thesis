@@ -1,3 +1,19 @@
+* Check MARKER_FOR_LOOKUP in the code, you use subprocess.Popen it is nice but slow and forces python to keep track of all outputs and errors, instead use ugly but fast os.system("....") and dump the output in a file using pipes like:
+./exec/prefixspan_linux_64 -min_sup 4090 /home/sergey/git/MAI-Thesis/data/prefixSpan/fifa.dat > tmp/seq_out
+then you can just go ahead and read tmp/seq_out
+
+* Do not hardcode paths, like to IDP, you can put a requirment for IDP to be installed though, we can try to fix it later
+
+* Try this instead of prefixSpan:
+http://sites.uclouvain.be/cp4dm/spm/
+
+* for sequences Maximal IDP program is wrong: it simply uses old code
+
+* check the conflict in utils
+
+*  The Class Sequence: 54 self.sequence.append(list(s)) # WHY?
+
+
 * Make up-to-date examples how to run the code  
 * Explanation what is supported in the configurations
 * How does cost constraint can be passed?

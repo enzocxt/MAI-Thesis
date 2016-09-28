@@ -73,13 +73,18 @@ class IDPGenerator:
     def gen_IDP_sequence(self, sequences, filename, index):
         idp_sequences, supports = '', ''
 
-        for sequence in sequences:
+        for seq_i, sequence in enumerate(sequences):
             index, items, support = str(sequence).split(':')
             supports += '({0},{1});'.format(index, support)
+            if seq_i % 5 == 0:
+              supports += "\n"
+              idp_sequences += "\n"
             items = items.split()
             idp_items = ''
             for i, it in enumerate(items):
                 idp_items += '({0},{1},{2});'.format(index, i, it)
+                if i % 5 == 0:
+                  idp_items += "\n"
             idp_sequences += idp_items
 
         # eleminate the last ';' in supports
@@ -142,12 +147,19 @@ class IDPGenerator:
     def run_IDP(self, filename):
         '''run IDP program to get closed patterns from frequent patterns'''
         if platform.system() == 'Linux':
-            idpBin = '/Users/enzo/Projects/Thesis/idp-Linux/bin/idp'
+            idpBin = 'idp' # don't hardcode the absolute paths, it never ends well, let's say IDP must be installed and found in PATH variable?
         else:
             idpBin = '/Users/enzo/Projects/Thesis/idp-3.5.0-Mac-OSX/bin/idp'
         idpProgram = '{0}{1}.idp'.format(self.idp_path, filename)
-        child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE)
-        stdOutput = child.stdout.read()
+        idp_tmp_output = "tmp/idp_out"
+        command = "{idp} {program} > {idp_tmp_output}".format(idp=idpBin, program=idpProgram,idp_tmp_output=idp_tmp_output)
+    #   print "executing IDP command: " +  command
+        os.system(command)
+      # child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE)
+      # stdOutput = child.stdout.read()
+        with open(idp_tmp_output,"r") as idp_tmp_file:
+          stdOutput = idp_tmp_file.read()
+
         return stdOutput
 
 
