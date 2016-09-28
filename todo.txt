@@ -13,6 +13,21 @@ http://sites.uclouvain.be/cp4dm/spm/
 
 *  The Class Sequence: 54 self.sequence.append(list(s)) # WHY?
 
+* rename data folders consistently: eclat --> itemsets, prefixSpan --> sequences, gspan --> graphs
+
+* try to generate idp scripts in advance and run it in bash
+
+tyr this:
+make a test idp program --> pick one from IDP/ and multiply like 1000 --> 10000
+write a simple bash script to run it on each of those 
+for f in path/*
+do
+idp $f > out/$f
+done
+measure time
+
+and the same from python use os.system(...) and compare to popen(...)
+
 
 * Make up-to-date examples how to run the code  
 * Explanation what is supported in the configurations

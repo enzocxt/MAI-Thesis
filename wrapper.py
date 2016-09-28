@@ -208,6 +208,8 @@ def sequence_idp(params, patterns):
     
 
     for seq in tqdm(patterns):
+        #if we make it a function, is_closed(seq)
+        #then we need just need async_map(is_closed,patterns)
         patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
         if patterns_to_check:
           # generate idp code for finding pattern with constraints for this seq
@@ -283,6 +285,11 @@ if __name__ == "__main__":
         test_out.write("support: " + str(p.get_support())+"\n")
       test_out.write("------frequent------"+"\n")
       for p in patterns:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      test_out.write("------closed------"+"\n")
+      for p in closed:
         test_out.write("id: "+str(p.id)+"\n")
         test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
         test_out.write("support: " + str(p.get_support())+"\n")
