@@ -211,14 +211,18 @@ def sequence_idp(params, patterns):
         #if we make it a function, is_closed(seq)
         #then we need just need async_map(is_closed,patterns)
         patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
-        if patterns_to_check:
+        if len(patterns_to_check) > 1: #the pattern itself and other patterns
           # generate idp code for finding pattern with constraints for this seq
           idp_gen.gen_IDP_code(patterns_to_check, idp_program_name, seq.id)
           idp_output = idp_gen.run_IDP(idp_program_name)
           if 'Unsatisfiable' in idp_output:
+              print(seq.id)
+              os.system("cp IDP/closed_sequence_test.idp tmp/seq_test_{id}".format(id=seq.id))
+              return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
+                     # the same for the case of id = 5, it is selected as 2 for some reason
               indices.append(seq.id)
         else:
-              indices.append(seq.id)
+          indices.append(seq.id)
 
     return indices
 
