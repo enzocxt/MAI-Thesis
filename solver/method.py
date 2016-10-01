@@ -97,7 +97,7 @@ class gSpan(Mining):
 
         #result = child.stdout.read()
         result = child.communicate()[0]
-        print result
+        #print result
         #self.parser(result)
         #fout = open(self.output, 'w')
         #fout.write(result)

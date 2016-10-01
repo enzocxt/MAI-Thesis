@@ -1,0 +1,163 @@
+vocabulary V{
+    type index
+    type patternID
+    type value
+    type frequency
+
+    seq(patternID,index,value)
+    selected_seq(patternID)
+    embedded_seq(patternID)
+    f(index):index
+    selected_index(index)
+}
+
+theory T:V{
+    ? selected_id: ?1 id: embedded_seq(id) & selected_seq(selected_id) & id ~= selected_id.
+    ! i, j: selected_index(i) & selected_index(j) & i < j => f(i) < f(j).
+
+    {
+        ! i, id, v: selected_index(i) <- selected_seq(id) & seq(id,i,v).
+    }
+
+    ! embedded_id, selected_id, index, value: embedded_seq(embedded_id) & selected_seq(selected_id) & seq(selected_id, index, value) => seq(embedded_id, f(index), value).
+}
+
+Structure S_11:V{
+	selected_seq = {11}
+	seq = {
+(11,0,65);
+(12,0,65);
+(12,1,63);(13,0,65);
+(13,1,64);(14,0,65);
+(14,1,64);(14,2,63)}}
+
+Structure S_4:V{
+	selected_seq = {4}
+	seq = {
+(3,0,17);
+(3,1,24);(3,2,35);(4,0,17);
+(4,1,35)}}
+
+Structure S_5:V{
+	selected_seq = {5}
+	seq = {
+(2,0,17);
+(2,1,24);(5,0,24);
+(6,0,24);
+(6,1,35);(3,0,17);
+(3,1,24);(3,2,35)}}
+
+Structure S_6:V{
+	selected_seq = {6}
+	seq = {
+(6,0,24);
+(6,1,35);(3,0,17);
+(3,1,24);(3,2,35)}}
+
+Structure S_14:V{
+	selected_seq = {14}
+	seq = {
+(14,0,65);
+(14,1,64);(14,2,63)}}
+
+Structure S_7:V{
+	selected_seq = {7}
+	seq = {
+(7,0,35);
+(4,0,17);
+(4,1,35);(6,0,24);
+(6,1,35);(3,0,17);
+(3,1,24);(3,2,35)}}
+
+Structure S_3:V{
+	selected_seq = {3}
+	seq = {
+(3,0,17);
+(3,1,24);(3,2,35)}}
+
+Structure S_8:V{
+	selected_seq = {8}
+	seq = {
+(14,0,65);
+(14,1,64);(14,2,63);(10,0,64);
+(10,1,63);(12,0,65);
+(12,1,63);(8,0,63);}}
+
+Structure S_1:V{
+	selected_seq = {1}
+	seq = {
+(2,0,17);
+(2,1,24);(3,0,17);
+(3,1,24);(3,2,35);(4,0,17);
+(4,1,35);(1,0,17);}}
+
+Structure S_13:V{
+	selected_seq = {13}
+	seq = {
+(13,0,65);
+(13,1,64);(14,0,65);
+(14,1,64);(14,2,63)}}
+
+Structure S_9:V{
+	selected_seq = {9}
+	seq = {
+(9,0,64);
+(10,0,64);
+(10,1,63);(13,0,65);
+(13,1,64);(14,0,65);
+(14,1,64);(14,2,63)}}
+
+Structure S_2:V{
+	selected_seq = {2}
+	seq = {
+(2,0,17);
+(2,1,24);(3,0,17);
+(3,1,24);(3,2,35)}}
+
+Structure S_10:V{
+	selected_seq = {10}
+	seq = {
+(14,0,65);
+(14,1,64);(14,2,63);(10,0,64);
+(10,1,63)}}
+
+Structure S_12:V{
+	selected_seq = {12}
+	seq = {
+(12,0,65);
+(12,1,63);(14,0,65);
+(14,1,64);(14,2,63)}}
+
+
+
+procedure main(){
+
+printmodels(modelexpand(T,S_11))
+
+printmodels(modelexpand(T,S_4))
+
+printmodels(modelexpand(T,S_5))
+
+printmodels(modelexpand(T,S_6))
+
+printmodels(modelexpand(T,S_14))
+
+printmodels(modelexpand(T,S_7))
+
+printmodels(modelexpand(T,S_3))
+
+printmodels(modelexpand(T,S_8))
+
+printmodels(modelexpand(T,S_1))
+
+printmodels(modelexpand(T,S_13))
+
+printmodels(modelexpand(T,S_9))
+
+printmodels(modelexpand(T,S_2))
+
+printmodels(modelexpand(T,S_10))
+
+printmodels(modelexpand(T,S_12))
+
+}

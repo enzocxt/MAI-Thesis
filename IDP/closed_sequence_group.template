@@ -22,24 +22,8 @@ theory T:V{
     ! embedded_id, selected_id, index, value: embedded_seq(embedded_id) & selected_seq(selected_id) & seq(selected_id, index, value) => seq(embedded_id, f(index), value).
 }
 
-Structure S_565:V{
-	selected_seq = {565}
-	seq = {
-(565,0,135);
-(565,1,13);(565,2,37)}}
-
-Structure S_645:V{
-	selected_seq = {645}
-	seq = {
-(645,0,147);
-(645,1,8);(645,2,98)}}
-
-
+${STRUCTURES}
 
 procedure main(){
-
-printmodels(modelexpand(T,S_565))
-
-printmodels(modelexpand(T,S_645))
-
+${PRINTMODELS}
 }
