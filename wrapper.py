@@ -5,9 +5,11 @@
 import getopt
 import ConfigParser
 import collections
+from collections import defaultdict
 from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
+from solver.groupIDP import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support
 
@@ -17,23 +19,6 @@ default_parameters = 'config.ini'
 # Debug print
 def DebugPrint(s):
     print s
-
-
-# Method for mining frequent patterns
-def fpMining(inputs):
-    if inputs['type'] == 'graph':
-        method = gSpan(inputs)
-    elif inputs['type'] == 'sequence':
-        method = prefixSpan(inputs)
-    elif inputs['type'] == 'itemset':
-        method = eclat(inputs)
-    else:
-        print 'Does not support "type == %s"!' % inputs['type']
-        sys.exit(2)
-
-    output = method.mining()
-    patterns = method.parser(output)
-    return patterns
 
 
 @logger
@@ -97,9 +82,10 @@ def fpMining_IDP(inputs):
 
     if params['type'] == 'itemset':
         #indices = itemset_idp(params, patterns)
-        indices = itemset_idp_iterative(params, patterns)
+        #indices = itemset_idp_iterative(params, patterns)
+        indices = itemset_idp_new(params, patterns)
     elif params['type'] == 'sequence':
-        indices = sequence_idp(params, patterns)
+        indices = sequence_idp_multiple(params, patterns)
     elif params['type'] == 'graph':
         #indices = graph_idp(params)
         pass
@@ -141,57 +127,21 @@ def itemset_idp(params, patterns):
     return indices
 
 
-def itemset_idp_iterative(params, patterns):
-    indices = set()
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-
-    groups = collections.defaultdict(list)
-    # group itemset with same support to different groups
-    for p in patterns:
-        groups[p.support].append(p)
-    groups = list(groups.values())
-    for i in tqdm(range(len(groups))):
-        group = groups[i]
-        print 'Number of itemsets with support {0}: {1}'.format(group[0].support, len(group))
-        idp_gen.gen_IDP_code(group, idp_program_name)
-        idp_output = idp_gen.run_IDP(idp_program_name)
-        '''
-        for itemset in group:
-            # generate idp code for finding pattern with constraints
-            idp_gen.gen_IDP_code(group, idp_program_name, itemset.id)
-            idp_output = idp_gen.run_IDP(idp_program_name)
-            if 'Unsatisfiable' in idp_output:
-                indices.append(itemset.id)
-        '''
-        indices.union(set(idp_gen.parser_from_stdout(idp_output)))
-
-    return indices
-
-
-# this method is not used now
-def itemset_idp_iterative_old(params, patterns):
-    indices = []
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    for i in tqdm(range(len(patterns))):
-        itemset = patterns[i]
-        # generate idp code for finding pattern with constraints
-        idp_gen.gen_IDP_code(patterns, idp_program_name, itemset.id)
+'''
+def is_closed(pattern, mapping, support_mapping, idp_gen, idp_program_name_base):
+    patterns_to_check = get_attribute_intersection(pattern, mapping, support_mapping)
+    idp_program_name = '{0}_{1}'.format(idp_program_name_base, pattern.id)
+    if patterns_to_check:
+        idp_gen.gen_IDP_code(patterns_to_check, idp_program_name, pattern.id)
         idp_output = idp_gen.run_IDP(idp_program_name)
         if 'Unsatisfiable' in idp_output:
-            indices.append(itemset.id)
+            return True
+        else:
+            return False
+'''
 
-    return indices
 
-
-def sequence_idp(params, patterns):
+def itemset_idp_new(params, patterns):
     indices = []
 
     # closed pattern mining by generated IDP code
@@ -205,8 +155,94 @@ def sequence_idp(params, patterns):
       support_mapping = None
 
     mapping = make_attribute_mapping(patterns)
-    
 
+    return indices
+
+
+def sequence_idp_multiple(params, patterns):
+    indices = set([seq.id for seq in patterns])
+    nonclosed_indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    ''' group testing '''
+    mapping_groups = []
+    for group in support_mapping.values():
+        if len(group) == 1:
+            print group
+            continue
+        check_mapping = defaultdict(set)
+        for seq in group:
+            patterns_to_check = get_attribute_intersection(seq, attribute_mapping, support_mapping)
+            if len(patterns_to_check) > 1:
+                check_mapping[seq] = patterns_to_check
+        if check_mapping:
+            mapping_groups.append(check_mapping)
+    nonclosed_indices = async_mapping(mapping_groups, idp_gen, idp_program_name)
+    #nonclosed_indices = async_mapping_withoutLock(mapping_groups, idp_gen, idp_program_name)
+
+    '''
+    lines = idp_output.split('\n')
+    for line in lines:
+        if 'selected_seq' in line:
+            nonclosed_indices.add(int(line[19]))
+    '''
+    indices = indices - nonclosed_indices
+    print indices
+
+    return indices
+
+
+def sequence_idp(params, patterns):
+    for p in patterns:
+        print p
+    indices = set([seq.id for seq in patterns])
+    nonclosed_indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    for support, group in support_mapping.items():
+        if len(group) == 1:
+            print group
+            continue
+        check_mapping = defaultdict(set)
+        for seq in group:
+            patterns_to_check = get_attribute_intersection(seq, attribute_mapping, support_mapping)
+            if patterns_to_check:
+                check_mapping[seq] = patterns_to_check
+
+        if len(check_mapping.values()) != 0:
+            idp_gen.gen_IDP_code_group(check_mapping, idp_program_name)
+            idp_output = idp_gen.run_IDP(idp_program_name)
+
+        lines = idp_output.split('\n')
+        for line in lines:
+            if 'selected_seq' in line:
+                nonclosed_indices.add(int(line[19]))
+    indices = indices - nonclosed_indices
+    print indices
+
+    '''
     for seq in tqdm(patterns):
         #if we make it a function, is_closed(seq)
         #then we need just need async_map(is_closed,patterns)
@@ -219,6 +255,7 @@ def sequence_idp(params, patterns):
               indices.append(seq.id)
         else:
               indices.append(seq.id)
+    '''
 
     return indices
 
@@ -266,10 +303,11 @@ if __name__ == "__main__":
     print('Parameters: %s' % params)
 
     # frequent pattern mining
-    patterns = fpMining_pure(params)
+    #patterns = fpMining_pure(params)
     closed_patterns = fpMining_IDP(params)
 
 
+    '''
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
 
@@ -299,6 +337,7 @@ if __name__ == "__main__":
     #   test_out.write("id: "+str(p.id)+"\n")
     #   test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
     #   test_out.write("support: " + str(p.get_support())+"\n")
+    '''
 
     '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
