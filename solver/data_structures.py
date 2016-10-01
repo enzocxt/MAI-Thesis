@@ -38,6 +38,8 @@ def get_attribute_intersection(pattern, mapping, support_mapping):
     if support_mapping: # if mining closed ones we can make use
       the_same_support_patterns = support_mapping[pattern.get_support()]
     patterns_to_check = patterns_to_check.intersection(the_same_support_patterns)
+    #patterns_to_check = patterns_to_check
+
     return list(patterns_to_check)
 
 
