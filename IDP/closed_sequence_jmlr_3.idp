@@ -22,32 +22,44 @@ theory T:V{
     ! embedded_id, selected_id, index, value: embedded_seq(embedded_id) & selected_seq(selected_id) & seq(selected_id, index, value) => seq(embedded_id, f(index), value).
 }
 
-Structure S_2:V{
-	selected_seq = {2}
+Structure S_183:V{
+	selected_seq = {183}
 	seq = {
-(2,0,1);
-(2,1,2)}}
+(37,0,2);
+(37,1,24);(37,2,38);(183,0,24);
+(183,1,38);(183,2,38)}}
 
-Structure S_1:V{
-	selected_seq = {1}
+Structure S_482:V{
+	selected_seq = {482}
 	seq = {
-(2,0,1);
-(2,1,2);(1,0,1);}}
+(402,0,123);
+(402,1,213);(482,0,213);
+(482,1,213)}}
 
-Structure S_5:V{
-	selected_seq = {5}
+Structure S_127:V{
+	selected_seq = {127}
 	seq = {
-(2,0,1);
-(2,1,2);(5,0,2);}}
+(127,0,8);
+(127,1,74);(300,0,74);
+(300,1,8)}}
+
+Structure S_300:V{
+	selected_seq = {300}
+	seq = {
+(127,0,8);
+(127,1,74);(300,0,74);
+(300,1,8)}}
 
 
 
 procedure main(){
 
-printmodels(modelexpand(T,S_2))
+printmodels(modelexpand(T,S_183))
 
-printmodels(modelexpand(T,S_1))
+printmodels(modelexpand(T,S_482))
 
-printmodels(modelexpand(T,S_5))
+printmodels(modelexpand(T,S_127))
+
+printmodels(modelexpand(T,S_300))
 
 }

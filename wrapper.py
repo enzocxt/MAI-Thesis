@@ -85,7 +85,8 @@ def fpMining_IDP(inputs):
         #indices = itemset_idp_iterative(params, patterns)
         indices = itemset_idp_new(params, patterns)
     elif params['type'] == 'sequence':
-        indices = sequence_idp_multiple(params, patterns)
+        #indices = sequence_idp_multiple(params, patterns)
+        indices = sequence_idp(params, patterns)
     elif params['type'] == 'graph':
         #indices = graph_idp(params)
         pass
@@ -179,7 +180,6 @@ def sequence_idp_multiple(params, patterns):
     mapping_groups = []
     for group in support_mapping.values():
         if len(group) == 1:
-            print group
             continue
         check_mapping = defaultdict(set)
         for seq in group:
@@ -188,9 +188,10 @@ def sequence_idp_multiple(params, patterns):
                 check_mapping[seq] = patterns_to_check
         if check_mapping:
             mapping_groups.append(check_mapping)
-    nonclosed_indices = async_mapping(mapping_groups, idp_gen, idp_program_name)
+    #nonclosed_indices = async_mapping(mapping_groups, idp_gen, idp_program_name)
     #nonclosed_indices = async_mapping_withoutLock(mapping_groups, idp_gen, idp_program_name)
-
+    idp_output = async_mapping_separate(mapping_groups, idp_gen, idp_program_name)
+    #print idp_output
     '''
     lines = idp_output.split('\n')
     for line in lines:
@@ -204,8 +205,6 @@ def sequence_idp_multiple(params, patterns):
 
 
 def sequence_idp(params, patterns):
-    for p in patterns:
-        print p
     indices = set([seq.id for seq in patterns])
     nonclosed_indices = set()
 
@@ -221,16 +220,18 @@ def sequence_idp(params, patterns):
 
     attribute_mapping = make_attribute_mapping(patterns)
 
+    # for each support, put the group of patterns to generate idp program
     for support, group in support_mapping.items():
-        if len(group) == 1:
-            print group
-            continue
+        # omit the group with only one pattern
+        if len(group) == 1: continue
+
         check_mapping = defaultdict(set)
         for seq in group:
             patterns_to_check = get_attribute_intersection(seq, attribute_mapping, support_mapping)
-            if patterns_to_check:
+            if len(patterns_to_check) > 1:
                 check_mapping[seq] = patterns_to_check
 
+        idp_output = ''
         if len(check_mapping.values()) != 0:
             idp_gen.gen_IDP_code_group(check_mapping, idp_program_name)
             idp_output = idp_gen.run_IDP(idp_program_name)
