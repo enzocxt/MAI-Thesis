@@ -22,12 +22,6 @@ theory T:V{
     ! embedded_id, selected_id, index, value: embedded_seq(embedded_id) & selected_seq(selected_id) & seq(selected_id, index, value) => seq(embedded_id, f(index), value).
 }
 
-Structure S_2:V{
-	selected_seq = {2}
-	seq = {
-(2,0,1);
-(2,1,2)}}
-
 Structure S_1:V{
 	selected_seq = {1}
 	seq = {
@@ -43,8 +37,6 @@ Structure S_5:V{
 
 
 procedure main(){
-
-printmodels(modelexpand(T,S_2))
 
 printmodels(modelexpand(T,S_1))
 
