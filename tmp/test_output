@@ -1,4 +1,5 @@
 ------not_closed------
+<<<<<<< HEAD
 id: 6
 attributes: 2;3
 support: 2
@@ -55,3 +56,7 @@ support: 3
 id: 3
 attributes: 1;2;3
 support: 2
+=======
+------frequent------
+------closed------
+>>>>>>> c4245976f1ec945c8128e088ca3f3ee779589019
