@@ -17,6 +17,63 @@ class IDPGenerator:
         else:
             self.dominance = ''
 
+    def gen_IDP_code_group(self, mapping, filename):
+        if len(mapping.values()) == 0:
+            print 'No need generate IDP program!'
+            return
+        if isinstance(mapping.keys()[0], Itemset):
+            self.gen_IDP_itemset_group(mapping, filename)
+        elif isinstance(mapping.keys()[0], Sequence):
+            self.gen_IDP_sequence_group(mapping, filename)
+        elif isinstance(mapping.keys()[0], Graph):
+            self.gen_IDP_sequence_group(mapping, filename)
+        else:
+            print 'Do not support this type!'
+            sys.exit(2)
+
+    def gen_IDP_itemset_group(self, mapping, filename):
+        pass
+
+    def gen_IDP_sequence_group(self, mapping, filename):
+        structures = ''
+        models = ''
+
+        for seq, seqs_to_check in mapping.items():
+            idp_sequences = ''
+            for seq_i, sequence in enumerate(seqs_to_check):
+                index, items, support = str(sequence).split(':')
+                if seq_i % 5 == 0:
+                    idp_sequences += '\n'
+                items = items.split()
+                idp_items = ''
+                for i, it in enumerate(items):
+                    idp_items += '({0},{1},{2});'.format(index, i, it)
+                    if i % 5 == 0:
+                        idp_items += '\n'
+                idp_sequences += idp_items
+            idp_sequences = idp_sequences[:-1]
+
+            structure = 'Structure S_%s:V{\n\tselected_seq = {%s}\n\tseq = {%s}}\n\n' % (str(seq.id), str(seq.id), idp_sequences)
+            structures += structure
+            printmodel = '\nprintmodels(modelexpand(T,S_{0}))\n'.format(seq.id)
+            models += printmodel
+
+        file_path = os.getcwd() + '/IDP/%s.idp' % filename
+        class_file = open(file_path, 'w')
+        lines = []
+        template_file = open(os.getcwd() + '/IDP/{0}_sequence_group.template'.format(self.dominance), 'r')
+        tmpl = Template(template_file.read())
+
+        # template substitute
+        lines.append(tmpl.substitute(STRUCTURES=structures, PRINTMODELS=models))
+        # write code to file
+        class_file.writelines(lines)
+        class_file.close()
+
+
+    def gen_IDP_graph_group(self, mapping, filename):
+        pass
+
     def gen_IDP_code(self, patterns, filename, index=None):
         if len(patterns) == 0:
             print 'No result patterns!'
