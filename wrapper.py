@@ -307,11 +307,11 @@ if __name__ == "__main__":
     print('Parameters: %s' % params)
 
     # frequent pattern mining
-    #patterns = fpMining_pure(params)
+    patterns = fpMining_pure(params)
     closed_patterns = fpMining_IDP(params)
 
 
-    '''
+       
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
 
@@ -321,7 +321,6 @@ if __name__ == "__main__":
     with open('tmp/test_output', "w") as test_out:
       test_out.write("------not_closed------"+"\n")
       for p in not_closed:
-    # for p in patterns:
         test_out.write("id: "+str(p.id)+"\n")
         test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
         test_out.write("support: " + str(p.get_support())+"\n")
@@ -336,13 +335,6 @@ if __name__ == "__main__":
         test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
         test_out.write("support: " + str(p.get_support())+"\n")
       
-    # test_out.write("------closed------"+"\n")
-    # for p in closed_patterns:
-    #   test_out.write("id: "+str(p.id)+"\n")
-    #   test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
-    #   test_out.write("support: " + str(p.get_support())+"\n")
-    '''
+    
 
-    '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
-    '''
