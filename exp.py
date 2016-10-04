@@ -30,6 +30,4 @@ def test_perf(config_file):
 
 
 if __name__ == '__main__':
-    configs = ['config_max_25.ini', 'config_max_20.ini']
-    for f in configs:
-        test_perf(f)
+    pass
