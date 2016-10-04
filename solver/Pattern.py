@@ -9,6 +9,14 @@ class Pattern(object):
         self.support = None
 
 
+    def get_pattern_len(self):
+        pass
+
+
+    def get_support(self):
+        return self.support
+
+
     def __str__(self):
         pass
 
@@ -42,6 +50,12 @@ class Graph(Pattern):
 
     def add_edge(self, edge):
         self.edges.append(edge)
+
+    def get_pattern_len(self):
+        return len(self.nodes)
+
+    def get_support(self):
+        return self.nsupport
 
 
 # Sequence class
@@ -97,8 +111,15 @@ class Itemset(Pattern):
         # self.itemset = itemset
         self.id = id
         self.itemset = set(itemset)
+        self.attributes = itemset
         self.support = support
         self.size = len(itemset)
+
+    def get_pattern_len(self):
+        return len(self.itemset)
+
+    def get_attributes(self):
+        return self.attributes
 
     def isValid(self):
         pass

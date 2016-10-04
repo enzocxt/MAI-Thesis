@@ -52,6 +52,3 @@ def get_attribute_intersection(pattern, mapping, support_mapping=None):
       patterns_to_check = patterns_to_check.intersection(the_same_support_patterns)
     return patterns_to_check
 
-
-
-
