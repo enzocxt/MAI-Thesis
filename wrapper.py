@@ -5,12 +5,13 @@
 import getopt
 import ConfigParser
 import collections
+from collections import defaultdict
 from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
+from solver.groupIDP import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len
-from solver.subsumption import create_subsumption_lattice
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support
 
 default_parameters = 'config.ini'
 
@@ -18,31 +19,6 @@ default_parameters = 'config.ini'
 # Debug print
 def DebugPrint(s):
     print s
-
-with open("tmp/sergey_tmp_log","w"): # clean the log file before each run
-    pass
-
-def sergeylog(s): #dump info into the log file
-    with open("tmp/sergey_tmp_log","a") as logfile:
-        logfile.write(s)
-
-
-
-# Method for mining frequent patterns
-def fpMining(inputs):
-    if inputs['type'] == 'graph':
-        method = gSpan(inputs)
-    elif inputs['type'] == 'sequence':
-        method = prefixSpan(inputs)
-    elif inputs['type'] == 'itemset':
-        method = eclat(inputs)
-    else:
-        print 'Does not support "type == %s"!' % inputs['type']
-        sys.exit(2)
-
-    output = method.mining()
-    patterns = method.parser(output)
-    return patterns
 
 
 @logger
@@ -106,8 +82,10 @@ def fpMining_IDP(inputs):
 
     if params['type'] == 'itemset':
         #indices = itemset_idp(params, patterns)
-        indices = itemset_idp_iterative(params, patterns)
+        #indices = itemset_idp_iterative(params, patterns)
+        indices = itemset_idp_new(params, patterns)
     elif params['type'] == 'sequence':
+        #indices = sequence_idp_multiple(params, patterns)
         indices = sequence_idp(params, patterns)
     elif params['type'] == 'graph':
         #indices = graph_idp(params)
@@ -150,61 +128,21 @@ def itemset_idp(params, patterns):
     return indices
 
 
-def itemset_idp_iterative(params, patterns):
-    indices = set()
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-
-    groups = collections.defaultdict(list)
-    # group itemset with same support to different groups
-    for p in patterns:
-        groups[p.support].append(p)
-    groups = list(groups.values())
-    for i in tqdm(range(len(groups))):
-        group = groups[i]
-        print 'Number of itemsets with support {0}: {1}'.format(group[0].support, len(group))
-        idp_gen.gen_IDP_code(group, idp_program_name)
-        idp_output = idp_gen.run_IDP(idp_program_name)
-        '''
-        for itemset in group:
-            # generate idp code for finding pattern with constraints
-            idp_gen.gen_IDP_code(group, idp_program_name, itemset.id)
-            idp_output = idp_gen.run_IDP(idp_program_name)
-            if 'Unsatisfiable' in idp_output:
-                indices.append(itemset.id)
-        '''
-        indices.union(set(idp_gen.parser_from_stdout(idp_output)))
-
-    return indices
-
-
-# this method is not used now
-def itemset_idp_iterative_old(params, patterns):
-    indices = []
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    for i in tqdm(range(len(patterns))):
-        itemset = patterns[i]
-        # generate idp code for finding pattern with constraints
-        idp_gen.gen_IDP_code(patterns, idp_program_name, itemset.id)
+'''
+def is_closed(pattern, mapping, support_mapping, idp_gen, idp_program_name_base):
+    patterns_to_check = get_attribute_intersection(pattern, mapping, support_mapping)
+    idp_program_name = '{0}_{1}'.format(idp_program_name_base, pattern.id)
+    if patterns_to_check:
+        idp_gen.gen_IDP_code(patterns_to_check, idp_program_name, pattern.id)
         idp_output = idp_gen.run_IDP(idp_program_name)
         if 'Unsatisfiable' in idp_output:
-            indices.append(itemset.id)
-
-    return indices
-
-
-def sequence_idp(params, patterns):
-    
-    subsumption_tree = create_subsumption_lattice(patterns)
+            return True
+        else:
+            return False
+'''
 
 
+def itemset_idp_new(params, patterns):
     indices = []
 
     # closed pattern mining by generated IDP code
@@ -218,40 +156,112 @@ def sequence_idp(params, patterns):
       support_mapping = None
 
     mapping = make_attribute_mapping(patterns)
-    mapping_by_len = group_by_len(patterns)
 
-    #for debuggin only
-    os.system("rm tmp/seq_test_*")
-    number_of_IDP_calls = 0
-    
+    return indices
 
+
+def sequence_idp_multiple(params, patterns):
+    indices = set([seq.id for seq in patterns])
+    nonclosed_indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    ''' group testing '''
+    mapping_groups = []
+    for group in support_mapping.values():
+        if len(group) == 1:
+            continue
+        check_mapping = defaultdict(set)
+        for seq in group:
+            patterns_to_check = get_attribute_intersection(seq, attribute_mapping, support_mapping)
+            if len(patterns_to_check) > 1:
+                check_mapping[seq] = patterns_to_check
+        if check_mapping:
+            mapping_groups.append(check_mapping)
+    #nonclosed_indices = async_mapping(mapping_groups, idp_gen, idp_program_name)
+    #nonclosed_indices = async_mapping_withoutLock(mapping_groups, idp_gen, idp_program_name)
+    idp_output = async_mapping_separate(mapping_groups, idp_gen, idp_program_name)
+    #print idp_output
+    '''
+    lines = idp_output.split('\n')
+    for line in lines:
+        if 'selected_seq' in line:
+            nonclosed_indices.add(int(line[19]))
+    '''
+    indices = indices - nonclosed_indices
+    print indices
+
+    return indices
+
+
+def sequence_idp(params, patterns):
+    indices = set([seq.id for seq in patterns])
+    nonclosed_indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    # for each support, put the group of patterns to generate idp program
+    for support, group in support_mapping.items():
+        # omit the group with only one pattern
+        if len(group) == 1: continue
+
+        check_mapping = defaultdict(set)
+        for seq in group:
+            patterns_to_check = get_attribute_intersection(seq, attribute_mapping, support_mapping)
+            if len(patterns_to_check) > 1:
+                check_mapping[seq] = patterns_to_check
+
+        idp_output = ''
+        if len(check_mapping.values()) != 0:
+            idp_gen.gen_IDP_code_group(check_mapping, idp_program_name)
+            idp_output = idp_gen.run_IDP(idp_program_name)
+
+        lines = idp_output.split('\n')
+        for line in lines:
+            if 'selected_seq' in line:
+                nonclosed_indices.add(int(line[19]))
+    indices = indices - nonclosed_indices
+    print indices
+
+    '''
     for seq in tqdm(patterns):
         #if we make it a function, is_closed(seq)
         #then we need just need async_map(is_closed,patterns)
         patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
-        patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, mapping_by_len)
         if len(patterns_to_check) > 1: #the pattern itself and other patterns
-          number_of_IDP_calls += 1
           # generate idp code for finding pattern with constraints for this seq
-          idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id)
+          idp_gen.gen_IDP_code(patterns_to_check, idp_program_name, seq.id)
           idp_output = idp_gen.run_IDP(idp_program_name)
-
-          print("running idp on id=",seq.id)
-          os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name))
           if 'Unsatisfiable' in idp_output:
-#             return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
+              print(seq.id)
+              os.system("cp IDP/closed_sequence_test.idp tmp/seq_test_{id}".format(id=seq.id))
+              return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
                      # the same for the case of id = 5, it is selected as 2 for some reason
               indices.append(seq.id)
-              sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id))
-          else:
-              sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
-              sergeylog("IDP OUTPUT: \n")
-              sergeylog(idp_output)
-              sergeylog("\n")
         else:
           indices.append(seq.id)
+    '''
 
-    print("NUMBER OF IDP CALLS",number_of_IDP_calls)
     return indices
 
 
@@ -302,35 +312,30 @@ if __name__ == "__main__":
     closed_patterns = fpMining_IDP(params)
 
 
+       
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
 
-#   freq = set([p for p in patterns])
-#   closed = set([p for p in closed_patterns])
-#   not_closed = freq - closed
-#   with open('tmp/test_output', "w") as test_out:
-#     test_out.write("------not_closed------"+"\n")
-#     for p in not_closed:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     test_out.write("------frequent------"+"\n")
-#     for p in patterns:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     test_out.write("------closed------"+"\n")
-#     for p in closed:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     
-    # test_out.write("------closed------"+"\n")
-    # for p in closed_patterns:
-    #   test_out.write("id: "+str(p.id)+"\n")
-    #   test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
-    #   test_out.write("support: " + str(p.get_support())+"\n")
+    freq = set([p for p in patterns])
+    closed = set([p for p in closed_patterns])
+    not_closed = freq- closed
+    with open('tmp/test_output', "w") as test_out:
+      test_out.write("------not_closed------"+"\n")
+      for p in not_closed:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      test_out.write("------frequent------"+"\n")
+      for p in patterns:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      test_out.write("------closed------"+"\n")
+      for p in closed:
+        test_out.write("id: "+str(p.id)+"\n")
+        test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
+        test_out.write("support: " + str(p.get_support())+"\n")
+      
+    
 
-    '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
-    '''

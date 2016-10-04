@@ -10,7 +10,7 @@ from solver.method import *
 from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len
-from solver.subsumption import create_subsumption_lattice
+from solver.subsumption import create_subsumption_lattice, get_all_children
 
 default_parameters = 'config.ini'
 
