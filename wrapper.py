@@ -10,6 +10,7 @@ from solver.method import *
 from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support
+from solver.subsumption import extract_subsumption_tree_for_sequences
 
 default_parameters = 'config.ini'
 
@@ -192,6 +193,10 @@ def itemset_idp_iterative_old(params, patterns):
 
 
 def sequence_idp(params, patterns):
+    
+    subsumption_tree = extract_tree(patterns)
+
+
     indices = []
 
     # closed pattern mining by generated IDP code
@@ -218,7 +223,7 @@ def sequence_idp(params, patterns):
           if 'Unsatisfiable' in idp_output:
               print(seq.id)
               os.system("cp IDP/closed_sequence_test.idp tmp/seq_test_{id}".format(id=seq.id))
-              return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
+#             return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
                      # the same for the case of id = 5, it is selected as 2 for some reason
               indices.append(seq.id)
         else:

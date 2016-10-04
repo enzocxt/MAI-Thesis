@@ -213,10 +213,10 @@ class prefixSpan(Mining):
         #self.patternSet = utils.parser(self, stdOutput)
         self.patternSet = self.parserSequence(stdOutput)
         return self.patternSet
-
-    def parserSequence(self, stdOutput, path=None):
+    
+    @staticmethod
+    def parserSequence(stdOutput, path=None):
         patterns = []
-
         if path == "" or not path:
             lines = stdOutput.split('\n')
             index = 1
