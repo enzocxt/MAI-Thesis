@@ -10,7 +10,7 @@ from solver.method import *
 from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len
-from solver.subsumption import create_subsumption_lattice, get_all_children
+from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
 
 default_parameters = 'config.ini'
 
@@ -202,7 +202,7 @@ def itemset_idp_iterative_old(params, patterns):
 
 def sequence_idp(params, patterns):
     
-    subsumption_tree = create_subsumption_lattice(patterns)
+    subsumption_lattice = create_subsumption_lattice(patterns)
 
 
     indices = []
@@ -224,8 +224,13 @@ def sequence_idp(params, patterns):
     os.system("rm tmp/seq_test_*")
     number_of_IDP_calls = 0
     
+    lattice = create_subsumption_lattice(patterns)
+    not_solution_set = set([])
 
-    for seq in tqdm(patterns):
+    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len)):
+        if seq in not_solution_set:
+          print('skipping the sequence ', seq)
+          continue
         #if we make it a function, is_closed(seq)
         #then we need just need async_map(is_closed,patterns)
         patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
@@ -243,6 +248,10 @@ def sequence_idp(params, patterns):
                      # the same for the case of id = 5, it is selected as 2 for some reason
               indices.append(seq.id)
               sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id))
+              children = set(get_all_children(seq,lattice))
+              the_same_sup = set(support_mapping[seq.get_support()])
+              not_solution_set |= children.intersection(the_same_sup)
+              
           else:
               sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
               sergeylog("IDP OUTPUT: \n")
@@ -250,7 +259,8 @@ def sequence_idp(params, patterns):
               sergeylog("\n")
         else:
           indices.append(seq.id)
-
+    
+    print("not solution set", not_solution_set)
     print("NUMBER OF IDP CALLS",number_of_IDP_calls)
     return indices
 

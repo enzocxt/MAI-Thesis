@@ -16,7 +16,7 @@ def create_subsumption_lattice(patterns):
   max_len = max(mapping_by_len.keys())
   attribute_mapping = make_attribute_mapping(patterns)
 
-  for l in range(max_len-1): # maximal are not subsumed by anything
+  for l in range(1,max_len): # maximal are not subsumed by anything
     print('processing len', l)
     sequences_with_len_l = mapping_by_len[l]
     for seq in sequences_with_len_l:
@@ -29,8 +29,16 @@ def create_subsumption_lattice(patterns):
 
   return subsumption_tree
 
-def get_all_children(pattern, lattice):
+def get_all_children(pattern, lattice): 
+  for child in lattice[pattern]:
+    yield child
+    for indirect_indirect_child in get_all_children(child, lattice):
+      yield indirect_indirect_child
+
+def get_direct_children(pattern, lattice):
   return lattice[pattern]
+    
+
   
 # print mapping_by_len
 # print attribute_mapping
