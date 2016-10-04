@@ -13,6 +13,17 @@ def group_by_len(patterns):
     mapping[l].add(pattern)
   return mapping
 
+def get_other_smaller_or_eq_patterns(pattern, len_mapping):
+  l = pattern.get_pattern_len()
+  other_patterns = len_mapping[l] - set([pattern])
+  while True:
+    l -= 1
+    if l <= 0:
+      break
+    smaller = len_mapping[l]
+    other_patterns = other_patterns.union(smaller)
+  return other_patterns
+
 def make_grouping_by_support(patterns):
   mapping = defaultdict(set)
   for pattern in patterns:
@@ -27,6 +38,7 @@ def make_attribute_mapping(patterns):
       mapping[attribute].add(pattern)
   return mapping
 
+
 def get_attribute_intersection(pattern, mapping, support_mapping=None):
     first_flag = True
     for attribute in pattern.get_attributes():
@@ -38,7 +50,7 @@ def get_attribute_intersection(pattern, mapping, support_mapping=None):
     if support_mapping: # if mining closed ones we can make use
       the_same_support_patterns = support_mapping[pattern.get_support()] 
       patterns_to_check = patterns_to_check.intersection(the_same_support_patterns)
-    return list(patterns_to_check)
+    return patterns_to_check
 
 
 
