@@ -1,3 +1,4 @@
+import array
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 
@@ -49,11 +50,13 @@ class Sequence(Pattern):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
-        self.attributes = sequence
+        self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
         for s in sequence:
             self.sequence.append(list(s)) # WHY?
         self.support = support
         self.number_of_attributes = len(sequence)
+        self.attribute_array = array.array('i', self.attributes)
+
 
     def append(self, p):
         if p.sequence[0][0] == PLACE_HOLDER:
@@ -83,6 +86,9 @@ class Sequence(Pattern):
     
     def get_pattern_len(self):
       return self.number_of_attributes
+
+    def get_attribute_array(self):
+      return self.attribute_array
 
 
 class Itemset(Pattern):
