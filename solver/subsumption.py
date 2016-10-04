@@ -28,6 +28,9 @@ def create_subsumption_lattice(patterns):
           subsumption_tree[candidate].add(seq)
 
   return subsumption_tree
+
+def get_all_children(pattern, lattice):
+  return lattice[pattern]
   
 # print mapping_by_len
 # print attribute_mapping
