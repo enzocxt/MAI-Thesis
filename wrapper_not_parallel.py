@@ -227,7 +227,8 @@ def sequence_idp(params, patterns):
     lattice = create_subsumption_lattice(patterns)
     not_solution_set = set([])
 
-    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len)):
+    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+       #print(seq.get_pattern_len())
         if seq in not_solution_set:
           print('skipping the sequence ', seq)
           continue
@@ -241,7 +242,7 @@ def sequence_idp(params, patterns):
           idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id)
           idp_output = idp_gen.run_IDP(idp_program_name)
 
-          print("running idp on id=",seq.id)
+       #  print("running idp on id=",seq.id)
           os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name))
           if 'Unsatisfiable' in idp_output:
 #             return # break here look at the INDEX, it should be 1 but it is 2 for some reason;

@@ -219,7 +219,8 @@ class IDPGenerator:
     #   print "executing IDP command: " +  command
         os.system(command)
         '''
-        child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE)
+        with open("tmp/fnull","w") as FNULL:
+          child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE,stderr=FNULL)
         stdOutput = child.stdout.read()
         #print stdOutput
         '''
