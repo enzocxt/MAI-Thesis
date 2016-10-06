@@ -11,6 +11,8 @@ from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len
 from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
+from solver.Constraint import LengthConstraint
+
 
 default_parameters = 'config.ini'
 
@@ -230,34 +232,34 @@ def sequence_idp(params, patterns):
         if seq in not_solution_set:
           print('skipping the sequence ', seq)
           continue
-        #if we make it a function, is_closed(seq)
-        #then we need just need async_map(is_closed,patterns)
-        patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
-        patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, mapping_by_len)
-        if len(patterns_to_check) > 1: #the pattern itself and other patterns
-          number_of_IDP_calls += 1
-          # generate idp code for finding pattern with constraints for this seq
-          idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id)
-          idp_output = idp_gen.run_IDP(idp_program_name)
+        if params['dominance'] == "closed":
+          patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
+          patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, mapping_by_len)
+          if len(patterns_to_check) > 1: #the pattern itself and other patterns
+            number_of_IDP_calls += 1
+            # generate idp code for finding pattern with constraints for this seq
+            idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id)
+            idp_output = idp_gen.run_IDP(idp_program_name)
 
-       #  print("running idp on id=",seq.id)
-          os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name))
-          if 'Unsatisfiable' in idp_output:
-#             return # break here look at the INDEX, it should be 1 but it is 2 for some reason;
-                     # the same for the case of id = 5, it is selected as 2 for some reason
-              indices.append(seq.id)
-              sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id))
-              children = set(get_all_children(seq,lattice))
-              the_same_sup = set(support_mapping[seq.get_support()])
-              not_solution_set |= children.intersection(the_same_sup)
-              
+       #    print("running idp on id=",seq.id)
+            os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name)) # debugging
+            if 'Unsatisfiable' in idp_output:
+                indices.append(seq.id)
+                sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id)) # debugging
+                children = set(get_all_children(seq,lattice)) 
+                the_same_sup = set(support_mapping[seq.get_support()])
+                not_solution_set |= children.intersection(the_same_sup)
+                
+            else: # all debugging code
+                sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
+                sergeylog("IDP OUTPUT: \n")
+                sergeylog(idp_output)
+                sergeylog("\n")
           else:
-              sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
-              sergeylog("IDP OUTPUT: \n")
-              sergeylog(idp_output)
-              sergeylog("\n")
-        else:
-          indices.append(seq.id)
+              indices.append(seq.id)
+        if params['dominance']:
+          pass
+            
     
     print("not solution set", not_solution_set)
     print("NUMBER OF IDP CALLS",number_of_IDP_calls)
