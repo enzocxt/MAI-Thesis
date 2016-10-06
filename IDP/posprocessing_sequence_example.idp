@@ -1,0 +1,87 @@
+vocabulary V{
+    type index
+    type patternID
+    type value
+   
+    seq(patternID,index,value)
+    
+    // output predicate
+    output(patternID)
+       
+    // sat per cosntraint
+    sat1(patternID)
+    sat2(patternID)
+    sat3(patternID)
+    
+    // len vocabulary
+    max_len: index
+    
+    //cost vocabulary
+    max_cost: int
+    cost(value): int
+    
+    //if-then-vocabulary
+    if:value
+    then:value
+}
+
+theory T:V{
+  // len constraint
+ //   max_len = max_len.
+    {
+     sat1(patternID) <- seq(patternID, index, value) & ~ (?i,v: i > max_len & seq(patternID,i,v)).
+    }
+    
+ // cost constraint
+    
+    {
+     sat2(patternID) <- seq(patternID, index, value) & sum{i, v: seq(patternID,i,v) : cost(v)} < max_cost.
+    }
+    
+  // if-then
+    
+    {
+        sat3(patternID) <- seq(patternID, index, value) & (!i: seq(patternID,i,if) => ?j: seq(patternID,j,then)).
+    }
+    
+    {
+        output(patternID) <- sat1(patternID) & sat2(patternID) & sat3(patternID).
+    }
+    
+}
+
+
+Structure S:V{
+  seq = {
+       1,1,3;
+       1,2,4;
+       1,3,6;
+        
+       2,1,5;
+       2,2,7;
+       2,3,5;
+       2,4,6;
+        
+       3,1,0;
+        
+       4,1,1;
+       4,2,2;
+       4,3,3;
+       
+    }
+    
+    max_len = 3
+    max_cost = 5
+    cost = {0 -> 6; 1-> 0; 2-> 0; 3 -> 0; 4 -> 0; 5 -> 2; 6 -> 2; 7 -> 0 }
+    
+    if = 3
+    then = 4
+    
+}
+
+
+procedure main(){
+
+printmodels(modelexpand(T,S))
+
+}
