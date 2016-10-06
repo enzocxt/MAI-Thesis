@@ -197,6 +197,7 @@ class IDPGenerator:
         # write code to file
         class_file.writelines(lines)
         class_file.close()
+        template_file.close()
 
         # print('\nGenerate idp file %s over. ~ ~\n' % file_path)
 
