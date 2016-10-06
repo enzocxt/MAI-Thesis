@@ -77,11 +77,11 @@ class gSpan(Mining):
             gSpan = "./exec/gSpan"
         options = ''
         if self.support:
-            options = ''.join('-support %s' % self.support)
+            options = ''.join('-s %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
         print('Command:\n%s -f %s -s %s -o -i' % (gSpan, self.data, self.support))
-        child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
+        child = subprocess.Popen([gSpan, "-f", self.data, options, "-o -i"], stdout=subprocess.PIPE)
         #child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
         '''
         print([gSpan, "-file", self.data, options])
