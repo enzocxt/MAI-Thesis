@@ -127,7 +127,7 @@ class IDPGenerator:
         idp_itemsets = idp_itemsets[:-1]
         self.generate(idp_itemsets, supports, filename, patternIndex)
 
-    def gen_IDP_sequence(self, sequences, filename, index):
+    def gen_IDP_sequence(self, sequences, filename, selected_index):
         idp_sequences, supports = '', ''
 
         for seq_i, sequence in enumerate(sequences):
@@ -147,7 +147,7 @@ class IDPGenerator:
         # eleminate the last ';' in supports
         supports = supports[:-1]
         idp_sequences = idp_sequences[:-1]
-        self.generate(idp_sequences, supports, filename, index)
+        self.generate(idp_sequences, supports, filename, selected_index)
 
     def gen_IDP_graph(self, graphs, filename):
         pass
