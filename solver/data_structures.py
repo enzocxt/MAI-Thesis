@@ -13,15 +13,15 @@ def group_by_len(patterns):
     mapping[l].add(pattern)
   return mapping
 
-def get_other_smaller_or_eq_patterns(pattern, len_mapping):
+def create_smaller_or_eq_by_len_mapping(len_mapping):
+  smaller_or_eq = defaultdict(set)
+  for k in len_mapping.keys():
+    smaller_or_eq[k] = smaller_or_eq[k-1].union(len_mapping[k]) 
+  return smaller_or_eq
+
+def get_other_smaller_or_eq_patterns(pattern, smaller_or_eq_mapping):
   l = pattern.get_pattern_len()
-  other_patterns = len_mapping[l] - set([pattern])
-  while True:
-    l -= 1
-    if l <= 0:
-      break
-    smaller = len_mapping[l]
-    other_patterns = other_patterns.union(smaller)
+  other_patterns = smaller_or_eq_mapping[l] - set([pattern])
   return other_patterns
 
 def make_grouping_by_support(patterns):

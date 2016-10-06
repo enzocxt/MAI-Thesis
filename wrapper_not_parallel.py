@@ -9,7 +9,7 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len,create_smaller_or_eq_by_len_mapping
 from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
 from solver.Constraint import LengthConstraint
 
@@ -204,8 +204,6 @@ def itemset_idp_iterative_old(params, patterns):
 
 def sequence_idp(params, patterns):
     
-    lattice = create_subsumption_lattice(patterns)
-    not_solution_set = set([])
 
     indices = []
 
@@ -221,6 +219,7 @@ def sequence_idp(params, patterns):
 
     mapping = make_attribute_mapping(patterns)
     mapping_by_len = group_by_len(patterns)
+    smaller_or_eq_mapping = create_smaller_or_eq_by_len_mapping(mapping_by_len)
 
     #for debuggin only
     os.system("rm tmp/seq_test_*")
@@ -228,40 +227,29 @@ def sequence_idp(params, patterns):
     
 
     for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
-       #print(seq.get_pattern_len())
-        if seq in not_solution_set:
-          print('skipping the sequence ', seq)
-          continue
         if params['dominance'] == "closed":
           patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
-          patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, mapping_by_len)
+          patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, smaller_or_eq_mapping)
           if len(patterns_to_check) > 1: #the pattern itself and other patterns
             number_of_IDP_calls += 1
-            # generate idp code for finding pattern with constraints for this seq
-            idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id)
+            idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id) # generate idp code for finding pattern with constraints for this seq
             idp_output = idp_gen.run_IDP(idp_program_name)
-
-       #    print("running idp on id=",seq.id)
             os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name)) # debugging
             if 'Unsatisfiable' in idp_output:
                 indices.append(seq.id)
                 sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id)) # debugging
-                children = set(get_all_children(seq,lattice)) 
-                the_same_sup = set(support_mapping[seq.get_support()])
-                not_solution_set |= children.intersection(the_same_sup)
-                
             else: # all debugging code
                 sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
-                sergeylog("IDP OUTPUT: \n")
-                sergeylog(idp_output)
-                sergeylog("\n")
+                sergeylog(idp_output+"\n")
           else:
               indices.append(seq.id)
-        if params['dominance']:
-          pass
-            
+        if params['dominance'] == "maximal":
+          
+          lattice = create_subsumption_lattice(patterns)
+          
+          valid_patterns = patterns # TODO write here an actual call to IDP with application of constraints
+
     
-    print("not solution set", not_solution_set)
     print("NUMBER OF IDP CALLS",number_of_IDP_calls)
     return indices
 
@@ -316,32 +304,6 @@ if __name__ == "__main__":
     print "\n*************************************"
     print "Number of frequent patterns: {0}".format(len(patterns))
 
-#   freq = set([p for p in patterns])
-#   closed = set([p for p in closed_patterns])
-#   not_closed = freq - closed
-#   with open('tmp/test_output', "w") as test_out:
-#     test_out.write("------not_closed------"+"\n")
-#     for p in not_closed:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     test_out.write("------frequent------"+"\n")
-#     for p in patterns:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     test_out.write("------closed------"+"\n")
-#     for p in closed:
-#       test_out.write("id: "+str(p.id)+"\n")
-#       test_out.write("attributes: "+";".join(map(lambda x: str(x),p.get_attributes()))+"\n")
-#       test_out.write("support: " + str(p.get_support())+"\n")
-#     
-    # test_out.write("------closed------"+"\n")
-    # for p in closed_patterns:
-    #   test_out.write("id: "+str(p.id)+"\n")
-    #   test_out.write("attributes: "+";".join(p.get_attributes())+"\n")
-    #   test_out.write("support: " + str(p.get_support())+"\n")
-
     '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
-    '''
+     '''
