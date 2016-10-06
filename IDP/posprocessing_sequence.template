@@ -1,0 +1,41 @@
+vocabulary V{
+    type index
+    type patternID
+    type value
+   
+    seq(patternID,index,value)
+    
+    // output predicate
+    output(patternID)
+       
+    // sat per constraint
+    len_constraint(patternID)
+    cost_constraint(patternID)
+    if_then_constraint(patternID)
+
+    ${VOCABULARY}
+}
+
+theory T:V{
+    ${THEORY}
+
+    ${FINAL_THEORY}
+    
+}
+
+
+Structure S:V{
+  seq = {
+  ${SEQUENCES}
+    }
+
+    ${STRUCTURE}
+    
+}
+
+
+procedure main(){
+
+printmodels(modelexpand(T,S))
+
+}

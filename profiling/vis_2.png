@@ -1,0 +1,2131 @@
+event: ns : Nanoseconds
+events: ns
+summary: 4996868999
+fl=/usr/lib/python2.7/__future__.py
+fn=<module>
+48 12000
+cfl=/usr/lib/python2.7/__future__.py
+cfn=_Feature
+calls=1 74
+48 1000
+cfl=/usr/lib/python2.7/__future__.py
+cfn=__init__
+calls=7 75
+48 1000
+
+fl=/usr/lib/python2.7/__future__.py
+fn=_Feature
+74 1000
+
+fl=/usr/lib/python2.7/__future__.py
+fn=__init__
+75 1000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=__init__:16
+16 2000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=__enter__
+20 4000
+cfl=~
+cfn=<method 'add' of 'set' objects>
+calls=2 0
+20 1000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=__exit__
+26 5000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=_commit_removals
+calls=2 52
+26 1000
+cfl=~
+cfn=<method 'remove' of 'set' objects>
+calls=2 0
+26 1000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=__init__:36
+36 5000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=_commit_removals
+52 1000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=__iter__
+58 12000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__init__:16
+calls=2 16
+58 2000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__enter__
+calls=2 20
+58 5000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__exit__
+calls=2 26
+58 7000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=add
+83 4000
+cfl=~
+cfn=<method 'add' of 'set' objects>
+calls=1 0
+83 7000
+
+fl=/usr/lib/python2.7/_weakrefset.py
+fn=remove
+108 3000
+cfl=~
+cfn=<method 'remove' of 'set' objects>
+calls=1 0
+108 7000
+
+fl=/usr/lib/python2.7/collections.py
+fn=<module>
+1 396000
+cfl=/usr/lib/python2.7/collections.py
+cfn=OrderedDict
+calls=1 26
+1 12000
+cfl=/usr/lib/python2.7/collections.py
+cfn=Counter
+calls=1 387
+1 80000
+cfl=/usr/lib/python2.7/heapq.py
+cfn=<module>
+calls=1 31
+1 111000
+cfl=/usr/lib/python2.7/keyword.py
+cfn=<module>
+calls=1 11
+1 7000
+
+fl=/usr/lib/python2.7/collections.py
+fn=OrderedDict
+26 12000
+
+fl=/usr/lib/python2.7/collections.py
+fn=Counter
+387 80000
+
+fl=/usr/lib/python2.7/csv.py
+fn=<module>
+4 200999
+cfl=/usr/lib/python2.7/csv.py
+cfn=Dialect
+calls=1 26
+4 2000
+cfl=/usr/lib/python2.7/csv.py
+cfn=excel
+calls=1 57
+4 1000
+cfl=/usr/lib/python2.7/csv.py
+cfn=excel_tab
+calls=1 67
+4 0
+cfl=/usr/lib/python2.7/csv.py
+cfn=DictReader
+calls=1 73
+4 7000
+cfl=/usr/lib/python2.7/csv.py
+cfn=DictWriter
+calls=1 127
+4 1000
+cfl=/usr/lib/python2.7/csv.py
+cfn=Sniffer
+calls=1 166
+4 1000
+cfl=~
+cfn=<_csv.register_dialect>
+calls=2 0
+4 7000
+
+fl=/usr/lib/python2.7/csv.py
+fn=Dialect
+26 2000
+
+fl=/usr/lib/python2.7/csv.py
+fn=excel
+57 1000
+
+fl=/usr/lib/python2.7/csv.py
+fn=excel_tab
+67 0
+
+fl=/usr/lib/python2.7/csv.py
+fn=DictReader
+73 5000
+cfl=~
+cfn=<method 'setter' of 'property' objects>
+calls=1 0
+73 2000
+
+fl=/usr/lib/python2.7/csv.py
+fn=DictWriter
+127 1000
+
+fl=/usr/lib/python2.7/csv.py
+fn=Sniffer
+166 1000
+
+fl=/usr/lib/python2.7/encodings/utf_8.py
+fn=decode
+15 9000
+cfl=~
+cfn=<_codecs.utf_8_decode>
+calls=2 0
+15 14000
+
+fl=/usr/lib/python2.7/heapq.py
+fn=<module>
+31 111000
+
+fl=/usr/lib/python2.7/keyword.py
+fn=<module>
+11 7000
+
+fl=/usr/lib/python2.7/pickle.py
+fn=<module>
+25 355000
+cfl=/usr/lib/python2.7/pickle.py
+cfn=PickleError
+calls=1 58
+25 1000
+cfl=/usr/lib/python2.7/pickle.py
+cfn=PicklingError
+calls=1 62
+25 1000
+cfl=/usr/lib/python2.7/pickle.py
+cfn=UnpicklingError
+calls=1 69
+25 0
+cfl=/usr/lib/python2.7/pickle.py
+cfn=_Stop
+calls=1 82
+25 0
+cfl=/usr/lib/python2.7/pickle.py
+cfn=Pickler
+calls=1 171
+25 9000
+cfl=/usr/lib/python2.7/pickle.py
+cfn=Unpickler
+calls=1 827
+25 14999
+cfl=/usr/lib/python2.7/pickle.py
+cfn=_EmptyClass
+calls=1 1261
+25 1000
+cfl=/usr/lib/python2.7/re.py
+cfn=match
+calls=117 134
+25 432999
+cfl=~
+cfn=<dir>
+calls=1 0
+25 24999
+cfl=~
+cfn=<method 'extend' of 'list' objects>
+calls=1 0
+25 0
+
+fl=/usr/lib/python2.7/pickle.py
+fn=PickleError
+58 1000
+
+fl=/usr/lib/python2.7/pickle.py
+fn=PicklingError
+62 1000
+
+fl=/usr/lib/python2.7/pickle.py
+fn=UnpicklingError
+69 0
+
+fl=/usr/lib/python2.7/pickle.py
+fn=_Stop
+82 0
+
+fl=/usr/lib/python2.7/pickle.py
+fn=Pickler
+171 9000
+
+fl=/usr/lib/python2.7/pickle.py
+fn=Unpickler
+827 14999
+
+fl=/usr/lib/python2.7/pickle.py
+fn=_EmptyClass
+1261 1000
+
+fl=/usr/lib/python2.7/platform.py
+fn=<module>
+10 40000
+cfl=/usr/lib/python2.7/platform.py
+cfn=_popen
+calls=1 388
+10 3000
+cfl=/usr/lib/python2.7/re.py
+cfn=compile
+calls=13 188
+10 4876999
+cfl=~
+cfn=<hasattr>
+calls=1 0
+10 0
+
+fl=/usr/lib/python2.7/platform.py
+fn=_popen
+388 3000
+
+fl=/usr/lib/python2.7/platform.py
+fn=_syscmd_uname
+1023 64000
+cfl=/usr/lib/python2.7/string.py
+cfn=strip
+calls=1 248
+1023 11000
+cfl=~
+cfn=<method 'close' of 'file' objects>
+calls=1 0
+1023 18000
+cfl=~
+cfn=<method 'read' of 'file' objects>
+calls=1 0
+1023 1206000
+cfl=~
+cfn=<posix.popen>
+calls=1 0
+1023 183000
+
+fl=/usr/lib/python2.7/platform.py
+fn=uname
+1189 18000
+cfl=/usr/lib/python2.7/platform.py
+cfn=_syscmd_uname
+calls=1 1023
+1189 1482000
+cfl=~
+cfn=<filter>
+calls=1 0
+1189 1000
+cfl=~
+cfn=<posix.uname>
+calls=1 0
+1189 3000
+
+fl=/usr/lib/python2.7/platform.py
+fn=system
+1326 5000
+cfl=/usr/lib/python2.7/platform.py
+cfn=uname
+calls=1 1189
+1326 1504000
+
+fl=/usr/lib/python2.7/re.py
+fn=match
+134 59000
+cfl=/usr/lib/python2.7/re.py
+cfn=_compile
+calls=117 226
+134 323000
+cfl=~
+cfn=<method 'match' of '_sre.SRE_Pattern' objects>
+calls=117 0
+134 51000
+
+fl=/usr/lib/python2.7/re.py
+fn=compile
+188 14999
+cfl=/usr/lib/python2.7/re.py
+cfn=_compile
+calls=15 226
+188 5550999
+
+fl=/usr/lib/python2.7/re.py
+fn=_compile
+226 197000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=isstring
+calls=16 472
+226 17000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=compile
+calls=16 493
+226 5624000
+cfl=~
+cfn=<isinstance>
+calls=16 0
+226 11000
+cfl=~
+cfn=<len>
+calls=16 0
+226 3000
+cfl=~
+cfn=<method 'get' of 'dict' objects>
+calls=132 0
+226 22000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_identityfunction
+24 8000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_compile
+32 793000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_compile
+calls=135 32
+32 1389000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_compile_charset
+calls=55 178
+32 457999
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_simple
+calls=78 354
+32 148000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__getitem__
+calls=392 130
+32 223000
+cfl=~
+cfn=<_sre.getlower>
+calls=44 0
+32 5000
+cfl=~
+cfn=<len>
+calls=298 0
+32 18999
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=1081 0
+32 97000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_compile_charset
+178 167000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_identityfunction
+calls=41 24
+178 6000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_optimize_charset
+calls=57 207
+178 297000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=238 0
+178 24000
+cfl=~
+cfn=<method 'extend' of 'list' objects>
+calls=1 0
+178 0
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_optimize_charset
+207 257999
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_identityfunction
+calls=19 24
+207 2000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_mk_bitmap
+calls=1 258
+207 29999
+cfl=~
+cfn=<len>
+calls=19 0
+207 0
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=25 0
+207 2000
+cfl=~
+cfn=<range>
+calls=7 0
+207 5000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_mk_bitmap
+258 29000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=8 0
+258 1000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_simple
+354 98000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__getitem__
+calls=71 130
+354 37999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=getwidth
+calls=78 140
+354 12000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_compile_info
+359 112000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_compile_charset
+calls=2 178
+359 36000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__len__
+calls=8 126
+359 3000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__getitem__
+calls=14 130
+359 10000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=getwidth
+calls=16 140
+359 421000
+cfl=~
+cfn=<len>
+calls=60 0
+359 12000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=95 0
+359 11000
+cfl=~
+cfn=<method 'extend' of 'list' objects>
+calls=4 0
+359 2000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=isstring
+472 22000
+cfl=~
+cfn=<isinstance>
+calls=32 0
+472 3000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=_code
+478 37999
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_compile
+calls=16 32
+478 1743000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_compile_info
+calls=16 359
+478 607000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=16 0
+478 1000
+
+fl=/usr/lib/python2.7/sre_compile.py
+fn=compile
+493 79000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=isstring
+calls=16 472
+493 8000
+cfl=/usr/lib/python2.7/sre_compile.py
+cfn=_code
+calls=16 478
+493 2389000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=parse
+calls=16 675
+493 3110000
+cfl=~
+cfn=<_sre.compile>
+calls=16 0
+493 35000
+cfl=~
+cfn=<method 'items' of 'dict' objects>
+calls=16 0
+493 3000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__init__:67
+67 11000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=opengroup
+72 26000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=38 0
+72 9000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=closegroup
+83 20000
+cfl=~
+cfn=<method 'remove' of 'list' objects>
+calls=38 0
+83 10000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__init__:90
+90 49000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__len__
+126 104000
+cfl=~
+cfn=<len>
+calls=336 0
+126 28000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__getitem__
+130 319000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__init__:90
+calls=78 90
+130 24000
+cfl=~
+cfn=<isinstance>
+calls=719 0
+130 136000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__setitem__
+134 14999
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=append
+138 104999
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=307 0
+138 37999
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=getwidth
+140 368000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=getwidth
+calls=135 140
+140 303000
+cfl=~
+cfn=<max>
+calls=8 0
+140 2000
+cfl=~
+cfn=<min>
+calls=310 0
+140 63000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__init__:178
+178 17000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__next
+calls=16 182
+178 31000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=__next
+182 426999
+cfl=~
+cfn=<len>
+calls=1214 0
+182 96000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=match
+195 96000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__next
+calls=94 182
+195 88000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=get
+201 173000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__next
+calls=521 182
+201 404000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=tell
+205 0
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=_class_escape
+225 31000
+cfl=~
+cfn=<len>
+calls=5 0
+225 0
+cfl=~
+cfn=<method 'get' of 'dict' objects>
+calls=54 0
+225 12000
+cfl=~
+cfn=<ord>
+calls=5 0
+225 0
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=_escape
+257 48000
+cfl=~
+cfn=<len>
+calls=24 0
+257 4000
+cfl=~
+cfn=<method 'get' of 'dict' objects>
+calls=77 0
+257 21000
+cfl=~
+cfn=<ord>
+calls=24 0
+257 2000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=_parse_sub
+301 164000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__init__:90
+calls=3 90
+301 0
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__len__
+calls=6 126
+301 1000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__getitem__
+calls=8 130
+301 2000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=append
+calls=3 138
+301 1000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=match
+calls=119 195
+301 29000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=_parse
+calls=70 379
+301 2918999
+cfl=~
+cfn=<len>
+calls=68 0
+301 5000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=70 0
+301 13000
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=_parse
+379 1287000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=opengroup
+calls=38 72
+379 35000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=closegroup
+calls=38 83
+379 29999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__init__:90
+calls=70 90
+379 24999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__len__
+calls=234 126
+379 97000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__getitem__
+calls=234 130
+379 206000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__setitem__
+calls=78 134
+379 14999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=append
+calls=304 138
+379 141999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=match
+calls=301 195
+379 155000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=get
+calls=505 201
+379 563000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=tell
+calls=2 205
+379 0
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=_class_escape
+calls=27 225
+379 42999
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=_escape
+calls=52 257
+379 75000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=_parse_sub
+calls=49 301
+379 1661999
+cfl=~
+cfn=<len>
+calls=146 0
+379 59999
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=74 0
+379 13000
+cfl=~
+cfn=<ord>
+calls=202 0
+379 14999
+
+fl=/usr/lib/python2.7/sre_parse.py
+fn=parse
+675 61000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__init__:67
+calls=16 67
+675 11000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__init__:178
+calls=16 178
+675 48000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=get
+calls=16 201
+675 14000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=_parse_sub
+calls=16 301
+675 2976000
+
+fl=/usr/lib/python2.7/string.py
+fn=strip
+248 10000
+cfl=~
+cfn=<method 'strip' of 'str' objects>
+calls=1 0
+248 1000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=<module>
+387 882000
+cfl=/usr/lib/python2.7/pickle.py
+cfn=<module>
+calls=1 25
+387 839999
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=CalledProcessError
+calls=1 400
+387 1000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=Popen
+calls=1 647
+387 8000
+cfl=~
+cfn=<getattr>
+calls=1 0
+387 1000
+cfl=~
+cfn=<hasattr>
+calls=1 0
+387 0
+cfl=~
+cfn=<posix.sysconf>
+calls=1 0
+387 3000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=CalledProcessError
+400 1000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_cleanup
+458 3000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_eintr_retry_call
+473 18000
+cfl=~
+cfn=<method 'read' of 'file' objects>
+calls=2 0
+473 1869000
+cfl=~
+cfn=<posix.read>
+calls=2 0
+473 2183000
+cfl=~
+cfn=<posix.waitpid>
+calls=2 0
+473 17000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=Popen
+647 8000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=__init__
+650 54000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_cleanup
+calls=2 458
+650 3000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_get_handles
+calls=2 1099
+650 197000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_execute_child
+calls=2 1187
+650 2708000
+cfl=~
+cfn=<isinstance>
+calls=2 0
+650 1000
+cfl=~
+cfn=<posix.fdopen>
+calls=2 0
+650 44000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=__del__
+754 9000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_internal_poll
+calls=2 1344
+754 1000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=communicate
+768 37999
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_eintr_retry_call
+calls=2 473
+768 1874000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=wait
+calls=2 1371
+768 48000
+cfl=~
+cfn=<method 'close' of 'file' objects>
+calls=2 0
+768 12000
+cfl=~
+cfn=<method 'count' of 'list' objects>
+calls=2 0
+768 2000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_get_handles
+1099 136000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=pipe_cloexec
+calls=2 1161
+1099 59000
+cfl=~
+cfn=<method 'update' of 'set' objects>
+calls=2 0
+1099 2000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_set_cloexec_flag
+1148 14999
+cfl=~
+cfn=<fcntl.fcntl>
+calls=16 0
+1148 28000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=pipe_cloexec
+1161 17000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_set_cloexec_flag
+calls=8 1148
+1161 42999
+cfl=~
+cfn=<posix.pipe>
+calls=4 0
+1161 14999
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_execute_child
+1187 160999
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_eintr_retry_call
+calls=2 473
+1187 2189000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=pipe_cloexec
+calls=2 1161
+1187 16000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_close_in_parent
+calls=2 1208
+1187 35000
+cfl=~
+cfn=<gc.disable>
+calls=2 0
+1187 2000
+cfl=~
+cfn=<gc.enable>
+calls=2 0
+1187 8000
+cfl=~
+cfn=<gc.isenabled>
+calls=2 0
+1187 1000
+cfl=~
+cfn=<isinstance>
+calls=2 0
+1187 4000
+cfl=~
+cfn=<posix.close>
+calls=4 0
+1187 16000
+cfl=~
+cfn=<posix.fork>
+calls=2 0
+1187 276000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_close_in_parent
+1208 28000
+cfl=~
+cfn=<method 'remove' of 'set' objects>
+calls=2 0
+1208 2000
+cfl=~
+cfn=<posix.close>
+calls=2 0
+1208 5000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_handle_exitstatus
+1330 6000
+cfl=~
+cfn=<posix.WEXITSTATUS>
+calls=2 0
+1330 2000
+cfl=~
+cfn=<posix.WIFEXITED>
+calls=2 0
+1330 0
+cfl=~
+cfn=<posix.WIFSIGNALED>
+calls=2 0
+1330 1000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=_internal_poll
+1344 1000
+
+fl=/usr/lib/python2.7/subprocess.py
+fn=wait
+1371 14999
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_eintr_retry_call
+calls=2 473
+1371 24000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=_handle_exitstatus
+calls=2 1330
+1371 9000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/__init__.py
+fn=<module>
+1 441999
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_main.py
+cfn=<module>
+calls=1 1
+1 5961999
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=<module>
+calls=1 9
+1 1937000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_gui.py
+cfn=<module>
+calls=1 9
+1 26000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_pandas.py
+cfn=<module>
+calls=1 1
+1 16000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_main.py
+fn=<module>
+1 99999
+cfl=/usr/lib/python2.7/re.py
+cfn=compile
+calls=2 188
+1 689000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_version.py
+cfn=<module>
+calls=1 2
+1 5173000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=<module>
+9 274000
+cfl=/usr/lib/python2.7/__future__.py
+cfn=<module>
+calls=1 48
+9 14000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=TqdmTypeError
+calls=1 27
+9 0
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=TqdmKeyError
+calls=1 31
+9 0
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=TqdmDeprecationWarning
+calls=1 35
+9 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=tqdm
+calls=1 44
+9 22000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=<module>
+calls=1 1
+9 1625999
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=TqdmTypeError
+27 0
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=TqdmKeyError
+31 0
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=TqdmDeprecationWarning
+35 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=tqdm
+44 22000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=format_interval
+78 7000
+cfl=~
+cfn=<divmod>
+calls=6 0
+78 3000
+cfl=~
+cfn=<method 'format' of 'str' objects>
+calls=3 0
+78 8000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=status_printer
+99 2000
+cfl=~
+cfn=<getattr>
+calls=1 0
+99 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=fp_write:109
+109 26000
+cfl=~
+cfn=<method 'flush' of 'file' objects>
+calls=2 0
+109 1000
+cfl=~
+cfn=<method 'write' of 'file' objects>
+calls=2 0
+109 49000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=print_status
+115 8000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=fp_write:109
+calls=2 109
+115 75999
+cfl=~
+cfn=<len>
+calls=2 0
+115 0
+cfl=~
+cfn=<max>
+calls=2 0
+115 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=format_meter
+121 34000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=format_interval
+calls=3 78
+121 18000
+cfl=~
+cfn=<divmod>
+calls=2 0
+121 0
+cfl=~
+cfn=<len>
+calls=4 0
+121 1000
+cfl=~
+cfn=<max>
+calls=4 0
+121 4000
+cfl=~
+cfn=<method 'format' of 'str' objects>
+calls=5 0
+121 12000
+cfl=~
+cfn=<unichr>
+calls=2 0
+121 2000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__new__
+286 24000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__init__:36
+calls=1 36
+286 5000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=add
+calls=1 83
+286 11000
+cfl=~
+cfn=<built-in method __new__ of type object at 0x919120>
+calls=1 0
+286 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=_get_free_pos
+296 11000
+cfl=~
+cfn=<max>
+calls=1 0
+296 18000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=<genexpr>
+300 0
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__iter__
+calls=2 58
+300 16000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=_decr_instances
+307 9000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=__iter__
+calls=1 58
+307 10000
+cfl=/usr/lib/python2.7/_weakrefset.py
+cfn=remove
+calls=1 108
+307 10000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__init__
+449 27000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=status_printer
+calls=1 99
+449 3000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=print_status
+calls=1 115
+449 44000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=format_meter
+calls=1 121
+449 35000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=_get_free_pos
+calls=1 296
+449 29000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=_supports_unicode
+calls=1 46
+449 10000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=_environ_cols_wrapper
+calls=1 53
+449 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=_environ_cols_linux
+calls=1 108
+449 327000
+cfl=~
+cfn=<len>
+calls=1 0
+449 1000
+cfl=~
+cfn=<time.time>
+calls=1 0
+449 2000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__del__
+644 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=close
+calls=1 853
+644 0
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__eq__
+660 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__hash__
+672 3000
+cfl=~
+cfn=<id>
+calls=2 0
+672 0
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=__iter__
+675 1993000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=close
+calls=1 853
+675 130999
+cfl=~
+cfn=<time.time>
+calls=4484 0
+675 388999
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=close
+853 10000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=print_status
+calls=1 115
+853 41000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=format_meter
+calls=1 121
+853 36000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=_decr_instances
+calls=1 307
+853 29000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=fp_write:872
+calls=2 872
+853 14000
+cfl=~
+cfn=<hasattr>
+calls=1 0
+853 1000
+cfl=~
+cfn=<time.time>
+calls=1 0
+853 0
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+fn=fp_write:872
+872 5000
+cfl=~
+cfn=<method 'write' of 'file' objects>
+calls=2 0
+872 9000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_gui.py
+fn=<module>
+9 24000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_gui.py
+cfn=tqdm_gui
+calls=1 25
+9 2000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_gui.py
+fn=tqdm_gui
+25 2000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm_pandas.py
+fn=<module>
+1 16000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=<module>
+1 107000
+cfl=/usr/lib/python2.7/platform.py
+cfn=system
+calls=1 1326
+1 1509000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=<genexpr>
+calls=1 7
+1 1000
+cfl=~
+cfn=<any>
+calls=1 0
+1 9000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=<genexpr>
+7 8000
+cfl=~
+cfn=<method 'startswith' of 'str' objects>
+calls=3 0
+7 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=_is_utf
+42 4000
+cfl=~
+cfn=<method 'lower' of 'str' objects>
+calls=1 0
+42 0
+cfl=~
+cfn=<method 'startswith' of 'str' objects>
+calls=1 0
+42 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=_supports_unicode
+46 4000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=_is_utf
+calls=1 42
+46 5000
+cfl=~
+cfn=<getattr>
+calls=1 0
+46 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=_environ_cols_wrapper
+53 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=_environ_cols_linux
+108 319000
+cfl=~
+cfn=<fcntl.ioctl>
+calls=1 0
+108 8000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+fn=_sh
+132 59000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=__init__
+calls=2 650
+132 3006999
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=__del__
+calls=2 754
+132 10000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=communicate
+calls=2 768
+132 1974000
+cfl=~
+cfn=<method 'decode' of 'str' objects>
+calls=2 0
+132 46000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_version.py
+fn=<module>
+2 24000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_version.py
+cfn=commit_hash
+calls=2 19
+2 5144000
+cfl=~
+cfn=<len>
+calls=1 0
+2 0
+cfl=~
+cfn=<map>
+calls=1 0
+2 4000
+cfl=~
+cfn=<method 'join' of 'str' objects>
+calls=1 0
+2 1000
+
+fl=/usr/local/lib/python2.7/dist-packages/tqdm/_version.py
+fn=commit_hash
+19 32999
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=_sh
+calls=2 132
+19 5096000
+cfl=~
+cfn=<method 'lstrip' of 'unicode' objects>
+calls=2 0
+19 2000
+cfl=~
+cfn=<method 'split' of 'unicode' objects>
+calls=2 0
+19 9000
+cfl=~
+cfn=<method 'startswith' of 'unicode' objects>
+calls=2 0
+19 4000
+
+fl=solver/Pattern.py
+fn=<module>
+1 93000
+cfl=solver/Pattern.py
+cfn=Pattern
+calls=1 6
+1 1000
+cfl=solver/Pattern.py
+cfn=Edge
+calls=1 17
+1 0
+cfl=solver/Pattern.py
+cfn=Node
+calls=1 26
+1 1000
+cfl=solver/Pattern.py
+cfn=Graph
+calls=1 33
+1 96000
+cfl=solver/Pattern.py
+cfn=Sequence
+calls=1 48
+1 2000
+cfl=solver/Pattern.py
+cfn=Itemset
+calls=1 94
+1 1000
+
+fl=solver/Pattern.py
+fn=Pattern
+6 1000
+
+fl=solver/Pattern.py
+fn=Edge
+17 0
+
+fl=solver/Pattern.py
+fn=Node
+26 1000
+
+fl=solver/Pattern.py
+fn=Graph
+33 96000
+
+fl=solver/Pattern.py
+fn=Sequence
+48 2000
+
+fl=solver/Pattern.py
+fn=__init__
+49 29890000
+cfl=~
+cfn=<len>
+calls=4483 0
+49 292000
+cfl=~
+cfn=<map>
+calls=4483 0
+49 18456000
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=25552 0
+49 2253000
+
+fl=solver/Pattern.py
+fn=<lambda>
+53 10458000
+
+fl=solver/Pattern.py
+fn=__repr__
+78 9271000
+
+fl=solver/Pattern.py
+fn=get_attributes
+84 201978000
+
+fl=solver/Pattern.py
+fn=get_pattern_len
+87 673000
+
+fl=solver/Pattern.py
+fn=Itemset
+94 1000
+
+fl=solver/__init__.py
+fn=<module>
+1 0
+
+fl=solver/data_structures.py
+fn=<module>
+1 266000
+cfl=/usr/lib/python2.7/collections.py
+cfn=<module>
+calls=1 1
+1 606000
+
+fl=solver/data_structures.py
+fn=group_by_len
+9 1844999
+cfl=solver/Pattern.py
+cfn=get_pattern_len
+calls=4483 87
+9 673000
+cfl=~
+cfn=<method 'add' of 'set' objects>
+calls=4483 0
+9 466999
+
+fl=solver/data_structures.py
+fn=make_attribute_mapping
+23 6001999
+cfl=solver/Pattern.py
+cfn=get_attributes
+calls=4483 84
+23 892999
+cfl=~
+cfn=<method 'add' of 'set' objects>
+calls=25552 0
+23 2196999
+
+fl=solver/data_structures.py
+fn=get_attribute_intersection
+30 348136000
+cfl=solver/Pattern.py
+cfn=get_attributes
+calls=4481 84
+30 1000999
+cfl=~
+cfn=<method 'intersection' of 'set' objects>
+calls=21040 0
+30 2231020000
+
+fl=solver/method.py
+fn=<module>
+1 877000
+cfl=/usr/lib/python2.7/platform.py
+cfn=<module>
+calls=1 10
+1 4920000
+cfl=/usr/lib/python2.7/subprocess.py
+cfn=<module>
+calls=1 387
+1 1735000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/__init__.py
+cfn=<module>
+calls=1 1
+1 8383000
+cfl=solver/method.py
+cfn=Mining
+calls=1 23
+1 2000
+cfl=solver/method.py
+cfn=gSpan
+calls=1 67
+1 5000
+cfl=solver/method.py
+cfn=prefixSpan
+calls=1 162
+1 7000
+cfl=solver/method.py
+cfn=prefixSpan_py
+calls=1 257
+1 3000
+cfl=solver/method.py
+cfn=eclat
+calls=1 275
+1 4000
+cfl=solver/utils.py
+cfn=<module>
+calls=1 1
+1 643000
+
+fl=solver/method.py
+fn=Mining
+23 2000
+
+fl=solver/method.py
+fn=gSpan
+67 5000
+
+fl=solver/method.py
+fn=prefixSpan
+162 7000
+
+fl=solver/method.py
+fn=parserSequence
+217 11413999
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__new__
+calls=1 286
+217 41000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__init__
+calls=1 449
+217 479000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__del__
+calls=1 644
+217 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__iter__
+calls=4485 675
+217 2513000
+cfl=solver/Pattern.py
+cfn=__init__
+calls=4483 49
+217 50891000
+cfl=~
+cfn=<len>
+calls=1 0
+217 0
+cfl=~
+cfn=<method 'append' of 'list' objects>
+calls=4483 0
+217 444000
+cfl=~
+cfn=<method 'split' of 'str' objects>
+calls=8967 0
+217 3787999
+cfl=~
+cfn=<method 'strip' of 'str' objects>
+calls=13449 0
+217 1434000
+cfl=~
+cfn=<range>
+calls=1 0
+217 63000
+
+fl=solver/method.py
+fn=prefixSpan_py
+257 3000
+
+fl=solver/method.py
+fn=eclat
+275 4000
+
+fl=solver/subsumption.py
+fn=<module>
+1 6994999
+cfl=solver/__init__.py
+cfn=<module>
+calls=1 1
+1 0
+cfl=solver/data_structures.py
+cfn=<module>
+calls=1 1
+1 872000
+cfl=solver/method.py
+cfn=<module>
+calls=1 1
+1 16579000
+cfl=solver/subsumption.py
+cfn=main
+calls=1 5
+1 4972423000
+
+fl=solver/subsumption.py
+fn=main
+5 260641999
+cfl=solver/Pattern.py
+cfn=__repr__
+calls=21899 78
+5 9271000
+cfl=solver/method.py
+cfn=parserSequence
+calls=1 217
+5 71067999
+cfl=solver/subsumption.py
+cfn=create_subsumption_lattice
+calls=1 17
+5 4631112000
+cfl=~
+cfn=<method 'read' of 'file' objects>
+calls=1 0
+5 323000
+cfl=~
+cfn=<open>
+calls=1 0
+5 7000
+
+fl=solver/subsumption.py
+fn=create_subsumption_lattice
+17 649161000
+cfl=solver/Pattern.py
+cfn=get_attributes
+calls=1788778 84
+17 200083999
+cfl=solver/data_structures.py
+cfn=group_by_len
+calls=1 9
+17 2985000
+cfl=solver/data_structures.py
+cfn=make_attribute_mapping
+calls=1 23
+17 9092000
+cfl=solver/data_structures.py
+cfn=get_attribute_intersection
+calls=4481 30
+17 2580157000
+cfl=solver/subsumption.py
+cfn=is_seq1_subsumed_by_seq2
+calls=894389 40
+17 1010453000
+cfl=~
+cfn=<max>
+calls=1 0
+17 2000
+cfl=~
+cfn=<method 'add' of 'set' objects>
+calls=17451 0
+17 2407000
+cfl=~
+cfn=<method 'intersection' of 'set' objects>
+calls=4481 0
+17 176767999
+cfl=~
+cfn=<method 'keys' of 'dict' objects>
+calls=1 0
+17 1000
+cfl=~
+cfn=<range>
+calls=1 0
+17 2000
+
+fl=solver/subsumption.py
+fn=is_seq1_subsumed_by_seq2
+40 925769000
+cfl=~
+cfn=<len>
+calls=1788778 0
+40 84684000
+
+fl=solver/utils.py
+fn=<module>
+1 228999
+cfl=/usr/lib/python2.7/csv.py
+cfn=<module>
+calls=1 4
+1 219999
+cfl=solver/Pattern.py
+cfn=<module>
+calls=1 1
+1 194000
+
+fl=~
+fn=<_codecs.utf_8_decode>
+0 14000
+
+fl=~
+fn=<_csv.register_dialect>
+0 7000
+
+fl=~
+fn=<_sre.compile>
+0 35000
+
+fl=~
+fn=<_sre.getlower>
+0 5000
+
+fl=~
+fn=<any>
+0 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_utils.py
+cfn=<genexpr>
+calls=3 7
+0 8000
+
+fl=~
+fn=<built-in method __new__ of type object at 0x919120>
+0 1000
+
+fl=~
+fn=<dir>
+0 24999
+
+fl=~
+fn=<divmod>
+0 3000
+
+fl=~
+fn=<fcntl.fcntl>
+0 28000
+
+fl=~
+fn=<fcntl.ioctl>
+0 8000
+
+fl=~
+fn=<filter>
+0 1000
+
+fl=~
+fn=<gc.disable>
+0 2000
+
+fl=~
+fn=<gc.enable>
+0 8000
+
+fl=~
+fn=<gc.isenabled>
+0 1000
+
+fl=~
+fn=<getattr>
+0 3000
+
+fl=~
+fn=<hasattr>
+0 1000
+
+fl=~
+fn=<id>
+0 0
+
+fl=~
+fn=<isinstance>
+0 155000
+
+fl=~
+fn=<len>
+0 85174000
+cfl=/usr/lib/python2.7/sre_parse.py
+cfn=__len__
+calls=88 126
+0 31000
+
+fl=~
+fn=<map>
+0 8002000
+cfl=solver/Pattern.py
+cfn=<lambda>
+calls=25552 53
+0 10458000
+
+fl=~
+fn=<max>
+0 11000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=<genexpr>
+calls=1 300
+0 16000
+
+fl=~
+fn=<method 'add' of 'set' objects>
+0 5077000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__hash__
+calls=1 672
+0 2000
+
+fl=~
+fn=<method 'append' of 'list' objects>
+0 2905999
+
+fl=~
+fn=<method 'close' of 'file' objects>
+0 29999
+
+fl=~
+fn=<method 'count' of 'list' objects>
+0 2000
+
+fl=~
+fn=<method 'decode' of 'str' objects>
+0 23000
+cfl=/usr/lib/python2.7/encodings/utf_8.py
+cfn=decode
+calls=2 15
+0 23000
+
+fl=~
+fn=<method 'disable' of '_lsprof.Profiler' objects>
+0 1000
+
+fl=~
+fn=<method 'extend' of 'list' objects>
+0 2000
+
+fl=~
+fn=<method 'flush' of 'file' objects>
+0 1000
+
+fl=~
+fn=<method 'format' of 'str' objects>
+0 20000
+
+fl=~
+fn=<method 'get' of 'dict' objects>
+0 54999
+
+fl=~
+fn=<method 'intersection' of 'set' objects>
+0 2407788000
+
+fl=~
+fn=<method 'items' of 'dict' objects>
+0 3000
+
+fl=~
+fn=<method 'join' of 'str' objects>
+0 1000
+
+fl=~
+fn=<method 'keys' of 'dict' objects>
+0 1000
+
+fl=~
+fn=<method 'lower' of 'str' objects>
+0 0
+
+fl=~
+fn=<method 'lstrip' of 'unicode' objects>
+0 2000
+
+fl=~
+fn=<method 'match' of '_sre.SRE_Pattern' objects>
+0 51000
+
+fl=~
+fn=<method 'read' of 'file' objects>
+0 3398000
+
+fl=~
+fn=<method 'remove' of 'list' objects>
+0 10000
+
+fl=~
+fn=<method 'remove' of 'set' objects>
+0 8000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__eq__
+calls=1 660
+0 1000
+cfl=/usr/local/lib/python2.7/dist-packages/tqdm/_tqdm.py
+cfn=__hash__
+calls=1 672
+0 1000
+
+fl=~
+fn=<method 'setter' of 'property' objects>
+0 2000
+
+fl=~
+fn=<method 'split' of 'str' objects>
+0 3787999
+
+fl=~
+fn=<method 'split' of 'unicode' objects>
+0 9000
+
+fl=~
+fn=<method 'startswith' of 'str' objects>
+0 2000
+
+fl=~
+fn=<method 'startswith' of 'unicode' objects>
+0 4000
+
+fl=~
+fn=<method 'strip' of 'str' objects>
+0 1434999
+
+fl=~
+fn=<method 'update' of 'set' objects>
+0 2000
+
+fl=~
+fn=<method 'write' of 'file' objects>
+0 58000
+
+fl=~
+fn=<min>
+0 63000
+
+fl=~
+fn=<open>
+0 7000
+
+fl=~
+fn=<ord>
+0 17000
+
+fl=~
+fn=<posix.WEXITSTATUS>
+0 2000
+
+fl=~
+fn=<posix.WIFEXITED>
+0 0
+
+fl=~
+fn=<posix.WIFSIGNALED>
+0 1000
+
+fl=~
+fn=<posix.close>
+0 21000
+
+fl=~
+fn=<posix.fdopen>
+0 44000
+
+fl=~
+fn=<posix.fork>
+0 276000
+
+fl=~
+fn=<posix.pipe>
+0 14999
+
+fl=~
+fn=<posix.popen>
+0 183000
+
+fl=~
+fn=<posix.read>
+0 2183000
+
+fl=~
+fn=<posix.sysconf>
+0 3000
+
+fl=~
+fn=<posix.uname>
+0 3000
+
+fl=~
+fn=<posix.waitpid>
+0 17000
+
+fl=~
+fn=<range>
+0 70000
+
+fl=~
+fn=<time.time>
+0 390999
+
+fl=~
+fn=<unichr>
+0 2000
+
