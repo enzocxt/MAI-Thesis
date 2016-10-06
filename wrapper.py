@@ -72,36 +72,21 @@ def fpMining_IDP(inputs):
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
+    # frequent patterns (not closed)
     output = method.mining()
-    patterns = method.parser(output)    # frequent patterns, not closed
-    '''
-    print "\nNumber of frequent patterns: {0}\n".format(len(patterns))
-    for p in patterns:
-        print p
-    '''
+    patterns = method.parser(output)
 
+    # generate idp program to get constraints satisfied patterns
     if params['type'] == 'itemset':
         #indices = itemset_idp(params, patterns)
         #indices = itemset_idp_iterative(params, patterns)
-        indices = itemset_idp_new(params, patterns)
+        indices = itemset_idp_multiple(params, patterns)
     elif params['type'] == 'sequence':
-        #indices = sequence_idp_multiple(params, patterns)
-        indices = sequence_idp(params, patterns)
+        indices = sequence_idp_multiple(params, patterns)
+        #indices = sequence_idp(params, patterns)
     elif params['type'] == 'graph':
         #indices = graph_idp(params)
         pass
-    '''
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    # generate idp code for finding pattern with constraints
-    idp_gen.gen_IDP_code(patterns, idp_program_name)
-    # run generated idp code
-    idp_output = idp_gen.run_IDP(idp_program_name)
-    # parser the idp output
-    indices = set(idp_gen.parser_from_stdout(idp_output))
-    '''
 
     closed_patterns = []
     for p in patterns:
@@ -118,10 +103,13 @@ def itemset_idp(params, patterns):
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
     idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
     # generate idp code for finding pattern with constraints
     idp_gen.gen_IDP_code(patterns, idp_program_name)
+
     # run generated idp code
     idp_output = idp_gen.run_IDP(idp_program_name)
+
     # parser the idp output
     indices = set(idp_gen.parser_from_stdout(idp_output))
 
@@ -142,8 +130,9 @@ def is_closed(pattern, mapping, support_mapping, idp_gen, idp_program_name_base)
 '''
 
 
-def itemset_idp_new(params, patterns):
-    indices = []
+def itemset_idp_multiple(params, patterns):
+    indices = set([itemset.id for itemset in patterns])
+    nonclosed_indices = set()
 
     # closed pattern mining by generated IDP code
     idp_gen = IDPGenerator(params)
@@ -155,7 +144,26 @@ def itemset_idp_new(params, patterns):
     else:
       support_mapping = None
 
-    mapping = make_attribute_mapping(patterns)
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    # multiply generate and run IDP programs for each group
+    mapping_groups = []
+    for group in support_mapping.values():
+        if len(group) == 1:
+            continue
+        check_mapping = defaultdict(set)
+        for itemset in group:
+            patterns_to_check = get_attribute_intersection(itemset, attribute_mapping, support_mapping)
+            if len(patterns_to_check) > 1:
+                check_mapping[itemset] = patterns_to_check
+        if check_mapping:
+            mapping_groups.append(check_mapping)
+    idp_output = async_mapping_separate(mapping_groups, idp_gen, idp_program_name)
+    print idp_output
+
+    lines = idp_output.split('\n')
+    # TO DO
+
 
     return indices
 
@@ -176,7 +184,7 @@ def sequence_idp_multiple(params, patterns):
 
     attribute_mapping = make_attribute_mapping(patterns)
 
-    ''' group testing '''
+    # multiply generate and run IDP programs for each group
     mapping_groups = []
     for group in support_mapping.values():
         if len(group) == 1:
@@ -192,12 +200,12 @@ def sequence_idp_multiple(params, patterns):
     #nonclosed_indices = async_mapping_withoutLock(mapping_groups, idp_gen, idp_program_name)
     idp_output = async_mapping_separate(mapping_groups, idp_gen, idp_program_name)
     #print idp_output
-    '''
+
     lines = idp_output.split('\n')
     for line in lines:
         if 'selected_seq' in line:
             nonclosed_indices.add(int(line[19]))
-    '''
+
     indices = indices - nonclosed_indices
     print indices
 
