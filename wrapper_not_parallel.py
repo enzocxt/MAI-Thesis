@@ -201,7 +201,6 @@ def itemset_idp_iterative_old(params, patterns):
 
     return indices
 
-
 def sequence_idp(params, patterns):
     
 
@@ -224,30 +223,45 @@ def sequence_idp(params, patterns):
     #for debuggin only
     os.system("rm tmp/seq_test_*")
     number_of_IDP_calls = 0
+
+    lattice = create_subsumption_lattice(patterns)
+    not_solution_set = set([])
     
 
     for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+        if seq in not_solution_set:
+            print('skipping the sequence ', seq)
+            continue
+        is_solution = False
         if params['dominance'] == "closed":
           patterns_to_check = get_attribute_intersection(seq,mapping,support_mapping)
           patterns_to_check = patterns_to_check - get_other_smaller_or_eq_patterns(seq, smaller_or_eq_mapping)
           if len(patterns_to_check) > 1: #the pattern itself and other patterns
-            number_of_IDP_calls += 1
+     #      number_of_IDP_calls += 1
             idp_gen.gen_IDP_code(list(patterns_to_check), idp_program_name, seq.id) # generate idp code for finding pattern with constraints for this seq
             idp_output = idp_gen.run_IDP(idp_program_name)
             os.system("cp IDP/{program}.idp tmp/seq_test_{id}.idp".format(id=seq.id, program=idp_program_name)) # debugging
             if 'Unsatisfiable' in idp_output:
+                is_solution = True
                 indices.append(seq.id)
                 sergeylog("run idp on {id}, it failed, solution\n".format(id=seq.id)) # debugging
             else: # all debugging code
                 sergeylog("run idp on {id}, it succeeded, not a solution\n".format(id=seq.id)) 
                 sergeylog(idp_output+"\n")
           else:
+              is_solution = True
               indices.append(seq.id)
         if params['dominance'] == "maximal":
           
-          lattice = create_subsumption_lattice(patterns)
-          
           valid_patterns = patterns # TODO write here an actual call to IDP with application of constraints
+       
+        if is_solution:
+            prune_patterns = set(get_all_children(seq,lattice))
+            if params['dominance'] == "closed":
+                the_same_sup   = set(support_mapping[seq.get_support()])
+                prune_patterns = prune_patterns.intersection(the_same_sup)
+            not_solution_set |= prune_patterns
+
 
     
     print("NUMBER OF IDP CALLS",number_of_IDP_calls)
