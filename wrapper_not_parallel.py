@@ -202,8 +202,8 @@ def itemset_idp_iterative_old(params, patterns):
 
 def sequence_idp(params, patterns):
     
-    subsumption_lattice = create_subsumption_lattice(patterns)
-
+    lattice = create_subsumption_lattice(patterns)
+    not_solution_set = set([])
 
     indices = []
 
@@ -224,8 +224,6 @@ def sequence_idp(params, patterns):
     os.system("rm tmp/seq_test_*")
     number_of_IDP_calls = 0
     
-    lattice = create_subsumption_lattice(patterns)
-    not_solution_set = set([])
 
     for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
        #print(seq.get_pattern_len())
