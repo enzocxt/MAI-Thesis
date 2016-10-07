@@ -5,7 +5,7 @@ class Constraint:
 
 
 
-class LengthConstraint(Constraint):
+class SequenceLengthConstraint(Constraint):
   constraint_type = "length"
   
   def __init__(self,max_len):
@@ -13,6 +13,9 @@ class LengthConstraint(Constraint):
 
   def get_max_length(self):
     return self.max_len
+
+  def is_valid(self,seq):
+    return seq.get_pattern_len() < self.max_len
 
   def generate_vocabulary(self):
     """
@@ -28,18 +31,29 @@ class LengthConstraint(Constraint):
     return '\tmax_len = {len}\n'.format(len=str(self.max_len))
 
 
-class IfThenConstraint(Constraint):
+class SequenceIfThenConstraint(Constraint):
   constraint_type = "ifthen"
 
   def __init__(self, pre, post):
     self.pre = pre
     self.post = post
 
+  def is_valid(self, seq):
+    attributes = seq.get_attributes()
+    if self.pre in attributes:
+      if self.post in attributes:
+        return True
+      else:
+        return False
+    else:
+      return True
+
   def get_pre(self):
     return self.pre
 
   def get_post(self):
     return self.post
+
 
   def generate_vocabulary(self):
     return '\tif:value\n\tthen:value\n'
@@ -52,7 +66,7 @@ class IfThenConstraint(Constraint):
 
 
 
-class CostConstraint(Constraint):
+class SequenceCostConstraint(Constraint):
   constraint_type = "cost"
 
   def __init__(self, max_cost, cost_mapping):
@@ -64,6 +78,11 @@ class CostConstraint(Constraint):
 
   def get_cost_mapping(self):
     return self.cost_mapping
+
+  def is_valid(self,seq):
+    cost  = self.get_cost_mapping()
+    overall = sum([cost[attr] for attr in seq.get_attributes()])
+    return overall <= self.get_max_cost()
 
   def generate_vocabulary(self):
     return '\tmax_cost: int\n\tcost(value): int\n'

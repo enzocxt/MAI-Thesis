@@ -11,10 +11,25 @@ from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len,create_smaller_or_eq_by_len_mapping
 from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
-from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
+from solver.Constraint import SequenceLengthConstraint, SequenceIfThenConstraint, SequenceCostConstraint
 
 
 default_parameters = 'config.ini'
+
+def process_constraints_sequences(params,patterns):
+    constraints = params['constraints']
+    print(constraints)
+    for pattern in patterns:
+      is_valid = True
+      for constraint in constraints.values():
+        if not constraint.is_valid(pattern):
+          is_valid = False
+          break
+      if is_valid:
+        yield pattern
+        
+
+
 
 
 # Debug print
@@ -112,14 +127,13 @@ def fpMining_IDP(inputs):
     elif params['type'] == 'sequence':
         # first call constraints check method to generate idp program
         # and check the patterns with constraints
-        indices = set(sequence_idp_constraints(params, patterns))
-        patterns_pruned = []
-        for p in patterns:
-            if p.id in indices:
-                patterns_pruned.append(p)
+        patterns_pruned = list(process_constraints_sequences(params,patterns))
+#       indices = set(sequence_idp_constraints(params, patterns))
+#       patterns_pruned = []
+#       for p in patterns:
+#           if p.id in indices:
+#               patterns_pruned.append(p)
 
-        # This is not the right way to use patterns_pruned!!!
-        # perform closed check
         indices = sequence_idp(params, patterns_pruned)
     elif params['type'] == 'graph':
         #indices = graph_idp(params)
@@ -219,7 +233,7 @@ def sequence_idp_constraints(params, patterns):
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
     idp_program_name = '{0}_{1}_{2}'.format('posprocessing', params['type'], filename.split('.')[0])
-    print("IDP NAME", idp_program_name)
+  # print("IDP NAME", idp_program_name)
     idp_gen.gen_IDP_sequence_constraints(constraints, patterns, idp_program_name)
     idp_output = idp_gen.run_IDP(idp_program_name)
     for line in idp_output.split('\n'):
@@ -259,7 +273,7 @@ def sequence_idp(params, patterns):
 
     for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
         if seq in not_solution_set:
-            print('pruning the sequence', seq)
+          # print('pruning the sequence', seq)
             continue
         indices.append(seq.id)
 
@@ -328,18 +342,18 @@ if __name__ == "__main__":
     for option in options:
         if option == 'length':
             max_len = int (config.get(section, option))
-            params['constraints']['length'] = LengthConstraint(max_len)
+            params['constraints']['length'] = SequenceLengthConstraint(max_len)
         elif option == 'ifthen':
             pre, post = config.get(section, option).split(';')
-            params['constraints']['ifthen'] = IfThenConstraint(int(pre), int(post))
+            params['constraints']['ifthen'] = SequenceIfThenConstraint(int(pre), int(post))
         elif option == 'cost':
-            cost_mapping = dict()
+            cost_mapping = collections.defaultdict(int)
             costs = config.get(section, option).split(';')
             costs, max_cost = costs[:-1], costs[-1].split(':')[-1]
             for c in costs:
                 id, cost = c.split(':')
                 cost_mapping[int(id)] = cost
-            params['constraints']['cost'] = CostConstraint(int(max_cost), cost_mapping)
+            params['constraints']['cost'] = SequenceCostConstraint(int(max_cost), cost_mapping)
         else:
             print("Does not support this type of constraint: %s" % option)
 
