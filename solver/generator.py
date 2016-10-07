@@ -17,6 +17,69 @@ class IDPGenerator:
         else:
             self.dominance = ''
 
+
+    def gen_IDP_sequence_constraints(self, constraints, sequences, filename):
+        file_path = os.getcwd() + '/IDP/%s.idp' % filename
+        class_file = open(file_path, 'w')
+        lines = []
+        template_file = open(os.getcwd() + '/IDP/posprocessing_sequence.template', 'r')
+        tmpl = Template(template_file.read())
+
+        idp_sequences = ''
+        for seq_i, sequence in enumerate(sequences):
+            index, items, support = str(sequence).split(':')
+            items = items.split()
+            idp_items = ''
+            for i, it in enumerate(items):
+                idp_items += '({0},{1},{2});'.format(index, i, it)
+            idp_sequences += idp_items + '\n'
+        idp_sequences = idp_sequences[:-1]
+
+        final_theory = '\t{\n\toutput(patternID) <- '
+        if 'length' in constraints and 'cost' in constraints and 'ifthen' in constraints:
+            final_theory += 'len_constraint(patternID) & cost_constraint(patternID) & if_then_constraint(patternID).'
+        elif 'length' in constraints and 'cost' in constraints:
+            final_theory += 'len_constraint(patternID) & cost_constraint(patternID).'
+        elif 'length' in constraints and 'ifthen' in constraints:
+            final_theory += 'len_constraint(patternID) & if_then_constraint(patternID).'
+        elif 'cost' in constraints and 'ifthen' in constraints:
+            final_theory += 'cost_constraint(patternID) & if_then_constraint(patternID).'
+        elif 'length' in constraints:
+            final_theory += 'len_constraint(patternID).'
+        elif 'cost' in constraints:
+            final_theory += 'cost_constraint(patternID).'
+        elif 'ifthen' in constraints:
+            final_theory += 'if_then_constraint(patternID).'
+        else:
+            pass
+        final_theory += '\n\t}\n'
+
+        vocabulary, theory, structure = '', '', ''
+        if 'length' in constraints:
+            vocabulary += constraints['length'].generate_vocabulary() + '\n'
+            theory += constraints['length'].generate_theory() + '\n'
+            structure += constraints['length'].generate_structure() + '\n'
+        if 'cost' in constraints:
+            vocabulary += constraints['cost'].generate_vocabulary() + '\n'
+            theory += constraints['cost'].generate_theory() + '\n'
+            structure += constraints['cost'].generate_structure() + '\n'
+        if 'ifthen' in constraints:
+            vocabulary += constraints['ifthen'].generate_vocabulary() + '\n'
+            theory += constraints['ifthen'].generate_theory() + '\n'
+            structure += constraints['ifthen'].generate_structure() + '\n'
+
+        lines.append(tmpl.substitute(
+            VOCABULARY=vocabulary,
+            THEORY=theory,
+            FINAL_THEORY=final_theory,
+            SEQUENCES=idp_sequences,
+            STRUCTURE=structure
+        ))
+
+        class_file.writelines(lines)
+        class_file.close()
+
+
     def gen_IDP_code_group(self, mapping, filename):
         if len(mapping.values()) == 0:
             print 'No need generate IDP program!'
@@ -32,7 +95,39 @@ class IDPGenerator:
             sys.exit(2)
 
     def gen_IDP_itemset_group(self, mapping, filename):
-        pass
+        structures = ''
+        models = ''
+
+        for itemset, its_to_check in mapping.items():
+            idp_itemsets = ''
+            for itemset_i, itemset in enumerate(its_to_check):
+                index, items, support = str(itemset).split(':')
+                if itemset_i % 5 == 0:
+                    idp_itemsets += '\n'
+                items = items.split()
+                idp_items = ''
+                for i in items:
+                    idp_items += '({0},{1};'.format(index, i)
+                idp_itemsets += idp_items
+            idp_itemsets = idp_itemsets[:-1]
+
+            structure = 'Structure S_%s:V{\n\tselected_itemset = {%s}\n\titemset = {%s}}\n\n' % (str(itemset.id), str(itemset.id), idp_itemsets)
+            structures += structure
+            printmodel = '\nprintmodels(modelexpand(T,S_{0}))\n'.format(itemset.id)
+            models += printmodel
+
+        file_path = os.getcwd() + '/IDP/%s.idp' % filename
+        class_file = open(file_path, 'w')
+        lines = []
+        template_file = open(os.getcwd() + '/IDP/{0}_itemset_group.template'.format(self.dominance), 'r')
+        tmpl = Template(template_file.read())
+
+        # template substitute
+        lines.append(tmpl.substitute(STRUCTURES=structures, PRINTMODELS=models))
+        # write code to file
+        class_file.writelines(lines)
+        class_file.close()
+
 
     def gen_IDP_sequence_group(self, mapping, filename):
         structures = ''
@@ -92,7 +187,7 @@ class IDPGenerator:
             sys.exit(2)
 
     def gen_IDP_itemset(self, itemsets, filename):
-        print 'generating itemset idp code...'
+        print 'Generating itemset idp code...'
         idp_itemsets, supports = '', ''
 
         for itemset in itemsets:
@@ -223,7 +318,7 @@ class IDPGenerator:
         with open("tmp/fnull","w") as FNULL:
           child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE,stderr=FNULL)
         stdOutput = child.stdout.read()
-        #print stdOutput
+        print stdOutput
         '''
         with open(idp_tmp_output,"r") as idp_tmp_file:
           stdOutput = idp_tmp_file.read()

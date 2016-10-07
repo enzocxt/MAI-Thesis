@@ -1,0 +1,58 @@
+vocabulary V{
+    type index
+    type patternID
+    type value
+   
+    seq(patternID,index,value)
+    
+    // output predicate
+    output(patternID)
+       
+    // sat per constraint
+    len_constraint(patternID)
+    cost_constraint(patternID)
+    if_then_constraint(patternID)
+
+    	max_len: index
+
+
+}
+
+theory T:V{
+    	{
+	len_constraint(patternID) <- seq(patternID, index, value) & ~ (?i,v: i > max_len & seq(patternID,i,v)).
+	}
+
+
+
+    	{
+	output(patternID) <- len_constraint(patternID).
+	}
+
+    
+}
+
+
+Structure S:V{
+  seq = {
+  (1,0,1);
+(2,0,1);(2,1,2);
+(3,0,1);(3,1,2);(3,2,3);
+(4,0,1);(4,1,3);
+(5,0,2);
+(6,0,2);(6,1,3);
+(7,0,3);
+    }
+
+    	max_len = 1
+
+
+    
+}
+
+
+procedure main(){
+
+printmodels(modelexpand(T,S))
+
+}
