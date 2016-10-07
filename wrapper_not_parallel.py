@@ -219,6 +219,7 @@ def sequence_idp_constraints(params, patterns):
     idp_gen = IDPGenerator(params)
     path, filename = os.path.split(params['data'])
     idp_program_name = '{0}_{1}_{2}'.format('posprocessing', params['type'], filename.split('.')[0])
+    print("IDP NAME", idp_program_name)
     idp_gen.gen_IDP_sequence_constraints(constraints, patterns, idp_program_name)
     idp_output = idp_gen.run_IDP(idp_program_name)
     for line in idp_output.split('\n'):

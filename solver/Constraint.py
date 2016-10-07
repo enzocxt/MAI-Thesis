@@ -22,7 +22,7 @@ class LengthConstraint(Constraint):
     return '\tmax_len: index\n'
 
   def generate_theory(self):
-    return '\t{\n\tlen_constraint(patternID) <- seq(patternID, index, value) & ~ (?i,v: i > max_len & seq(patternID,i,v)).\n\t}\n'
+    return '\t{\n\tlen_constraint(patternID) <- seq(patternID, index, value) & ~ (?i,v: i >= max_len & seq(patternID,i,v)).\n\t}\n'
 
   def generate_structure(self):
     return '\tmax_len = {len}\n'.format(len=str(self.max_len))
