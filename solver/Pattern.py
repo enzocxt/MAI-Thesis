@@ -60,11 +60,12 @@ class Graph(Pattern):
 
 # Sequence class
 class Sequence(Pattern):
-    def __init__(self, id=None, sequence=None, support=None):
+    def __init__(self, id=None, sequence=None, support=None, coverage=None):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
         self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
+        self.coverage = coverage
         for s in sequence:
             self.sequence.append(list(s)) # WHY?
         self.support = support
@@ -81,6 +82,9 @@ class Sequence(Pattern):
         else:
             self.sequence.extend(p.sequence)
         self.support = min(self.support, p.support)
+
+    def get_coverage(self):
+      return self.coverage
 
     def __str__(self):
         output = str(self.id) + ':'
@@ -103,6 +107,17 @@ class Sequence(Pattern):
 
     def get_attribute_array(self):
       return self.attribute_array
+
+    def is_identical(self, seq):
+      if self.get_pattern_len() != seq.get_pattern_len():
+        return False
+
+      for attr1, attr2 in zip(self.get_attributes(), seq.get_attributes()):
+        if attr1 != attr2:
+          return False
+
+      return True
+
 
 
 class Itemset(Pattern):
