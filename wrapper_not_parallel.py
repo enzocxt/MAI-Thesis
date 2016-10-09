@@ -10,7 +10,7 @@ from solver.method import *
 from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len,create_smaller_or_eq_by_len_mapping
-from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
+from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children, read_negative_dataset_sequences
 from solver.Constraint import SequenceLengthConstraint, SequenceIfThenConstraint, SequenceCostConstraint
 
 
@@ -279,8 +279,6 @@ def sequence_idp(params, patterns):
 
         prune_patterns = set(get_all_children(seq,lattice))
           
-        valid_patterns = patterns # TODO write here an actual call to IDP with application of constraints
-       
         if params['dominance'] == "closed":
             the_same_sup   = set(support_mapping[seq.get_support()])
             prune_patterns = prune_patterns.intersection(the_same_sup)
@@ -334,6 +332,8 @@ if __name__ == "__main__":
             print("exception on %s!" % option)
             params[option] = None
     print('Parameters: %s' % params)
+
+    print(read_negative_dataset_sequences(params['negative']))
 
     # read constraints
     section = 'Constraints'

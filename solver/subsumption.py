@@ -9,6 +9,26 @@ from collections import defaultdict
 #   subsumption_tree = create_subsumption_lattice(patterns)
 #   print(subsumption_tree)
 
+def read_negative_dataset_sequences(params):
+  filename = params['negative']
+  with open(filename,"r") as negativefile:
+    lines = negativefile.read().splitlines()
+  sequences = [map(lambda x: int(x), line.split()) for line in lines]
+  output = []
+  for i,seq in enumerate(sequences):
+    output.append(Sequence(id=i,sequence=seq))
+  return output
+
+def compute_sequence_coverage(seq, in_sequences):
+  cover_neg = set()
+  for transaction_seq in in_sequences:
+    if is_seq1_subsequence_of_seq2(seq.get_attributes(),transaction_seq.get_attributes()):
+      cover_neg.add(seq.id)
+  return cover_neg
+
+
+
+
 
 def create_subsumption_lattice(patterns):
   subsumption_tree = defaultdict(set)
@@ -24,7 +44,7 @@ def create_subsumption_lattice(patterns):
       with_at_least_the_same_attributes = get_attribute_intersection(seq, attribute_mapping)
       candidates = sequences_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
       for candidate in candidates:
-        if is_seq1_subsumed_by_seq2(seq.get_attributes(),candidate.get_attributes()):
+        if is_seq1_subsequence_of_seq2(seq.get_attributes(),candidate.get_attributes()):
           subsumption_tree[candidate].add(seq)
 
   return subsumption_tree
@@ -44,7 +64,7 @@ def get_direct_children(pattern, lattice):
 # print attribute_mapping
   
   
-def is_seq1_subsumed_by_seq2(attr1, attr2):
+def is_seq1_subsequence_of_seq2(attr1, attr2):
   max_l1 = len(attr1)
   max_l2 = len(attr2)
   i = 0
