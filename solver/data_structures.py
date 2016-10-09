@@ -5,6 +5,15 @@ The point of this data structure to avoid using the whole dataset in the experim
 It should split the set of patterns into small groups based on its parameters
 """
 
+def get_the_same_cover_sequences(seq, sequences):
+  output = set()
+  for seq2 in sequences:
+    if seq.get_coverage() == seq2.get_coverage():
+      output.add(seq2)
+  return output
+
+
+
 
 def group_by_len(patterns):
   mapping = defaultdict(set)
