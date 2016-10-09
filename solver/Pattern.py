@@ -65,7 +65,7 @@ class Sequence(Pattern):
         self.id = id
         self.sequence = []
         self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
-        self.coverage = coverage
+        self.coverage = set(coverage)
         for s in sequence:
             self.sequence.append(list(s)) # WHY?
         self.support = support

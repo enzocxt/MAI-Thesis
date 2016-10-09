@@ -27,6 +27,17 @@ def compute_sequence_coverage(seq, in_sequences):
   return cover_neg
 
 
+def get_leaves(patterns, lattice):
+  output = []
+  for pattern in patterns:
+    direct_children = get_direct_children(pattern, lattice)
+    for child in direct_children:
+      if child in patterns:
+        break
+    else:
+      output.append(pattern)
+  return output
+
 
 
 
