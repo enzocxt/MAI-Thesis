@@ -9,8 +9,8 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len,create_smaller_or_eq_by_len_mapping
-from solver.subsumption import create_subsumption_lattice, get_all_children, get_direct_children
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping
+from solver.subsumption import SumsumptionLattice
 from solver.Constraint import SequenceLengthConstraint, SequenceIfThenConstraint, SequenceCostConstraint
 
 
@@ -18,7 +18,7 @@ default_parameters = 'config.ini'
 
 def process_constraints_sequences(params,patterns):
     constraints = params['constraints']
-    print(constraints)
+
     for pattern in patterns:
       is_valid = True
       for constraint in constraints.values():
@@ -27,9 +27,6 @@ def process_constraints_sequences(params,patterns):
           break
       if is_valid:
         yield pattern
-        
-
-
 
 
 # Debug print
@@ -115,41 +112,16 @@ def fpMining_IDP(inputs):
 
     output = method.mining()
     patterns = method.parser(output)    # frequent patterns, not closed
-    '''
-    print "\nNumber of frequent patterns: {0}\n".format(len(patterns))
-    for p in patterns:
-        print p
-    '''
 
     if params['type'] == 'itemset':
-        #indices = itemset_idp(params, patterns)
-        indices = itemset_idp_iterative(params, patterns)
+        # indices = itemset_idp(params, patterns)
+        pass
     elif params['type'] == 'sequence':
-        # first call constraints check method to generate idp program
-        # and check the patterns with constraints
         patterns_pruned = list(process_constraints_sequences(params,patterns))
-#       indices = set(sequence_idp_constraints(params, patterns))
-#       patterns_pruned = []
-#       for p in patterns:
-#           if p.id in indices:
-#               patterns_pruned.append(p)
-
         indices = sequence_idp(params, patterns_pruned)
     elif params['type'] == 'graph':
-        #indices = graph_idp(params)
+        # indices = graph_idp(params)
         pass
-    '''
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    # generate idp code for finding pattern with constraints
-    idp_gen.gen_IDP_code(patterns, idp_program_name)
-    # run generated idp code
-    idp_output = idp_gen.run_IDP(idp_program_name)
-    # parser the idp output
-    indices = set(idp_gen.parser_from_stdout(idp_output))
-    '''
 
     closed_patterns = []
     for p in patterns:
@@ -161,126 +133,25 @@ def fpMining_IDP(inputs):
     return closed_patterns
 
 
-def itemset_idp(params, patterns):
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    # generate idp code for finding pattern with constraints
-    idp_gen.gen_IDP_code(patterns, idp_program_name)
-    # run generated idp code
-    idp_output = idp_gen.run_IDP(idp_program_name)
-    # parser the idp output
-    indices = set(idp_gen.parser_from_stdout(idp_output))
-
-    return indices
-
-
-def itemset_idp_iterative(params, patterns):
-    indices = set()
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-
-    groups = collections.defaultdict(list)
-    # group itemset with same support to different groups
-    for p in patterns:
-        groups[p.support].append(p)
-    groups = list(groups.values())
-    for i in tqdm(range(len(groups))):
-        group = groups[i]
-        print 'Number of itemsets with support {0}: {1}'.format(group[0].support, len(group))
-        idp_gen.gen_IDP_code(group, idp_program_name)
-        idp_output = idp_gen.run_IDP(idp_program_name)
-        '''
-        for itemset in group:
-            # generate idp code for finding pattern with constraints
-            idp_gen.gen_IDP_code(group, idp_program_name, itemset.id)
-            idp_output = idp_gen.run_IDP(idp_program_name)
-            if 'Unsatisfiable' in idp_output:
-                indices.append(itemset.id)
-        '''
-        indices.union(set(idp_gen.parser_from_stdout(idp_output)))
-
-    return indices
-
-
-# this method is not used now
-def itemset_idp_iterative_old(params, patterns):
-    indices = []
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
-    for i in tqdm(range(len(patterns))):
-        itemset = patterns[i]
-        # generate idp code for finding pattern with constraints
-        idp_gen.gen_IDP_code(patterns, idp_program_name, itemset.id)
-        idp_output = idp_gen.run_IDP(idp_program_name)
-        if 'Unsatisfiable' in idp_output:
-            indices.append(itemset.id)
-
-    return indices
-
-
-def sequence_idp_constraints(params, patterns):
-    indices = []
-    constraints = params['constraints']
-
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format('posprocessing', params['type'], filename.split('.')[0])
-  # print("IDP NAME", idp_program_name)
-    idp_gen.gen_IDP_sequence_constraints(constraints, patterns, idp_program_name)
-    idp_output = idp_gen.run_IDP(idp_program_name)
-    for line in idp_output.split('\n'):
-        if 'output' in line:
-            ids = line.split('=')[-1]
-            ids = ids.replace(' ', '').replace('{','').replace('}','')
-            indices = [int(id) for id in ids.split(';')]
-            break
-    return indices
-
-
 def sequence_idp(params, patterns):
-    
-
     indices = []
-
-    # closed pattern mining by generated IDP code
-    idp_gen = IDPGenerator(params)
-    path, filename = os.path.split(params['data'])
-    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
 
     if params['dominance'] == "closed":
       support_mapping = make_grouping_by_support(patterns)
     else:
       support_mapping = None
 
-    mapping = make_attribute_mapping(patterns)
-    mapping_by_len = group_by_len(patterns)
-    smaller_or_eq_mapping = create_smaller_or_eq_by_len_mapping(mapping_by_len)
-
-    #for debuggin only
-    os.system("rm tmp/seq_test_*")
-    number_of_IDP_calls = 0
-
-    lattice = create_subsumption_lattice(patterns)
+    subsumLattice = SumsumptionLattice(patterns)
+    lattice = subsumLattice.get_lattice()
     not_solution_set = set([])
 
-    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
         if seq in not_solution_set:
-          # print('pruning the sequence', seq)
             continue
         indices.append(seq.id)
 
-        prune_patterns = set(get_all_children(seq,lattice))
-          
-        valid_patterns = patterns # TODO write here an actual call to IDP with application of constraints
-       
+        prune_patterns = set(subsumLattice.get_all_children(seq, lattice))
+
         if params['dominance'] == "closed":
             the_same_sup   = set(support_mapping[seq.get_support()])
             prune_patterns = prune_patterns.intersection(the_same_sup)
@@ -301,7 +172,6 @@ if __name__ == "__main__":
     params = {}     # Dict to store input parameters
 
     try:
-        # opts, args = getopt.getopt(sys.argv[1:], 'hc:i:o:', ['help=', 'config=', 'infile=', 'outfile='])
         opts, args = getopt.getopt(sys.argv[1:], 'hc:', ['help=', 'config='])
     except getopt.GetoptError:
         print('wrapper.py -c <configfile>\nSet input data and output file in config file')
@@ -310,10 +180,6 @@ if __name__ == "__main__":
         if opt in ('-h', '--help'):
             print 'wrapper.py -c <configfile> -i <inputfile> -o <outputfile>'
             sys.exit(2)
-        #elif opt in ('-i', '--infile'):
-        #    params['datafile'] = arg
-        #elif opt in ('-o', '--outfile'):
-        #    params['output'] = arg
         elif opt in ('-c', '--config'):
             config_file = arg
 

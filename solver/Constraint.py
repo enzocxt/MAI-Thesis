@@ -80,7 +80,7 @@ class SequenceCostConstraint(Constraint):
     return self.cost_mapping
 
   def is_valid(self,seq):
-    cost  = self.get_cost_mapping()
+    cost = self.get_cost_mapping()
     overall = sum([cost[attr] for attr in seq.get_attributes()])
     return overall <= self.get_max_cost()
 

@@ -9,34 +9,43 @@ from collections import defaultdict
 #   subsumption_tree = create_subsumption_lattice(patterns)
 #   print(subsumption_tree)
 
+class SumsumptionLattice:
 
-def create_subsumption_lattice(patterns):
-  subsumption_tree = defaultdict(set)
-  mapping_by_len = group_by_len(patterns)
-  max_len = max(mapping_by_len.keys())
-  attribute_mapping = make_attribute_mapping(patterns)
+  def __init__(self, patterns):
+    self.lattice = self.create_subsumption_lattice(patterns)
 
-  for l in range(1,max_len): # maximal are not subsumed by anything
-    print('processing len', l)
-    sequences_with_len_l = mapping_by_len[l]
-    for seq in sequences_with_len_l:
-      sequences_with_len_l_plus_1 = mapping_by_len[l+1]
-      with_at_least_the_same_attributes = get_attribute_intersection(seq, attribute_mapping)
-      candidates = sequences_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
-      for candidate in candidates:
-        if is_seq1_subsumed_by_seq2(seq.get_attributes(),candidate.get_attributes()):
-          subsumption_tree[candidate].add(seq)
+  def create_subsumption_lattice(self, patterns):
+    print('\nCreating subsumption lattice...')
+    subsumption_tree = defaultdict(set)
+    mapping_by_len = group_by_len(patterns)
+    max_len = max(mapping_by_len.keys())
+    attribute_mapping = make_attribute_mapping(patterns)
 
-  return subsumption_tree
+    for l in range(1,max_len): # maximal are not subsumed by anything
+      print('Processing len: %s' % l)
+      sequences_with_len_l = mapping_by_len[l]
+      for seq in sequences_with_len_l:
+        sequences_with_len_l_plus_1 = mapping_by_len[l+1]
+        with_at_least_the_same_attributes = get_attribute_intersection(seq, attribute_mapping)
+        candidates = sequences_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
+        for candidate in candidates:
+          if is_seq1_subsumed_by_seq2(seq.get_attributes(),candidate.get_attributes()):
+            subsumption_tree[candidate].add(seq)
 
-def get_all_children(pattern, lattice): 
-  for child in lattice[pattern]:
-    yield child
-    for indirect_indirect_child in get_all_children(child, lattice):
-      yield indirect_indirect_child
+    print('Creating subsumption lattice done...\n')
+    return subsumption_tree
 
-def get_direct_children(pattern, lattice):
-  return lattice[pattern]
+  def get_all_children(self, pattern, lattice):
+    for child in lattice[pattern]:
+      yield child
+      for indirect_indirect_child in self.get_all_children(child, lattice):
+        yield indirect_indirect_child
+
+  def get_direct_children(self, pattern, lattice):
+    return lattice[pattern]
+
+  def get_lattice(self):
+    return self.lattice
     
 
   
@@ -60,4 +69,4 @@ def is_seq1_subsumed_by_seq2(attr1, attr2):
   return True
 
 if __name__ == "__main__":
-  main()
+  pass
