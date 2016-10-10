@@ -44,6 +44,7 @@ class Graph(Pattern):
         self.edges = []
         self.nodes = []
         self.nsupport = nsupport
+        self.graphx = nx.Graph()
 
     def add_node(self, node):
         self.nodes.append(node)

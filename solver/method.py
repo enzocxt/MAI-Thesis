@@ -44,13 +44,15 @@ class Mining(object):
         else:
             self.support = 0.1
         if 'data' in inputs:
-            self.data = os.getcwd() + '/' + inputs['data']
+           #self.data = os.getcwd() + '/' + inputs['data']
+            self.data = inputs['data']
             #self.datafile = inputs['datafile']
         else:
             print 'Need input data file!'
             sys.exit(2)
         if 'output' in inputs:
-            self.output = os.getcwd() + '/' + inputs['output']
+        #   self.output = os.getcwd() + '/' + inputs['output']
+            self.output = inputs['output']
         else:
         #    print 'Need specify output file!'
         #    sys.exit(2)
@@ -72,17 +74,19 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "./exec/gSpan"
+            gSpan = "./exec/gspan"
         else:
-            gSpan = "./exec/gSpan"
+            gSpan = "./exec/gspan"
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
 
         #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print('Command:\n%s -f %s -s %s -o -i' % (gSpan, self.data, self.support))
-        child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
-        #child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
+        print('Command:\n%s -file %s -support %s -output %s' % (gSpan, self.data, self.support,self.output))
+       #child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
+        child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
+        
+
         '''
         print([gSpan, "-file", self.data, options])
         child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
@@ -95,8 +99,8 @@ class gSpan(Mining):
         '''
         #print(returncode)
 
-        #result = child.stdout.read()
-        result = child.communicate()[0]
+        result = child.stdout.read()
+       #result = child.communicate()[0]
         #print result
         #self.parser(result)
         #fout = open(self.output, 'w')

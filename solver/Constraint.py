@@ -17,19 +17,6 @@ class SequenceLengthConstraint(Constraint):
   def is_valid(self,seq):
     return seq.get_pattern_len() < self.max_len
 
-  def generate_vocabulary(self):
-    """
-    // len vocabulary
-    max_len: index
-    """
-    return '\tmax_len: index\n'
-
-  def generate_theory(self):
-    return '\t{\n\tlen_constraint(patternID) <- seq(patternID, index, value) & ~ (?i,v: i >= max_len & seq(patternID,i,v)).\n\t}\n'
-
-  def generate_structure(self):
-    return '\tmax_len = {len}\n'.format(len=str(self.max_len))
-
 
 class SequenceIfThenConstraint(Constraint):
   constraint_type = "ifthen"
@@ -55,17 +42,6 @@ class SequenceIfThenConstraint(Constraint):
     return self.post
 
 
-  def generate_vocabulary(self):
-    return '\tif:value\n\tthen:value\n'
-
-  def generate_theory(self):
-    return '\t{\n\tif_then_constraint(patternID) <- seq(patternID, index, value) & (!i: seq(patternID,i,if) => ?j: seq(patternID,j,then)).\n\t}\n'
-
-  def generate_structure(self):
-    return '\tif={pre}\n\tthen={post}\n'.format(pre=self.pre, post=self.post)
-
-
-
 class SequenceCostConstraint(Constraint):
   constraint_type = "cost"
 
@@ -83,16 +59,3 @@ class SequenceCostConstraint(Constraint):
     cost = self.get_cost_mapping()
     overall = sum([cost[attr] for attr in seq.get_attributes()])
     return overall <= self.get_max_cost()
-
-  def generate_vocabulary(self):
-    return '\tmax_cost: int\n\tcost(value): int\n'
-
-  def generate_theory(self):
-    return '\t{\n\tcost_constraint(patternID) <- seq(patternID, index, value) & sum{i, v: seq(patternID,i,v) : cost(v)} < max_cost.\n\t}\n'
-
-  def generate_structure(self):
-    costMapping = '{'
-    for id, cost in self.cost_mapping.items():
-      costMapping += '{id}->{cost};'.format(id=id, cost=cost)
-    costMapping = costMapping[:-1] + '}'
-    return '\tmax_cost = {maxCost}\n\tcost = {costMapping}\n'.format(maxCost=self.max_cost, costMapping=costMapping)
