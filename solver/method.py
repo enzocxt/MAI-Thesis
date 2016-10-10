@@ -72,7 +72,7 @@ class gSpan(Mining):
 
     def mining(self):
         if platform.system() == "Linux":
-            gSpan = "./exec/gSpan"
+            gSpan = "./exec/gSpan-64"
         else:
             gSpan = "./exec/gSpan"
         options = ''
@@ -97,11 +97,12 @@ class gSpan(Mining):
 
         #result = child.stdout.read()
         result = child.communicate()[0]
-        print result
+        #print result
         #self.parser(result)
         #fout = open(self.output, 'w')
         #fout.write(result)
         #fout.close()
+        print result
         return result
 
     def parser(self, stdOutput, path=None):
@@ -213,10 +214,10 @@ class prefixSpan(Mining):
         #self.patternSet = utils.parser(self, stdOutput)
         self.patternSet = self.parserSequence(stdOutput)
         return self.patternSet
-
-    def parserSequence(self, stdOutput, path=None):
+    
+    @staticmethod
+    def parserSequence(stdOutput, path=None):
         patterns = []
-
         if path == "" or not path:
             lines = stdOutput.split('\n')
             index = 1

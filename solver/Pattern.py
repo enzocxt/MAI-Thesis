@@ -1,3 +1,4 @@
+import array
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 
@@ -6,6 +7,14 @@ class Pattern(object):
     def __init__(self):
         self.id = None
         self.support = None
+
+
+    def get_pattern_len(self):
+        pass
+
+
+    def get_support(self):
+        return self.support
 
 
     def __str__(self):
@@ -42,6 +51,12 @@ class Graph(Pattern):
     def add_edge(self, edge):
         self.edges.append(edge)
 
+    def get_pattern_len(self):
+        return len(self.nodes)
+
+    def get_support(self):
+        return self.nsupport
+
 
 # Sequence class
 class Sequence(Pattern):
@@ -49,11 +64,13 @@ class Sequence(Pattern):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
-        self.attributes = sequence
+        self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
         for s in sequence:
             self.sequence.append(list(s)) # WHY?
         self.support = support
         self.number_of_attributes = len(sequence)
+        self.attribute_array = array.array('i', self.attributes)
+
 
     def append(self, p):
         if p.sequence[0][0] == PLACE_HOLDER:
@@ -84,6 +101,9 @@ class Sequence(Pattern):
     def get_pattern_len(self):
       return self.number_of_attributes
 
+    def get_attribute_array(self):
+      return self.attribute_array
+
 
 class Itemset(Pattern):
     def __init__(self, id=None, itemset=None, support=None):
@@ -91,8 +111,15 @@ class Itemset(Pattern):
         # self.itemset = itemset
         self.id = id
         self.itemset = set(itemset)
+        self.attributes = itemset
         self.support = support
         self.size = len(itemset)
+
+    def get_pattern_len(self):
+        return len(self.itemset)
+
+    def get_attributes(self):
+        return self.attributes
 
     def isValid(self):
         pass

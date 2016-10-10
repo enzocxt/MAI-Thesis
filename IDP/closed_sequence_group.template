@@ -6,7 +6,6 @@ vocabulary V{
 
     seq(patternID,index,value)
     selected_seq(patternID)
-    support(patternID,frequency)
     embedded_seq(patternID)
     f(index):index
     selected_index(index)
@@ -23,13 +22,8 @@ theory T:V{
     ! embedded_id, selected_id, index, value: embedded_seq(embedded_id) & selected_seq(selected_id) & seq(selected_id, index, value) => seq(embedded_id, f(index), value).
 }
 
-Structure S:V{
-
-    selected_seq = {${INDEX}}
-    seq = {${SEQUENCE}}
-    support = {${SUPPORT}}
-}
+${STRUCTURES}
 
 procedure main(){
-    printmodels(modelexpand(T,S))
+${PRINTMODELS}
 }

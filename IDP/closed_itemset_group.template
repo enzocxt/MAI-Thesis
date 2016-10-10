@@ -1,0 +1,30 @@
+vocabulary V{
+    type index isa nat
+    type item isa nat
+    type frequency isa nat
+    type boolean isa int
+
+    itemset(index,item)
+    subset(index,index)
+    dominated(index)
+    output(index)
+}
+
+theory T:V{
+    ? selected_id: ?1 id: ? s: embedded_itemset(id) & selected_itemset(selected_id) & id ~= selected_id.
+    ! e, embedded_id, selected_id: embedded_itemset(embedded_id) & selected_itemset(selected_id) & itemset(selected_id,e) => itemset(embedded_id,e).
+
+    {
+        ! v, id, i: selected_index(i) <- selected_itemset(id) & itemset(id,v).
+    }
+}
+
+${STRUCTURES}
+//Structure S:V{
+//      selected_itemset={${INDEX}}
+//      itemset={${ITEMSET}}
+//}
+
+procedure main(){
+${PRINTMODELS}
+}
