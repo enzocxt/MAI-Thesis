@@ -14,7 +14,7 @@ def parse_graph(text):
             G.graph['id'], G.graph['support'] = int(graph_id), int(coverage)
         if "v " in line:
             _, node_id, node_label = line.split(" ")
-            
+            #TODO add it to networkx graph
             print('node_id,node_label',node_id,node_label)
         if "e " in line:
             _, edge_from, edge_to, label = line.split(" ")

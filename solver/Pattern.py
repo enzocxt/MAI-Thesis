@@ -1,4 +1,6 @@
 import array
+import networkx as nx
+import sys
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 
@@ -39,32 +41,48 @@ class Node(object):
 
 
 class Graph(Pattern):
-    def __init__(self, nsupport=None):
-        self.id = None
-        self.edges = []
-        self.nodes = []
+    def __init__(self, id, nsupport=None):
+        self.id = id
         self.nsupport = nsupport
+        self.parent = -1
+        self.graphx = nx.Graph()
 
-    def add_node(self, node):
-        self.nodes.append(node)
+    def add_node(self, v_id, v_label):
+        self.graphx.add_node(v_id, label=v_label)
 
-    def add_edge(self, edge):
-        self.edges.append(edge)
+    def add_edge(self, e_from_node, e_to_node, e_label):
+        self.graphx.add_edge(e_from_node, e_to_node, label=e_label)
 
     def get_pattern_len(self):
-        return len(self.nodes)
+        return self.graphx.number_of_nodes()
 
     def get_support(self):
         return self.nsupport
 
+    def set_parent(self, parent_id):
+        self.parent = parent_id
+
+    def get_graphx(self):
+        return self.graphx
+
+    def get_attributes(self):
+        return self.graphx.nodes(data=False)
+
+    def has_node(self, node):
+        return self.graphx.has_node(node)
+
+    def isSubgraph(self, graph):
+        pass
+
 
 # Sequence class
 class Sequence(Pattern):
-    def __init__(self, id=None, sequence=None, support=None):
+    def __init__(self, id=None, sequence=None, support=None, coverage=None):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
         self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
+        self.coverage = set(coverage)
         for s in sequence:
             self.sequence.append(list(s)) # WHY?
         self.support = support
@@ -81,6 +99,9 @@ class Sequence(Pattern):
         else:
             self.sequence.extend(p.sequence)
         self.support = min(self.support, p.support)
+
+    def get_coverage(self):
+      return self.coverage
 
     def __str__(self):
         output = str(self.id) + ':'
@@ -103,6 +124,17 @@ class Sequence(Pattern):
 
     def get_attribute_array(self):
       return self.attribute_array
+
+    def is_identical(self, seq):
+      if self.get_pattern_len() != seq.get_pattern_len():
+        return False
+
+      for attr1, attr2 in zip(self.get_attributes(), seq.get_attributes()):
+        if attr1 != attr2:
+          return False
+
+      return True
+
 
 
 class Itemset(Pattern):
