@@ -1,11 +1,14 @@
 __author__ = 'enzo'
 
+debugging  = True # delete later
+
 
 import os, sys
 import platform
 import subprocess
 from string import Template
 from Pattern import *
+import time
 
 
 class IDPGenerator:
@@ -19,6 +22,9 @@ class IDPGenerator:
 
 
     def gen_IDP_sequence_constraints(self, constraints, sequences, filename):
+        global debugging
+        if debugging:
+            t_start = time.time()
         file_path = os.getcwd() + '/IDP/%s.idp' % filename
         class_file = open(file_path, 'w')
         lines = []
@@ -78,6 +84,9 @@ class IDPGenerator:
 
         class_file.writelines(lines)
         class_file.close()
+        if debugging:
+            t_end = time.time()
+            print("GENERATION TIME FOR IDP", t_end-t_start)
 
 
     def gen_IDP_code_group(self, mapping, filename):
@@ -298,6 +307,10 @@ class IDPGenerator:
 
 
     def run_IDP(self, filename):
+        global debugging
+        if debugging:
+            t_start = time.time()
+            
         '''run IDP program to get closed patterns from frequent patterns'''
         if platform.system() == 'Linux':
             idpBin = 'idp' # don't hardcode the absolute paths, it never ends well, let's say IDP must be installed and found in PATH variable?
@@ -318,12 +331,15 @@ class IDPGenerator:
         with open("tmp/fnull","w") as FNULL:
           child = subprocess.Popen([idpBin, idpProgram], stdout=subprocess.PIPE,stderr=FNULL)
         stdOutput = child.stdout.read()
-        print stdOutput
+       #print stdOutput
         '''
         with open(idp_tmp_output,"r") as idp_tmp_file:
           stdOutput = idp_tmp_file.read()
         '''
 
+        if debugging:
+            t_end = time.time()
+            print("TIME TO RUN IDP PROGRAM",t_end-t_start)
         return stdOutput
 
 

@@ -44,13 +44,15 @@ class Mining(object):
         else:
             self.support = 0.1
         if 'data' in inputs:
-            self.data = os.getcwd() + '/' + inputs['data']
+           #self.data = os.getcwd() + '/' + inputs['data']
+            self.data = inputs['data']
             #self.datafile = inputs['datafile']
         else:
             print 'Need input data file!'
             sys.exit(2)
         if 'output' in inputs:
-            self.output = os.getcwd() + '/' + inputs['output']
+        #   self.output = os.getcwd() + '/' + inputs['output']
+            self.output = inputs['output']
         else:
         #    print 'Need specify output file!'
         #    sys.exit(2)
@@ -71,18 +73,22 @@ class gSpan(Mining):
         Mining.__init__(self, inputs)
 
     def mining(self):
+        gSpan_exec = ''
         if platform.system() == "Linux":
-            gSpan = "./exec/gSpan-64"
+            # gSpan = "./exec/gspan"
+            gSpan_exec = "./exec/gspan-CT"
         else:
-            gSpan = "./exec/gSpan"
+            gSpan_exec = "./exec/gspan"
         options = ''
         if self.support:
-            options = ''.join('-s %s' % self.support)
+            options = ''.join('-support %s' % self.support)
 
-        #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print('Command:\n%s -f %s -s %s -o -i' % (gSpan, self.data, self.support))
-        child = subprocess.Popen([gSpan, "-f", self.data, options, "-o -i"], stdout=subprocess.PIPE)
-        #child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
+        command = '{exe} -file {data} -output {output} -support {support}'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
+        print('%s' % command)
+        #child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
+        #child = subprocess.Popen(command, stdout=subprocess.PIPE)
+        #child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
+
         '''
         print([gSpan, "-file", self.data, options])
         child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
@@ -96,13 +102,15 @@ class gSpan(Mining):
         #print(returncode)
 
         #result = child.stdout.read()
-        result = child.communicate()[0]
+        #result = child.communicate()[0]
         #print result
         #self.parser(result)
-        #fout = open(self.output, 'w')
-        #fout.write(result)
-        #fout.close()
-        print result
+
+        os.system(command)
+        fout = open(self.output, 'r')
+        result = fout.read()
+        fout.close()
+
         return result
 
     def parser(self, stdOutput, path=None):
@@ -124,25 +132,26 @@ class gSpan(Mining):
             line = lines[i]
             if 't #' in line:  # t # 0 * 45
                 t = line.split(' ')
-                graph = Graph(t[4])
-                graph.id = t[2]
+                graph = Graph(t[2], t[4])     # id, support
                 i += 1
+
                 while i < len(lines):
                     line = lines[i]
-                    if 'v ' in line:
+                    if 'parent' in lines[i]:
+                        graph.set_parent(int(lines[i].split()[-1]))
+                        i += 1
+                    elif 'v ' in line:
                         v = line.split(' ')  # v 0 2
-                        node = Node()
-                        node.id = v[1]
-                        node.label = v[2]
-                        graph.add_node(node)
+                        v_id = v[1]
+                        v_label = v[2]
+                        graph.add_node(int(v_id), v_label)
                         i += 1
                     elif 'e ' in line:
                         e = line.split(' ')  # e 0 1 0
-                        edge = Edge()
-                        edge.fromnode = e[1]
-                        edge.tonode = e[2]
-                        edge.label = e[3]
-                        graph.add_edge(edge)
+                        e_from_node = e[1]
+                        e_to_node = e[2]
+                        e_label = e[3]
+                        graph.add_edge(int(e_from_node), int(e_to_node), e_label)
                         i += 1
                     else:
                         break
@@ -198,7 +207,7 @@ class prefixSpan(Mining):
                 options += '-min_sup'
             print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
             command = '{0} {1} {2}'.format(prefixSpan, options, self.data)
-            print r'%s' % command
+
             child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
             #child = subprocess.Popen([command], stdout=subprocess.PIPE)
             result = child.stdout.read()
@@ -221,11 +230,12 @@ class prefixSpan(Mining):
         if path == "" or not path:
             lines = stdOutput.split('\n')
             index = 1
-            for i in tqdm(range(0, len(lines)/2)):
+            for i in range(0, len(lines)/2):
                 if lines[2*i] == '':
                     continue
-                freq = lines[2*i+1].strip().split(':')[-1].strip()
-                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq)))
+                coverage, freq = map(lambda x: x.strip(" ()"), lines[2*i+1].strip().split(':'))
+                coverage = map(lambda x: int(x),coverage.split())
+                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)) # coverage is the set of transactions covered by the
                 index += 1
         else:
             with open(path, 'r') as fin:
