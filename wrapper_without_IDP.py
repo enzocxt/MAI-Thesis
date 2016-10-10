@@ -62,8 +62,8 @@ def fpMining(inputs):
 @logger
 def fpMining_pure(inputs):
     if inputs['type'] == 'graph':
-        inputs['data'] = 'data/gSpan/' + inputs['data']
-        inputs['output'] = 'output/gSpan/' + inputs['output']
+        inputs['data'] = 'data/gspan/' + inputs['data']
+        inputs['output'] = 'output/' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         inputs['data'] = 'data/prefixSpan/' + inputs['data']
