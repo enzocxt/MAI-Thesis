@@ -1,6 +1,7 @@
 #from solver.method import prefixSpan#for debugging           
 from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection
 from collections import defaultdict
+from Pattern import Sequence
 
 # def main():
 #   with open("output/prefix_sequence_user_pos.txt","r") as datafile:
@@ -9,10 +10,40 @@ from collections import defaultdict
 #   subsumption_tree = create_subsumption_lattice(patterns)
 #   print(subsumption_tree)
 
+
 class SumsumptionLattice:
 
   def __init__(self, patterns):
     self.lattice = self.create_subsumption_lattice(patterns)
+
+  def read_negative_dataset_sequences(self, params):
+    filename = params['negative']
+    with open(filename,"r") as negativefile:
+      lines = negativefile.read().splitlines()
+    sequences = [map(lambda x: int(x), line.split()) for line in lines]
+    output = []
+    for i,seq in enumerate(sequences):
+      output.append(Sequence(id=i,sequence=seq))
+    return output
+
+  def compute_sequence_coverage(self, seq, in_sequences):
+    cover_neg = set()
+    for transaction_seq in in_sequences:
+      if is_seq1_subsequence_of_seq2(seq.get_attributes(),transaction_seq.get_attributes()):
+        cover_neg.add(seq.id)
+    return cover_neg
+
+
+  def get_leaves(self, patterns, lattice):
+    output = []
+    for pattern in patterns:
+      direct_children = self.get_direct_children(pattern, lattice)
+      for child in direct_children:
+        if child in patterns:
+          break
+      else:
+        output.append(pattern)
+    return output
 
   def create_subsumption_lattice(self, patterns):
     print('\nCreating subsumption lattice...')
@@ -29,7 +60,7 @@ class SumsumptionLattice:
         with_at_least_the_same_attributes = get_attribute_intersection(seq, attribute_mapping)
         candidates = sequences_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
         for candidate in candidates:
-          if is_seq1_subsumed_by_seq2(seq.get_attributes(),candidate.get_attributes()):
+          if is_seq1_subsequence_of_seq2(seq.get_attributes(),candidate.get_attributes()):
             subsumption_tree[candidate].add(seq)
 
     print('Creating subsumption lattice done...\n')
@@ -46,14 +77,13 @@ class SumsumptionLattice:
 
   def get_lattice(self):
     return self.lattice
-    
 
   
 # print mapping_by_len
 # print attribute_mapping
   
   
-def is_seq1_subsumed_by_seq2(attr1, attr2):
+def is_seq1_subsequence_of_seq2(attr1, attr2):
   max_l1 = len(attr1)
   max_l2 = len(attr2)
   i = 0

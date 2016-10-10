@@ -9,7 +9,7 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences
 from solver.subsumption import SumsumptionLattice
 from solver.Constraint import SequenceLengthConstraint, SequenceIfThenConstraint, SequenceCostConstraint
 
@@ -136,29 +136,41 @@ def fpMining_IDP(inputs):
 def sequence_idp(params, patterns):
     indices = []
 
-    if params['dominance'] == "closed":
+    if params['dominance'] == "closed" or params['dominance'] == "free" :
       support_mapping = make_grouping_by_support(patterns)
     else:
       support_mapping = None
 
     subsumLattice = SumsumptionLattice(patterns)
     lattice = subsumLattice.get_lattice()
-    not_solution_set = set([])
+    skip_set = set([])
 
-    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
-        if seq in not_solution_set:
+    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+        if seq in skip_set:
+          # print('skipping the sequence', seq)
             continue
-        indices.append(seq.id)
 
         prune_patterns = set(subsumLattice.get_all_children(seq, lattice))
+        children = set(subsumLattice.get_all_children(seq,lattice))
 
         if params['dominance'] == "closed":
             the_same_sup   = set(support_mapping[seq.get_support()])
-            prune_patterns = prune_patterns.intersection(the_same_sup)
-        # elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
-        #     prune_patterns = prune_patterns
-        not_solution_set |= prune_patterns
+            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
+            indices.append(seq.id)
+        elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
+            prune_patterns = children 
+            indices.append(seq.id)
+        elif params['dominance'] == "free":
+            the_same_sup   = set(support_mapping[seq.get_support()])
+            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
+            prune_patterns.add(seq)
+            leaves         = subsumLattice.get_leaves(prune_patterns, lattice)
+            for leaf in leaves:
+                indices.append(leaf.id)
 
+
+        skip_set |= prune_patterns
+    print()
     return indices
 
 
@@ -200,7 +212,7 @@ if __name__ == "__main__":
             print("exception on %s!" % option)
             params[option] = None
     print('Parameters: %s' % params)
-
+   
     # read constraints
     section = 'Constraints'
     options = config.options(section)

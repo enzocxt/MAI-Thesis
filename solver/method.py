@@ -220,11 +220,12 @@ class prefixSpan(Mining):
         if path == "" or not path:
             lines = stdOutput.split('\n')
             index = 1
-            for i in tqdm(range(0, len(lines)/2)):
+            for i in range(0, len(lines)/2):
                 if lines[2*i] == '':
                     continue
-                freq = lines[2*i+1].strip().split(':')[-1].strip()
-                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq)))
+                coverage, freq = map(lambda x: x.strip(" ()"), lines[2*i+1].strip().split(':'))
+                coverage = map(lambda x: int(x),coverage.split())
+                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)) # coverage is the set of transactions covered by the
                 index += 1
         else:
             with open(path, 'r') as fin:
