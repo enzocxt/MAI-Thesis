@@ -130,6 +130,37 @@ def is_closed(pattern, mapping, support_mapping, idp_gen, idp_program_name_base)
 '''
 
 
+def itemset_idp_iterative(params, patterns):
+    indices = set()
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    groups = collections.defaultdict(list)
+    # group itemset with same support to different groups
+    for p in patterns:
+        groups[p.support].append(p)
+    groups = list(groups.values())
+    for i in tqdm(range(len(groups))):
+        group = groups[i]
+        print 'Number of itemsets with support {0}: {1}'.format(group[0].support, len(group))
+        idp_gen.gen_IDP_code(group, idp_program_name)
+        idp_output = idp_gen.run_IDP(idp_program_name)
+        '''
+        for itemset in group:
+            # generate idp code for finding pattern with constraints
+            idp_gen.gen_IDP_code(group, idp_program_name, itemset.id)
+            idp_output = idp_gen.run_IDP(idp_program_name)
+            if 'Unsatisfiable' in idp_output:
+                indices.append(itemset.id)
+        '''
+        indices.union(set(idp_gen.parser_from_stdout(idp_output)))
+
+    return indices
+
+
 def itemset_idp_multiple(params, patterns):
     indices = set([itemset.id for itemset in patterns])
     nonclosed_indices = set()
@@ -269,6 +300,69 @@ def sequence_idp(params, patterns):
         else:
           indices.append(seq.id)
     '''
+
+    return indices
+
+
+def sequence_idp_constraints(params, patterns):
+    indices = []
+    constraints = params['constraints']
+
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format('posprocessing', params['type'], filename.split('.')[0])
+  # print("IDP NAME", idp_program_name)
+    idp_gen.gen_IDP_sequence_constraints(constraints, patterns, idp_program_name)
+    idp_output = idp_gen.run_IDP(idp_program_name)
+    for line in idp_output.split('\n'):
+        if 'output' in line:
+            ids = line.split('=')[-1]
+            ids = ids.replace(' ', '').replace('{','').replace('}','')
+            indices = [int(id) for id in ids.split(';')]
+            break
+    return indices
+
+
+def sequence_idp_back(params, patterns):
+    indices = []
+
+    # closed pattern mining by generated IDP code
+    idp_gen = IDPGenerator(params)
+    path, filename = os.path.split(params['data'])
+    idp_program_name = '{0}_{1}_{2}'.format(params['dominance'], params['type'], filename.split('.')[0])
+
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+    else:
+      support_mapping = None
+
+    mapping = make_attribute_mapping(patterns)
+    mapping_by_len = group_by_len(patterns)
+    smaller_or_eq_mapping = create_smaller_or_eq_by_len_mapping(mapping_by_len)
+
+    #for debuggin only
+    os.system("rm tmp/seq_test_*")
+    number_of_IDP_calls = 0
+
+    lattice = create_subsumption_lattice(patterns)
+    not_solution_set = set([])
+
+    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+        if seq in not_solution_set:
+          # print('pruning the sequence', seq)
+            continue
+        indices.append(seq.id)
+
+        prune_patterns = set(get_all_children(seq,lattice))
+
+        valid_patterns = patterns # TODO write here an actual call to IDP with application of constraints
+
+        if params['dominance'] == "closed":
+            the_same_sup   = set(support_mapping[seq.get_support()])
+            prune_patterns = prune_patterns.intersection(the_same_sup)
+        # elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
+        #     prune_patterns = prune_patterns
+        not_solution_set |= prune_patterns
 
     return indices
 

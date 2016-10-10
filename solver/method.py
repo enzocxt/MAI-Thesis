@@ -197,7 +197,7 @@ class prefixSpan(Mining):
                 options += '-min_sup'
             print('Command:\n{0} {1} {2}'.format(prefixSpan, options, self.data))
             command = '{0} {1} {2}'.format(prefixSpan, options, self.data)
-            print r'%s' % command
+
             child = subprocess.Popen([prefixSpan, options, str(supp), self.data], stdout=subprocess.PIPE)
             #child = subprocess.Popen([command], stdout=subprocess.PIPE)
             result = child.stdout.read()
