@@ -122,11 +122,9 @@ class gSpan(Mining):
         return self.patternSet
 
     def parserGraph(self, stdOutput, path=None):
-        if not path:
-            lines = stdOutput.split('\n')
-        else:
+        if path:
             fg = open(path, 'r')
-            lines = fg.readlines()
+            stdOutput = fg.readlines()
             fg.close()
         return [graph for graph in self.parse_gspan_output(stdOutput)]
 
@@ -163,50 +161,6 @@ class gSpan(Mining):
                         coverage.add(int(t))
                 graph.build_coverage(coverage)
 
-        '''
-        i = 0
-        while i < len(lines):
-            line = lines[i]
-            if 't' in line:  # t # 0 * 45
-                t = line.split()
-                graph = Graph(t[2], t[4])     # id, support
-                i += 1
-
-                while i < len(lines):
-                    line = lines[i]
-                    if 'parent' in line:
-                        graph.set_parent(int(lines[i].split()[-1]))
-                        i += 1
-                    elif 'v ' in line:
-                        v = line.split(' ')  # v 0 2
-                        v_id = v[1]
-                        v_label = v[2]
-                        graph.add_node(int(v_id), v_label)
-                        i += 1
-                    elif 'e ' in line:
-                        e = line.split()  # e 0 1 0
-                        e_from_node = e[1]
-                        e_to_node = e[2]
-                        e_label = e[3]
-                        graph.add_edge(int(e_from_node), int(e_to_node), e_label)
-                        i += 1
-                    elif 'x' in line:
-                        transactions = line.split()
-                        coverage = set()
-                        for t in transactions:
-                            if 'x' not in t and t != '':
-                                coverage.add(int(t))
-                        graph.build_coverage(coverage)
-                        i += 1
-                        break
-                graphs.append(graph)
-                if i < len(lines) and 't' not in lines[i]:
-                    i += 1
-                elif i < len(lines) and 't' in lines[i]:
-                    continue
-            else:
-                i += 1
-        '''
         return graph
 
     def getPatterns(self):
