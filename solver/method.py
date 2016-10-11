@@ -73,23 +73,27 @@ class gSpan(Mining):
         Mining.__init__(self, inputs)
 
     def mining(self):
+        gSpan_exec = ''
         if platform.system() == "Linux":
-            gSpan = "./exec/gspan"
+            # gSpan = "./exec/gspan"
+            gSpan_exec = "./exec/gspan-CT"
         else:
-            gSpan = "./exec/gspan"
+            gSpan_exec = "./exec/gspan"
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
 
-        #print("%s -file %s %s" % (gSpan, self.datafile, options))
-        print('Command:\n%s -file %s -support %s -output %s' % (gSpan, self.data, self.support,self.output))
-       #child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
-        child = subprocess.Popen([gSpan, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
-        
+      # command = '{exe} -file {data} -output {output} -support {support} &> tmp/FNULL'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
+      #  child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
+        with open("tmp/FNULL","w") as devnull:
+        #  print(gSpan_exec, "-file", self.data, "-output", self.output, options)
+           child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], shell=False, stderr=devnull)
+
+        #child = subprocess.Popen(command, stdout=subprocess.PIPE)
+        #child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
 
         '''
         print([gSpan, "-file", self.data, options])
-        child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, "-output", self.output, options])
             returncode = 0
@@ -99,13 +103,14 @@ class gSpan(Mining):
         '''
         #print(returncode)
 
-        result = child.stdout.read()
-       #result = child.communicate()[0]
+        #result = child.communicate()[0]
         #print result
         #self.parser(result)
-        #fout = open(self.output, 'w')
-        #fout.write(result)
-        #fout.close()
+
+       #os.system(command)
+        with open(self.output, 'r') as fout:
+          print(self.output)
+          result = fout.read()
         return result
 
     def parser(self, stdOutput, path=None):
@@ -127,25 +132,26 @@ class gSpan(Mining):
             line = lines[i]
             if 't #' in line:  # t # 0 * 45
                 t = line.split(' ')
-                graph = Graph(t[4])
-                graph.id = t[2]
+                graph = Graph(t[2], t[4])     # id, support
                 i += 1
+
                 while i < len(lines):
                     line = lines[i]
-                    if 'v ' in line:
+                    if 'parent' in lines[i]:
+                        graph.set_parent(int(lines[i].split()[-1]))
+                        i += 1
+                    elif 'v ' in line:
                         v = line.split(' ')  # v 0 2
-                        node = Node()
-                        node.id = v[1]
-                        node.label = v[2]
-                        graph.add_node(node)
+                        v_id = v[1]
+                        v_label = v[2]
+                        graph.add_node(int(v_id), v_label)
                         i += 1
                     elif 'e ' in line:
                         e = line.split(' ')  # e 0 1 0
-                        edge = Edge()
-                        edge.fromnode = e[1]
-                        edge.tonode = e[2]
-                        edge.label = e[3]
-                        graph.add_edge(edge)
+                        e_from_node = e[1]
+                        e_to_node = e[2]
+                        e_label = e[3]
+                        graph.add_edge(int(e_from_node), int(e_to_node), e_label)
                         i += 1
                     else:
                         break

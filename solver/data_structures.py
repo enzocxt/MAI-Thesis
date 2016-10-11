@@ -28,6 +28,14 @@ def create_smaller_or_eq_by_len_mapping(len_mapping):
     smaller_or_eq[k] = smaller_or_eq[k-1].union(len_mapping[k]) 
   return smaller_or_eq
 
+def create_greater_or_eq_by_len_mapping_sequences(len_mapping):
+  greater_or_eq = defaultdict(set)
+  for k in len_mapping.keys():
+    greater_or_eq[k] = greater_or_eq[k].union(len_mapping[k+1]) 
+  return smaller_or_eq
+
+
+
 def get_other_smaller_or_eq_patterns(pattern, smaller_or_eq_mapping):
   l = pattern.get_pattern_len()
   other_patterns = smaller_or_eq_mapping[l] - set([pattern])

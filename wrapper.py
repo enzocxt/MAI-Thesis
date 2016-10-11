@@ -11,7 +11,7 @@ from solver.method import *
 from solver.generator import *
 from solver.groupIDP import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, group_by_len
 
 default_parameters = 'config.ini'
 
