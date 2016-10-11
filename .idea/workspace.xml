@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81d5d915-d4eb-438c-87db-15c2f74ccb73" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/output/gSpan/Chemical_340.output" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/output/gSpanChemical_340.output" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config_graph.ini" afterPath="$PROJECT_DIR$/config_graph.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/Pattern.py" afterPath="$PROJECT_DIR$/solver/Pattern.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/data_structures.py" afterPath="$PROJECT_DIR$/solver/data_structures.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output/gSpan/Chemical_340.output" afterPath="$PROJECT_DIR$/output/gSpan/Chemical_340.output" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/method.py" afterPath="$PROJECT_DIR$/solver/method.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/solver/subsumption.py" afterPath="$PROJECT_DIR$/solver/subsumption.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapper_without_IDP.py" afterPath="$PROJECT_DIR$/wrapper_without_IDP.py" />
     </list>
     <ignored path="MAI-Thesis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,35 +24,16 @@
     <favorites_list name="MAI-Thesis" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.38825756">
+    <splitter split-orientation="horizontal" split-proportion="0.39204547">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="config_graph.ini" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/config_graph.ini">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.049763035">
-                  <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="constraint_propagation.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/solver/constraint_propagation.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="wrapper_without_IDP.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="wrapper_without_IDP.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/wrapper_without_IDP.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="136.12903">
-                  <caret line="11" column="196" selection-start-line="11" selection-start-column="196" selection-end-line="11" selection-end-column="196" />
+                <state vertical-scroll-proportion="0.4345048">
+                  <caret line="266" column="47" selection-start-line="266" selection-start-column="47" selection-end-line="266" selection-end-column="47" />
                   <folding>
+                    <element signature="e#30#43#0" expanded="true" />
                     <element signature="e#1260#1645#0" expanded="false" />
                   </folding>
                 </state>
@@ -85,8 +60,8 @@
           <file leaf-file-name="method.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/solver/method.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.1943128">
-                  <caret line="135" column="48" selection-start-line="135" selection-start-column="48" selection-end-line="135" selection-end-column="48" />
+                <state vertical-scroll-proportion="1.3604652">
+                  <caret line="128" column="27" selection-start-line="128" selection-start-column="27" selection-end-line="128" selection-end-column="27" />
                   <folding />
                 </state>
               </provider>
@@ -446,7 +421,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11409396" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3323486" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44756278" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -911,16 +886,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wrapper_without_IDP.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="136.12903">
-          <caret line="11" column="196" selection-start-line="11" selection-start-column="196" selection-end-line="11" selection-end-column="196" />
-          <folding>
-            <element signature="e#1260#1645#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solver/Pattern.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -932,27 +897,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/solver/constraint_propagation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solver/method.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1943128">
-          <caret line="135" column="48" selection-start-line="135" selection-start-column="48" selection-end-line="135" selection-end-column="48" />
+        <state vertical-scroll-proportion="1.3604652">
+          <caret line="128" column="27" selection-start-line="128" selection-start-column="27" selection-end-line="128" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config_graph.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.049763035">
+        <state vertical-scroll-proportion="0.07526882">
           <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solver/constraint_propagation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.9677419">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wrapper_without_IDP.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4345048">
+          <caret line="266" column="47" selection-start-line="266" selection-start-column="47" selection-end-line="266" selection-end-column="47" />
+          <folding>
+            <element signature="e#30#43#0" expanded="true" />
+            <element signature="e#1260#1645#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
