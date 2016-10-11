@@ -41,17 +41,27 @@ class Node(object):
 
 
 class Graph(Pattern):
-    def __init__(self, id, nsupport=None):
+    def __init__(self, id=None, nsupport=None):
         self.id = id
         self.nsupport = nsupport
         self.parent = -1
         self.graphx = nx.Graph()
+        self.coverage = set()
+
+    def set_id(self, id):
+        self.id = int(id)
+
+    def set_support(self, support):
+        self.nsupport = support
 
     def add_node(self, v_id, v_label):
         self.graphx.add_node(v_id, label=v_label)
 
     def add_edge(self, e_from_node, e_to_node, e_label):
         self.graphx.add_edge(e_from_node, e_to_node, label=e_label)
+
+    def build_coverage(self, coverage):
+        self.coverage = coverage
 
     def get_pattern_len(self):
         return self.graphx.number_of_nodes()
@@ -60,7 +70,10 @@ class Graph(Pattern):
         return self.nsupport
 
     def set_parent(self, parent_id):
-        self.parent = parent_id
+        self.parent = int(parent_id)
+
+    def get_parent(self):
+        return self.parent
 
     def get_graphx(self):
         return self.graphx
@@ -68,11 +81,22 @@ class Graph(Pattern):
     def get_attributes(self):
         return self.graphx.nodes(data=False)
 
+    def get_coverage(self):
+      return self.coverage
+
     def has_node(self, node):
         return self.graphx.has_node(node)
 
     def isSubgraph(self, graph):
         pass
+
+    def __str__(self):
+        output = 't # {id} * {support}'.format(id=self.id, support=self.nsupport)
+        output += '\nparent : {0}'.format(self.parent)
+        for v, l in self.graphx.nodes_iter(data='label'):
+            output += '\nv {id} {label}'.format(id=v, label=l['label'])
+        output += '\n'
+        return output
 
 
 # Sequence class

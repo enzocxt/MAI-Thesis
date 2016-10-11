@@ -9,7 +9,7 @@ from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences, get_the_same_cover_graphs
 from solver.subsumption import SumsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
 
@@ -63,7 +63,7 @@ def fpMining(inputs):
 def fpMining_pure(inputs):
     if inputs['type'] == 'graph':
         inputs['data'] = 'data/gSpan/' + inputs['data']
-        inputs['output'] = 'output/gSpan' + inputs['output']
+        inputs['output'] = 'output/gSpan/' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         inputs['data'] = 'data/prefixSpan/' + inputs['data']
@@ -122,7 +122,6 @@ def fpMining_IDP(inputs):
         indices = sequence_mining(params, patterns_pruned)
     elif params['type'] == 'graph':
         patterns_pruned = list(process_constraints_sequences(params, patterns))
-        sys.exit(2)
         indices = graph_mining(params, patterns_pruned)
 
     closed_patterns = []
@@ -177,6 +176,7 @@ def sequence_mining(params, patterns):
 
 
 def graph_mining(params, patterns):
+    print('\nNumber of patterns: %s' % len(patterns))
     indices = []
 
     if params['dominance'] == "closed" or params['dominance'] == "free" :
@@ -185,33 +185,34 @@ def graph_mining(params, patterns):
       support_mapping = None
 
     subsumLattice = SumsumptionLattice(patterns)
-    sys.exit(2)
     lattice = subsumLattice.get_lattice()
+    #for i in lattice.values():
+    #    print len(i)
+
     skip_set = set([])
 
-    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
-        if seq in skip_set:
+    for graph in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+        if graph in skip_set:
           # print('skipping the sequence', seq)
             continue
 
-        prune_patterns = set(subsumLattice.get_all_children(seq, lattice))
-        children = set(subsumLattice.get_all_children(seq,lattice))
+        prune_patterns = set(subsumLattice.get_all_children(graph, lattice))
+        children = set(subsumLattice.get_all_children(graph, lattice))
 
         if params['dominance'] == "closed":
-            the_same_sup   = set(support_mapping[seq.get_support()])
-            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
-            indices.append(seq.id)
+            the_same_sup   = set(support_mapping[graph.get_support()])
+            prune_patterns = get_the_same_cover_graphs(graph, children.intersection(the_same_sup))
+            indices.append(graph.id)
         elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
             prune_patterns = children
-            indices.append(seq.id)
+            indices.append(graph.id)
         elif params['dominance'] == "free":
-            the_same_sup   = set(support_mapping[seq.get_support()])
-            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
-            prune_patterns.add(seq)
+            the_same_sup   = set(support_mapping[graph.get_support()])
+            prune_patterns = get_the_same_cover_sequences(graph, children.intersection(the_same_sup))
+            prune_patterns.add(graph)
             leaves         = subsumLattice.get_leaves(prune_patterns, lattice)
             for leaf in leaves:
                 indices.append(leaf.id)
-
 
         skip_set |= prune_patterns
 
@@ -288,7 +289,7 @@ if __name__ == "__main__":
 
 
     print "\n*************************************"
-    print "Number of frequent patterns: {0}".format(len(patterns))
+    print "Number of frequent patterns: {0}".format(len(closed_patterns))
 
     '''
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))

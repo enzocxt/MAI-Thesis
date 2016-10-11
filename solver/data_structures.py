@@ -12,6 +12,12 @@ def get_the_same_cover_sequences(seq, sequences):
       output.add(seq2)
   return output
 
+def get_the_same_cover_graphs(graph, graphs):
+    output = set()
+    for graph2 in graphs:
+        if graph.get_coverage() == graph2.get_coverage():
+            output.add(graph2)
+    return output
 
 
 
