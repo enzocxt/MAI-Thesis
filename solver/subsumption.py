@@ -20,9 +20,9 @@ class SumsumptionLattice:
     if len(patterns) == 0: return None
 
     if isinstance(patterns[0], Sequence):
-      self.create_subsumption_lattice_sequence(patterns)
+      return self.create_subsumption_lattice_sequence(patterns)
     elif isinstance(patterns[0], Graph):
-      self.create_subsumption_lattice_graph(patterns)
+      return self.create_subsumption_lattice_graph(patterns)
 
   def create_subsumption_lattice_sequence(self, patterns):
     print('\nCreating subsumption lattice for sequences...')
@@ -47,7 +47,16 @@ class SumsumptionLattice:
 
   def create_subsumption_lattice_graph(self, patterns):
     print('\nCreating subsumption lattice for graphs...')
+
+    subsumption_tree_id = defaultdict(set)  # parent_id: children set
+    for graph in patterns:
+      subsumption_tree_id[int(graph.get_parent())].add(graph)
+
     subsumption_tree = defaultdict(set)
+    for graph in patterns:
+      subsumption_tree[graph] = subsumption_tree_id[int(graph.id)]
+
+    '''
     mapping_by_len = group_by_len(patterns)
     max_len = max(mapping_by_len.keys())
     attribute_mapping = make_attribute_mapping(patterns)
@@ -62,6 +71,7 @@ class SumsumptionLattice:
         for candidate in candidates:
           if graph.isSubgraph(candidate):
             subsumption_tree[candidate].add(graph)
+    '''
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree

@@ -82,6 +82,7 @@ class gSpan(Mining):
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
+        print self.support
 
         command = '{exe} -file {data} -output {output} -support {support}'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
         print('%s' % command)
@@ -106,6 +107,7 @@ class gSpan(Mining):
         #print result
         #self.parser(result)
 
+        os.system('rm %s' % self.output)
         os.system(command)
         fout = open(self.output, 'r')
         result = fout.read()
@@ -126,18 +128,53 @@ class gSpan(Mining):
             fg = open(path, 'r')
             lines = fg.readlines()
             fg.close()
-        graphs = []
+        return [graph for graph in self.parse_gspan_output(stdOutput)]
+
+    def parse_gspan_output(self, stdOutput):
+        data = stdOutput.split('t #')
+        for graph_txt in data:
+            graph = self.parse_gspan_graph(graph_txt)
+            if graph:
+                yield graph
+
+    def parse_gspan_graph(self, text):
+        if '*' not in text:
+            return None
+        graph = Graph()
+        for line in text.splitlines():
+            if '*' in line:
+                graph_id, support = line.split('*')
+                graph.set_id(int(graph_id))
+                graph.set_support(int(support))
+            if 'parent' in line:
+                _, parent_id = line.split(':')
+                graph.set_parent(int(parent_id))
+            if 'v ' in line:
+                _, node_id, node_label = line.split()
+                graph.add_node(int(node_id), node_label)
+            if 'e ' in line:
+                _, edge_from, edge_to, label = line.split()
+                graph.add_edge(int(edge_from), int(edge_to), label)
+            if 'x ' in line:
+                transactions = line.split()
+                coverage = set()
+                for t in transactions:
+                    if 'x' not in t and t != '':
+                        coverage.add(int(t))
+                graph.build_coverage(coverage)
+
+        '''
         i = 0
         while i < len(lines):
             line = lines[i]
-            if 't #' in line:  # t # 0 * 45
-                t = line.split(' ')
+            if 't' in line:  # t # 0 * 45
+                t = line.split()
                 graph = Graph(t[2], t[4])     # id, support
                 i += 1
 
                 while i < len(lines):
                     line = lines[i]
-                    if 'parent' in lines[i]:
+                    if 'parent' in line:
                         graph.set_parent(int(lines[i].split()[-1]))
                         i += 1
                     elif 'v ' in line:
@@ -147,23 +184,30 @@ class gSpan(Mining):
                         graph.add_node(int(v_id), v_label)
                         i += 1
                     elif 'e ' in line:
-                        e = line.split(' ')  # e 0 1 0
+                        e = line.split()  # e 0 1 0
                         e_from_node = e[1]
                         e_to_node = e[2]
                         e_label = e[3]
                         graph.add_edge(int(e_from_node), int(e_to_node), e_label)
                         i += 1
-                    else:
+                    elif 'x' in line:
+                        transactions = line.split()
+                        coverage = set()
+                        for t in transactions:
+                            if 'x' not in t and t != '':
+                                coverage.add(int(t))
+                        graph.build_coverage(coverage)
+                        i += 1
                         break
                 graphs.append(graph)
-                if i < len(lines) and 't #' not in lines[i]:
+                if i < len(lines) and 't' not in lines[i]:
                     i += 1
-                elif i < len(lines) and 't #' in lines[i]:
+                elif i < len(lines) and 't' in lines[i]:
                     continue
             else:
                 i += 1
-
-        return graphs
+        '''
+        return graph
 
     def getPatterns(self):
         return self.patternSet
