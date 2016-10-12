@@ -3,6 +3,7 @@ import networkx as nx
 import sys
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
+from collections import Counter
 
 # Pattern abstract class
 class Pattern(object):
@@ -49,12 +50,22 @@ class Graph(Pattern):
 
     def get_attributes(self):
       #TODO TO DEBUG!
-      print(self.get_nodes())
-      nodes = map(lambda x: "v_"+str(x['label']),get_nodes())
-      edges = map(lambda x: "e_"+str(x['label']),self.get_edges())
+      nodes = map(lambda x: "v_"+str(x[1]['label']),self.get_nodes())
+      edges = map(lambda x: "e_"+str(x[2]['label']),self.get_edges())
       attributes = nodes + edges
-      print(attributes)
       return attributes
+
+    def get_attributes_with_arities(self):
+      count = Counter(self.get_attributes())
+      return count
+
+    def is_superset_by_attributes(self,graph):
+      counter1 = self.get_attributes_with_arities()
+      counter2 = graph.get_attributes_with_arities()
+      for key in counter1.keys():
+        if counter1[key] < counter2[key]:
+          return False
+      return True
 
 
     def get_nodes(self):

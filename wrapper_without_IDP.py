@@ -10,8 +10,9 @@ from solver.method import *
 from solver.generator import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences
-from solver.subsumption import SumsumptionLattice
+from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
+import time
 
 
 default_parameters = 'config.ini'
@@ -110,21 +111,27 @@ def fpMining_IDP(inputs):
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
-
+    
+    start1 = time.time()
     output = method.mining()
     patterns = method.parser(output)    # frequent patterns, not closed, not constrainted
+    end1 = time.time()
 
     if params['type'] == 'itemset':
         # indices = itemset_idp(params, patterns)
         pass
     else:
         print "# of patterns", len(patterns)
+        start2 = time.time()
         patterns_pruned = list(process_constraints(params, patterns))
+        end2 = time.time()
         print "# of constrained patterns", len(patterns_pruned)
+        start3 = time.time()
         final_patterns  = list(dominance_check(params, patterns_pruned))
         print "# of dominance patterns", len(final_patterns)
-
-
+        end3 = time.time()
+ 
+    print("step1:", end1-start1, "step2:", end2-start2, "step3:", end3-start3)
     return final_patterns
 
 
@@ -136,10 +143,17 @@ def dominance_check(params, patterns):
     else:
       support_mapping = None
 
-    subsumLattice = SumsumptionLattice(patterns)
+    subsumLattice = SubsumptionLattice(patterns)
     skip_set = set([])
 
-    for pattern in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+    if params['type'] == "graph":
+      print('using pareto front')
+      ordered_patterns = sorted(patterns, cmp=lambda x,y: subsumLattice.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+    else:
+      ordered_patterns = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
+
+
+    for pattern in tqdm(ordered_patterns):
         if pattern in skip_set:
           # print('skipping the sequence', seq)
             continue
