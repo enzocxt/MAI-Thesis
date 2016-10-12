@@ -5,6 +5,13 @@ The point of this data structure to avoid using the whole dataset in the experim
 It should split the set of patterns into small groups based on its parameters
 """
 
+def get_the_same_cover_itemsets(it, itemsets):
+    output = set()
+    for it2 in itemsets:
+        if it.get_support() == it.get_support():
+            output.add(it2)
+    return output
+
 def get_the_same_cover_sequences(seq, sequences):
   output = set()
   for seq2 in sequences:
@@ -12,6 +19,12 @@ def get_the_same_cover_sequences(seq, sequences):
       output.add(seq2)
   return output
 
+def get_the_same_cover_graphs(graph, graphs):
+    output = set()
+    for graph2 in graphs:
+        if graph.get_coverage() == graph2.get_coverage():
+            output.add(graph2)
+    return output
 
 
 

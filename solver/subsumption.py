@@ -1,7 +1,7 @@
 #from solver.method import prefixSpan#for debugging           
 from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection
 from collections import defaultdict
-from Pattern import Sequence, Graph
+from Pattern import Itemset, Sequence, Graph
 
 # def main():
 #   with open("output/prefix_sequence_user_pos.txt","r") as datafile:
@@ -11,19 +11,40 @@ from Pattern import Sequence, Graph
 #   print(subsumption_tree)
 
 
-class SumsumptionLattice:
+class SubsumptionLattice:
 
   def __init__(self, patterns):
     self.lattice = self.create_subsumption_lattice(patterns)
 
   def create_subsumption_lattice(self, patterns):
     if len(patterns) == 0: return None
-
-    if isinstance(patterns[0], Sequence):
+    if isinstance(patterns[0], Itemset):
+      return self.create_subsumption_lattice_itemset(patterns)
+    elif isinstance(patterns[0], Sequence):
       return self.create_subsumption_lattice_sequence(patterns)
     elif isinstance(patterns[0], Graph):
       return self.create_subsumption_lattice_graph(patterns)
 
+  #TODO check and rewrite -- Sergey
+  def create_subsumption_lattice_itemset(self, patterns):
+    print('\nCreating subsumption lattice for itemsets...')
+    subsumption_tree = defaultdict(set)
+    mapping_by_len = group_by_len(patterns)
+    max_len = max(mapping_by_len.keys())
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    for l in range(1, max_len):
+      print('Processing len: %s' % l)
+      itemsets_with_len_l = mapping_by_len[l]
+      for it in itemsets_with_len_l:
+        itemsets_with_len_plus_1 = mapping_by_len[l+1]
+        with_at_least_the_same_attributes = get_attribute_intersection(it, attribute_mapping)
+        candidates = itemsets_with_len_plus_1.intersection(with_at_least_the_same_attributes)
+        for candidate in candidates:
+          subsumption_tree[candidate].add(it)
+
+    print('Creating subsumption lattice done...\n')
+    return subsumption_tree
 
   def create_subsumption_lattice_sequence(self, patterns):
     print('\nCreating subsumption lattice for sequences...')
@@ -50,24 +71,6 @@ class SumsumptionLattice:
     if x[0] >= y[0] and x[1] >= y[1]: return 1
     else: return -1
 
-
-  def create_subsumption_lattice_graph(self, patterns):
-    print('\nCreating subsumption lattice for sequences...')
-    subsumption_tree = defaultdict(set)
-    self.mapping_by_len = group_by_len(patterns)
-    self.attribute_mapping = make_attribute_mapping(patterns)
-
-    for l in sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True): # maximal are not subsumed by anything
-      print('Processing graph of size = {size}'.format(size=l))
-      graphs_with_len_l = self.mapping_by_len[l]
-      for graph in graphs_with_len_l:
-        candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, get_attribute_intersection(graph, self.attribute_mapping))
-        for candidate in candidates:
-          if graph.is_subgraph_of(candidate):
-            subsumption_tree[candidate].add(graph)
-
-    print('Creating subsumption lattice done...\n')
-    return subsumption_tree
 
 
   def read_negative_dataset_sequences(self, params):
