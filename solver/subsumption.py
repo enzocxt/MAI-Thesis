@@ -25,7 +25,7 @@ class SubsumptionLattice:
     elif isinstance(patterns[0], Graph):
       return self.create_subsumption_lattice_graph(patterns)
 
-  #TODO check and rewrite -- Sergey
+  #TODO check and rewrite -- Sergey, modified a bit
   def create_subsumption_lattice_itemset(self, patterns):
     print('\nCreating subsumption lattice for itemsets...')
     subsumption_tree = defaultdict(set)
@@ -37,11 +37,9 @@ class SubsumptionLattice:
       print('Processing len: %s' % l)
       itemsets_with_len_l = mapping_by_len[l]
       for it in itemsets_with_len_l:
-        itemsets_with_len_plus_1 = mapping_by_len[l+1]
-        with_at_least_the_same_attributes = get_attribute_intersection(it, attribute_mapping)
-        candidates = itemsets_with_len_plus_1.intersection(with_at_least_the_same_attributes)
-        for candidate in candidates:
-          subsumption_tree[candidate].add(it)
+          candidates = filter(lambda x: x.get_pattern_len() > l, get_attribute_intersection(it, attribute_mapping))
+          for candidate in candidates:
+              subsumption_tree[candidate].add(it)
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
@@ -64,6 +62,26 @@ class SubsumptionLattice:
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
+
+  def create_subsumption_lattice_graph(self, patterns):
+    print('\nCreating subsumption lattice for sequences...')
+    subsumption_tree = defaultdict(set)
+    self.mapping_by_len = group_by_len(patterns)
+    self.attribute_mapping = make_attribute_mapping(patterns)
+
+    for l in sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True): # maximal are not subsumed by anything
+        print('Processing graph of size = {size}'.format(size=l))
+        graphs_with_len_l = self.mapping_by_len[l]
+        for graph in graphs_with_len_l:
+           candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, get_attribute_intersection(graph, self.attribute_mapping))
+           for candidate in candidates:
+               if graph.is_subgraph_of(candidate):
+                   subsumption_tree[candidate].add(graph)
+
+    print('Creating subsumption lattice done...\n')
+    return subsumption_tree
+
+
 
   @staticmethod
   def pareto_front_pair(x,y):
