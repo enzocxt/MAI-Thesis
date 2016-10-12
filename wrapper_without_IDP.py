@@ -121,6 +121,7 @@ def fpMining_IDP(inputs):
         # indices = itemset_idp(params, patterns)
         pass
     else:
+        
         print "# of patterns", len(patterns)
         start2 = time.time()
         patterns_pruned = list(process_constraints(params, patterns))
