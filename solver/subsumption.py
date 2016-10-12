@@ -111,8 +111,10 @@ class SubsumptionLattice:
 
 
     for l in tqdm(sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)): # maximal are not subsumed by anything
-      # print('Processing graph of size = {size}'.format(size=l))
+        print('Processing graph of size = {size}'.format(size=l))
+        # PARALELLIZATION_MARKER for different graphs of the same len
         graphs_with_len_l = self.mapping_by_len[l]
+        print('we have l graphs with len l', len(graphs_with_len_l))
         for graph in graphs_with_len_l:
         #  print("attribute interstionction started")
            candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, get_attribute_intersection(graph, self.attribute_mapping))
@@ -121,11 +123,13 @@ class SubsumptionLattice:
          # print("candidates setsize", len(candidates))
            skip_set    = set()
            all_descendants = self.get_all_initial_descendants(graph, initial_parent_subsumed_by_tree)
-           for candidate in sorted(candidates, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len())):
+           print("initial descendants len", len(all_descendants))
+           sorted_candidates = sorted(candidates, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()))
+           for candidate in sorted_candidates:
 
                if candidate in skip_set:
                    continue
-
+                      
                if candidate.id in all_descendants or graph.is_subgraph_of(candidate):
                    subsumed_by[graph].append(candidate)
                    subsumption_tree[candidate].add(graph)
