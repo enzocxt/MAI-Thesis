@@ -5,13 +5,35 @@
 import getopt
 import ConfigParser
 import collections
+import threading
+import math
 from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences, get_the_same_cover_graphs
-from solver.subsumption import SumsumptionLattice
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_itemsets, get_the_same_cover_sequences, get_the_same_cover_graphs
+from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
+
+
+class itemsetThread(threading.Thread):
+    def __init__(self, id, itemsets, attribute_mapping, support_mapping):
+        threading.Thread.__init__(self)
+        self.id = id
+        self.itemsets = itemsets
+        self.attribute_mapping = attribute_mapping
+        self.support_mapping = support_mapping
+
+    def run(self):
+        print('Start thread %s...' % self.id)
+        indices = []
+        for it in self.itemsets:
+            patterns_to_check = get_attribute_intersection(it, self.attribute_mapping, self.support_mapping)
+            if len(patterns_to_check) <= 1:
+                indices.append(it.id)
+                continue
+        print('Stop thread %s...' % self.id)
+        return indices
 
 
 default_parameters = 'config.ini'
@@ -115,7 +137,7 @@ def fpMining_IDP(inputs):
     patterns = method.parser(output)    # frequent patterns, not closed
 
     if params['type'] == 'itemset':
-        # indices = itemset_idp(params, patterns)
+        indices = itemset_mining(params, patterns)
         pass
     elif params['type'] == 'sequence':
         patterns_pruned = list(process_constraints_sequences(params, patterns))
@@ -134,6 +156,79 @@ def fpMining_IDP(inputs):
     return closed_patterns
 
 
+def itemset_mining(params, patterns):
+    indices = []
+
+    if params['dominance'] == 'closed' or params['dominance'] == 'free' :
+        support_mapping = make_grouping_by_support(patterns)
+    else:
+        support_mapping = None
+
+    '''
+    subsumLattice = SubsumptionLattice(patterns)
+    lattice = subsumLattice.get_lattice()
+
+    skip_set = set([])
+    '''
+    attribute_mapping = make_attribute_mapping(patterns)
+
+    ''' Multiple threads test
+    patterns_part = []
+    indices_parts = []
+    for i in range(9):
+        chunk_size = int(math.ceil(float(len(patterns))/10.0))
+        patterns_part.append(patterns[i*chunk_size:(i+1)*chunk_size])
+    patterns_part.append(patterns[9*chunk_size:])
+
+    threads = []
+    for i in range(10):
+        thread = itemsetThread(i, patterns_part[i], attribute_mapping, support_mapping)
+        indices_parts.append(thread.start())
+        threads.append(thread)
+
+    for t in threads:
+        t.join
+
+    print indices_parts
+    return indices
+    '''
+
+    for it in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
+
+        patterns_to_check = get_attribute_intersection(it, attribute_mapping, support_mapping)
+        if len(patterns_to_check) <= 1:
+            indices.append(it.id)
+            continue
+
+        '''
+        if it in skip_set:
+            continue
+
+        prune_patterns = set(subsumLattice.get_all_children(it, lattice))
+        children = set(subsumLattice.get_all_children(it, lattice))
+
+        if params['dominance'] == "closed":
+            the_same_sup   = set(support_mapping[it.get_support()])
+            prune_patterns = get_the_same_cover_itemsets(it,children.intersection(the_same_sup))
+            indices.append(it.id)
+        elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
+            prune_patterns = children
+            indices.append(it.id)
+        elif params['dominance'] == "free":
+            the_same_sup   = set(support_mapping[it.get_support()])
+            prune_patterns = get_the_same_cover_itemsets(it,children.intersection(the_same_sup))
+            prune_patterns.add(it)
+            leaves         = subsumLattice.get_leaves(prune_patterns, lattice)
+            for leaf in leaves:
+                indices.append(leaf.id)
+
+
+        skip_set |= prune_patterns
+        '''
+
+    return indices
+
+
 def sequence_mining(params, patterns):
     indices = []
 
@@ -142,7 +237,7 @@ def sequence_mining(params, patterns):
     else:
       support_mapping = None
 
-    subsumLattice = SumsumptionLattice(patterns)
+    subsumLattice = SubsumptionLattice(patterns)
     lattice = subsumLattice.get_lattice()
     skip_set = set([])
 
@@ -184,16 +279,13 @@ def graph_mining(params, patterns):
     else:
       support_mapping = None
 
-    subsumLattice = SumsumptionLattice(patterns)
+    subsumLattice = SubsumptionLattice(patterns)
     lattice = subsumLattice.get_lattice()
-    #for i in lattice.values():
-    #    print len(i)
 
     skip_set = set([])
 
     for graph in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
         if graph in skip_set:
-          # print('skipping the sequence', seq)
             continue
 
         prune_patterns = set(subsumLattice.get_all_children(graph, lattice))
@@ -282,15 +374,15 @@ if __name__ == "__main__":
 
 
     # frequent pattern mining
-    #patterns = fpMining_pure(params)
+    patterns = fpMining_pure(params)
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
     closed_patterns = fpMining_IDP(params)
 
 
     print "\n*************************************"
-    print "Number of frequent patterns: {0}".format(len(closed_patterns))
+    print "Number of frequent patterns: {0}".format(len(patterns))
 
-    '''
+
     print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
-     '''
+
