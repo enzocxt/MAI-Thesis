@@ -159,7 +159,6 @@ def dominance_check(params, patterns):
           # print('skipping the sequence', seq)
             continue
 
-        prune_patterns = set(subsumLattice.get_all_children(pattern))
         children = set(subsumLattice.get_all_children(pattern))
 
         if params['dominance'] == "closed":
@@ -182,9 +181,11 @@ def dominance_check(params, patterns):
 
         skip_set |= prune_patterns
 
+    output_patterns = []
     for p in patterns:
         if p.id in indices:
-            yield p
+            output_patterns.append(p)
+    return output_patterns
 
 
 

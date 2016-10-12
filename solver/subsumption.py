@@ -70,13 +70,45 @@ class SubsumptionLattice:
       for indirect_parent in self.get_all_parents(parent,subsumed_by):
         yield indirect_parent
 
+  @staticmethod
+  def create_initial_parent_tree(patterns):
+    initial_subsumption_tree = {}
+    initial_subsumed_by_tree = {}
+    for pattern in patterns:
+        if pattern.parent == -1:
+            continue
+      
+        initial_subsumption_tree[pattern.id] = pattern.parent  
+        initial_subsumed_by_tree[pattern.parent] = pattern.id
+
+    return initial_subsumed_by_tree
+
+  @staticmethod
+  def get_all_initial_descendants(pattern, initial_subsumed_by_tree):
+    parents = []
+    current_id = pattern.id
+    while True:
+      current_parent = initial_subsumed_by_tree.get(current_id, -5)
+      if current_parent == -5:
+        return parents
+      else:
+        current_id = current_parent.id
+        parents.append(current_id)
+
+
+   
+
 
   def create_subsumption_lattice_graph(self, patterns):
     print('\nCreating subsumption lattice for graphs...')
-    subsumption_tree = defaultdict(set)
     self.mapping_by_len = group_by_len(patterns)
     self.attribute_mapping = make_attribute_mapping(patterns)
+
     subsumed_by = defaultdict(list)
+    subsumption_tree = defaultdict(set)
+    
+    initial_parent_subsumed_by_tree = self.create_initial_parent_tree(patterns)
+
 
     for l in tqdm(sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)): # maximal are not subsumed by anything
       # print('Processing graph of size = {size}'.format(size=l))
@@ -87,12 +119,14 @@ class SubsumptionLattice:
            candidates = list(get_attribute_superset(graph, candidates))
          # print("attribute interstionction done")
          # print("candidates setsize", len(candidates))
-           skip_set = set()
+           skip_set    = set()
+           all_descendants = self.get_all_initial_descendants(graph, initial_parent_subsumed_by_tree)
            for candidate in sorted(candidates, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len())):
+
                if candidate in skip_set:
                    continue
 
-               if graph.is_subgraph_of(candidate):
+               if candidate.id in all_descendants or graph.is_subgraph_of(candidate):
                    subsumed_by[graph].append(candidate)
                    subsumption_tree[candidate].add(graph)
                    parents = set(self.get_all_parents(candidate,subsumed_by))
