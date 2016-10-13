@@ -16,6 +16,7 @@ from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
 
 
+''' For test '''
 class itemsetThread(threading.Thread):
     def __init__(self, id, itemsets, attribute_mapping, support_mapping):
         threading.Thread.__init__(self)
@@ -38,7 +39,7 @@ class itemsetThread(threading.Thread):
 
 default_parameters = 'config.ini'
 
-def process_constraints_sequences(params,patterns):
+def process_constraints(params,patterns):
     constraints = params['constraints']
 
     for pattern in patterns:
@@ -86,6 +87,7 @@ def fpMining_pure(inputs):
     if inputs['type'] == 'graph':
         inputs['data'] = 'data/gSpan/' + inputs['data']
         inputs['output'] = 'output/gSpan/' + inputs['output']
+        #inputs['output'] = 'output/gSpan_' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         inputs['data'] = 'data/prefixSpan/' + inputs['data']
@@ -113,6 +115,7 @@ def fpMining_IDP(inputs):
         if 'data/' not in inputs['data']:
             inputs['data'] = 'data/gSpan/' + inputs['data']
             inputs['output'] = 'output/gSpan/' + inputs['output']
+            #inputs['output'] = 'output/gSpan_' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         if 'data/' not in inputs['data']:
@@ -137,13 +140,26 @@ def fpMining_IDP(inputs):
     patterns = method.parser(output)    # frequent patterns, not closed
 
     if params['type'] == 'itemset':
+        # indices = itemset_idp(params, patterns)
+        pass
+    else:
+        print "# of patterns", len(patterns)
+        patterns_pruned = list(process_constraints(params, patterns))
+        print "# of constrained patterns", len(patterns_pruned)
+        final_patterns  = list(dominance_check(params, patterns_pruned))
+        print "# of dominance patterns", len(final_patterns)
+
+
+    return final_patterns
+    '''
+    if params['type'] == 'itemset':
         indices = itemset_mining(params, patterns)
         pass
     elif params['type'] == 'sequence':
-        patterns_pruned = list(process_constraints_sequences(params, patterns))
+        patterns_pruned = list(process_constraints(params, patterns))
         indices = sequence_mining(params, patterns_pruned)
     elif params['type'] == 'graph':
-        patterns_pruned = list(process_constraints_sequences(params, patterns))
+        patterns_pruned = list(process_constraints(params, patterns))
         indices = graph_mining(params, patterns_pruned)
 
     closed_patterns = []
@@ -154,6 +170,7 @@ def fpMining_IDP(inputs):
     print "\nNumber of {0} frequent patterns: {1}\n".format(params['dominance'], len(closed_patterns))
 
     return closed_patterns
+    '''
 
 
 def itemset_mining(params, patterns):
@@ -164,12 +181,6 @@ def itemset_mining(params, patterns):
     else:
         support_mapping = None
 
-    '''
-    subsumLattice = SubsumptionLattice(patterns)
-    lattice = subsumLattice.get_lattice()
-
-    skip_set = set([])
-    '''
     attribute_mapping = make_attribute_mapping(patterns)
 
     ''' Multiple threads test
@@ -200,36 +211,10 @@ def itemset_mining(params, patterns):
             indices.append(it.id)
             continue
 
-        '''
-        if it in skip_set:
-            continue
-
-        prune_patterns = set(subsumLattice.get_all_children(it, lattice))
-        children = set(subsumLattice.get_all_children(it, lattice))
-
-        if params['dominance'] == "closed":
-            the_same_sup   = set(support_mapping[it.get_support()])
-            prune_patterns = get_the_same_cover_itemsets(it,children.intersection(the_same_sup))
-            indices.append(it.id)
-        elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
-            prune_patterns = children
-            indices.append(it.id)
-        elif params['dominance'] == "free":
-            the_same_sup   = set(support_mapping[it.get_support()])
-            prune_patterns = get_the_same_cover_itemsets(it,children.intersection(the_same_sup))
-            prune_patterns.add(it)
-            leaves         = subsumLattice.get_leaves(prune_patterns, lattice)
-            for leaf in leaves:
-                indices.append(leaf.id)
-
-
-        skip_set |= prune_patterns
-        '''
-
     return indices
 
 
-def sequence_mining(params, patterns):
+def dominance_check(params, patterns):
     indices = []
 
     if params['dominance'] == "closed" or params['dominance'] == "free" :
@@ -238,36 +223,38 @@ def sequence_mining(params, patterns):
       support_mapping = None
 
     subsumLattice = SubsumptionLattice(patterns)
-    lattice = subsumLattice.get_lattice()
     skip_set = set([])
 
-    for seq in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
-        if seq in skip_set:
+    for pattern in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)):
+        if pattern in skip_set:
           # print('skipping the sequence', seq)
             continue
 
-        prune_patterns = set(subsumLattice.get_all_children(seq, lattice))
-        children = set(subsumLattice.get_all_children(seq,lattice))
+        prune_patterns = set(subsumLattice.get_all_children(pattern))
+        children = set(subsumLattice.get_all_children(pattern))
 
         if params['dominance'] == "closed":
-            the_same_sup   = set(support_mapping[seq.get_support()])
-            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
-            indices.append(seq.id)
+            the_same_sup   = set(support_mapping[pattern.get_support()])
+           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
+            prune_patterns = children.intersection(the_same_sup)
+            indices.append(pattern.id)
         elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
             prune_patterns = children 
-            indices.append(seq.id)
+            indices.append(pattern.id)
         elif params['dominance'] == "free":
-            the_same_sup   = set(support_mapping[seq.get_support()])
-            prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup))
-            prune_patterns.add(seq)
-            leaves         = subsumLattice.get_leaves(prune_patterns, lattice)
+            the_same_sup   = set(support_mapping[pattern.get_support()])
+           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
+            prune_patterns = children.intersection(the_same_sup)
+            prune_patterns.add(pattern)
+            leaves         = subsumLattice.get_leaves(prune_patterns)
             for leaf in leaves:
                 indices.append(leaf.id)
 
-
         skip_set |= prune_patterns
 
-    return indices
+    for p in patterns:
+        if p.id in indices:
+            yield p
 
 
 def graph_mining(params, patterns):
@@ -381,8 +368,6 @@ if __name__ == "__main__":
 
 
     print "\n*************************************"
-    print "Number of frequent patterns: {0}".format(len(patterns))
-
-
-    print "Number of {0} frequent patterns: {1}".format(params['dominance'], len(closed_patterns))
+  # print "Number of frequent patterns: {0}".format(len(patterns))
+    print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
 

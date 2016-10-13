@@ -26,6 +26,7 @@ class SubsumptionLattice:
     elif isinstance(patterns[0], Graph):
       return self.create_subsumption_lattice_graph(patterns)
 
+  #TODO check and rewrite -- Sergey, modified a bit
   def create_subsumption_lattice_itemset(self, patterns):
     print('\nCreating subsumption lattice for itemsets...')
     subsumption_tree = defaultdict(set)
@@ -37,11 +38,9 @@ class SubsumptionLattice:
       print('Processing len: %s' % l)
       itemsets_with_len_l = mapping_by_len[l]
       for it in itemsets_with_len_l:
-        itemsets_with_len_plus_1 = mapping_by_len[l+1]
-        with_at_least_the_same_attributes = get_attribute_intersection(it, attribute_mapping)
-        candidates = itemsets_with_len_plus_1.intersection(with_at_least_the_same_attributes)
+        candidates = filter(lambda x: x.get_pattern_len() > l, get_attribute_intersection(it, attribute_mapping))
         for candidate in candidates:
-          subsumption_tree[candidate].add(it)
+            subsumption_tree[candidate].add(it)
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
@@ -49,19 +48,18 @@ class SubsumptionLattice:
   def create_subsumption_lattice_sequence(self, patterns):
     print('\nCreating subsumption lattice for sequences...')
     subsumption_tree = defaultdict(set)
-    mapping_by_len = group_by_len(patterns)
-    max_len = max(mapping_by_len.keys())
-    attribute_mapping = make_attribute_mapping(patterns)
+
+    self.mapping_by_len = group_by_len(patterns)
+    max_len = max(self.mapping_by_len.keys())
+    self.attribute_mapping = make_attribute_mapping(patterns)
 
     for l in range(1,max_len): # maximal are not subsumed by anything
       print('Processing len: %s' % l)
-      sequences_with_len_l = mapping_by_len[l]
+      sequences_with_len_l = self.mapping_by_len[l]
       for seq in sequences_with_len_l:
-        sequences_with_len_l_plus_1 = mapping_by_len[l+1]
-        with_at_least_the_same_attributes = get_attribute_intersection(seq, attribute_mapping)
-        candidates = sequences_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
+        candidates = filter(lambda x: x.get_pattern_len() > l, get_attribute_intersection(seq, self.attribute_mapping))
         for candidate in candidates:
-          if is_seq1_subsequence_of_seq2(seq.get_attributes(),candidate.get_attributes()):
+          if seq.is_subsequence_of(candidate):
             subsumption_tree[candidate].add(seq)
 
     print('Creating subsumption lattice done...\n')
@@ -69,7 +67,7 @@ class SubsumptionLattice:
 
   def create_subsumption_lattice_graph(self, patterns):
     print('\nCreating subsumption lattice for graphs...')
-
+    '''
     subsumption_tree_id = defaultdict(set)  # parent_id: children set
     for graph in patterns:
       subsumption_tree_id[int(graph.get_parent())].add(graph)
@@ -77,26 +75,29 @@ class SubsumptionLattice:
     subsumption_tree = defaultdict(set)
     for graph in patterns:
       subsumption_tree[graph] = subsumption_tree_id[int(graph.id)]
-
     '''
-    mapping_by_len = group_by_len(patterns)
-    max_len = max(mapping_by_len.keys())
-    attribute_mapping = make_attribute_mapping(patterns)
 
-    for l in range(1,max_len): # maximal are not subsumed by anything
-      print('Processing len: %s' % l)
-      graphs_with_len_l = mapping_by_len[l]
-      for graph in graphs_with_len_l:
-        graphs_with_len_l_plus_1 = mapping_by_len[l+1]
-        with_at_least_the_same_attributes = get_attribute_intersection(graph, attribute_mapping)
-        candidates = graphs_with_len_l_plus_1.intersection(with_at_least_the_same_attributes)
-        for candidate in candidates:
-          if graph.isSubgraph(candidate):
-            subsumption_tree[candidate].add(graph)
-    '''
+    subsumption_tree = defaultdict(set)
+    self.mapping_by_len = group_by_len(patterns)
+    self.attribute_mapping = make_attribute_mapping(patterns)
+
+    for l in sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True): # maximal are not subsumed by anything
+        print('Processing graph of size = {size}'.format(size=l))
+        graphs_with_len_l = self.mapping_by_len[l]
+        for graph in graphs_with_len_l:
+           candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, get_attribute_intersection(graph, self.attribute_mapping))
+           for candidate in candidates:
+               if graph.is_subgraph_of(candidate):
+                   subsumption_tree[candidate].add(graph)
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
+
+  @staticmethod
+  def pareto_front_pair(x,y):
+    if x == y: return 0
+    if x[0] >= y[0] and x[1] >= y[1]: return 1
+    else: return -1
 
   def read_negative_dataset_sequences(self, params):
     filename = params['negative']
@@ -111,15 +112,14 @@ class SubsumptionLattice:
   def compute_sequence_coverage(self, seq, in_sequences):
     cover_neg = set()
     for transaction_seq in in_sequences:
-      if is_seq1_subsequence_of_seq2(seq.get_attributes(),transaction_seq.get_attributes()):
+      if seq.is_subsequence_of(transaction_seq):
         cover_neg.add(seq.id)
     return cover_neg
 
-
-  def get_leaves(self, patterns, lattice):
+  def get_leaves(self, patterns):
     output = []
     for pattern in patterns:
-      direct_children = self.get_direct_children(pattern, lattice)
+      direct_children = self.get_direct_children(pattern)
       for child in direct_children:
         if child in patterns:
           break
@@ -127,14 +127,14 @@ class SubsumptionLattice:
         output.append(pattern)
     return output
 
-  def get_all_children(self, pattern, lattice):
-    for child in lattice[pattern]:
+  def get_all_children(self, pattern):
+    for child in self.lattice[pattern]:
       yield child
-      for indirect_indirect_child in self.get_all_children(child, lattice):
+      for indirect_indirect_child in self.get_all_children(child):
         yield indirect_indirect_child
 
-  def get_direct_children(self, pattern, lattice):
-    return lattice[pattern]
+  def get_direct_children(self, pattern):
+    return self.lattice[pattern]
 
   def get_lattice(self):
     return self.lattice
@@ -142,22 +142,6 @@ class SubsumptionLattice:
   
 # print mapping_by_len
 # print attribute_mapping
-  
-  
-def is_seq1_subsequence_of_seq2(attr1, attr2):
-  max_l1 = len(attr1)
-  max_l2 = len(attr2)
-  i = 0
-  j = 0
-  while i < max_l1:
-    if j >= max_l2:
-      return False
-    if attr1[i] == attr2[j]:
-      i += 1
-      j += 1
-    else:
-      j += 1
-  return True
 
 if __name__ == "__main__":
   pass
