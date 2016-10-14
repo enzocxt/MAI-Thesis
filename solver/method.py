@@ -71,6 +71,7 @@ class gSpan(Mining):
 
     def __init__(self, inputs):
         Mining.__init__(self, inputs)
+        Pattern.id2pattern = {}
 
     def mining(self):
         gSpan_exec = ''
@@ -111,7 +112,7 @@ class gSpan(Mining):
         #print(returncode)
 
         #result = child.communicate()[0]
-        #print result
+        #print resul
         #self.parser(result)
 
        #os.system(command)
@@ -140,6 +141,7 @@ class gSpan(Mining):
             if 't #' in line:  # t # 0 * 45
                 t = line.split(' ')
                 graph = Graph(t[2], t[4])     # id, support
+                Graph.id2pattern[int(t[2])] = graph
                 i += 1
 
                 while i < len(lines):
@@ -179,8 +181,10 @@ class gSpan(Mining):
 class prefixSpan(Mining):
     """Use prefixSpan to mining frequent sequences"""
 
+
     def __init__(self, inputs):
         Mining.__init__(self, inputs)
+        Pattern.id2pattern = {}
 
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
@@ -242,7 +246,9 @@ class prefixSpan(Mining):
                     continue
                 coverage, freq = map(lambda x: x.strip(" ()"), lines[2*i+1].strip().split(':'))
                 coverage = map(lambda x: int(x),coverage.split())
-                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)) # coverage is the set of transactions covered by the
+                seq = Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)
+                patterns.append(seq) # coverage is the set of transactions covered by the
+                Pattern.id2pattern[index] = seq
                 index += 1
         else:
             with open(path, 'r') as fin:

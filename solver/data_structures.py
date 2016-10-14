@@ -1,4 +1,5 @@
 from collections import defaultdict
+MAGIK_NUMBER = 4
 
 """
 The point of this data structure to avoid using the whole dataset in the experiments and IDP code generation
@@ -84,7 +85,8 @@ def get_attribute_intersection(pattern, mapping, support_mapping=None):
 
 
 def get_attribute_superset(pattern, patternset):
+  output = []
   for candidate in patternset:
     if candidate.is_superset_by_attributes(pattern):
-      yield candidate
-
+      output.append(candidate)
+  return output

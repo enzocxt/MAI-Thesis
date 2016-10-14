@@ -137,55 +137,55 @@ def fpMining_IDP(inputs):
 
 
 def dominance_check(params, patterns):
-    indices = []
+#   indices = []
 
-    if params['dominance'] == "closed" or params['dominance'] == "free" :
-      support_mapping = make_grouping_by_support(patterns)
-    else:
-      support_mapping = None
+#   if params['dominance'] == "closed" or params['dominance'] == "free" :
+#     support_mapping = make_grouping_by_support(patterns)
+#   else:
+#     support_mapping = None
 
-    subsumLattice = SubsumptionLattice(patterns)
-    skip_set = set([])
+    subsumLattice = SubsumptionLattice()
+    patterns = subsumLattice.check_dominance(patterns,params)
+    return patterns
+#   skip_set = set([])
 
-    if params['type'] == "graph":
-      print('using pareto front')
-      ordered_patterns = sorted(patterns, cmp=lambda x,y: subsumLattice.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
-    else:
-      ordered_patterns = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
-
-
-    for pattern in tqdm(ordered_patterns):
-        if pattern in skip_set:
-          # print('skipping the sequence', seq)
-            continue
-
-        children = set(subsumLattice.get_all_children(pattern))
-
-        if params['dominance'] == "closed":
-            the_same_sup   = set(support_mapping[pattern.get_support()])
-           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
-            prune_patterns = children.intersection(the_same_sup)
-            indices.append(pattern.id)
-        elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
-            prune_patterns = children 
-            indices.append(pattern.id)
-        elif params['dominance'] == "free":
-            the_same_sup   = set(support_mapping[pattern.get_support()])
-           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
-            prune_patterns = children.intersection(the_same_sup)
-            prune_patterns.add(pattern)
-            leaves         = subsumLattice.get_leaves(prune_patterns)
-            for leaf in leaves:
-                indices.append(leaf.id)
+#   if params['type'] == "graph":
+#     print('using pareto front')
+#     ordered_patterns = sorted(patterns, cmp=lambda x,y: subsumLattice.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+#   else:
+#     ordered_patterns = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
 
 
-        skip_set |= prune_patterns
+#   for pattern in tqdm(ordered_patterns):
+#       if pattern in skip_set:
+#         # print('skipping the sequence', seq)
+#           continue
 
-    output_patterns = []
-    for p in patterns:
-        if p.id in indices:
-            output_patterns.append(p)
-    return output_patterns
+#       children = set(subsumLattice.get_all_children(pattern))
+
+#       if params['dominance'] == "closed":
+#           the_same_sup   = set(support_mapping[pattern.get_support()])
+#           prune_patterns = children.intersection(the_same_sup)
+#           indices.append(pattern.id)
+#       elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
+#           prune_patterns = children 
+#           indices.append(pattern.id)
+#       elif params['dominance'] == "free":
+#           the_same_sup   = set(support_mapping[pattern.get_support()])
+#           prune_patterns = children.intersection(the_same_sup)
+#           prune_patterns.add(pattern)
+#           leaves         = subsumLattice.get_leaves(prune_patterns)
+#           for leaf in leaves:
+#               indices.append(leaf.id)
+
+
+#       skip_set |= prune_patterns
+
+#   output_patterns = []
+#   for p in patterns:
+#       if p.id in indices:
+#           output_patterns.append(p)
+#   return output_patterns
 
 
 
