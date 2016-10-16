@@ -5,8 +5,7 @@
 import getopt
 import ConfigParser
 import collections
-import threading
-import math
+import time
 from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
@@ -14,29 +13,6 @@ from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_itemsets, get_the_same_cover_sequences, get_the_same_cover_graphs
 from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
-import time
-
-
-''' For test '''
-class itemsetThread(threading.Thread):
-    def __init__(self, id, itemsets, attribute_mapping, support_mapping):
-        threading.Thread.__init__(self)
-        self.id = id
-        self.itemsets = itemsets
-        self.attribute_mapping = attribute_mapping
-        self.support_mapping = support_mapping
-
-    def run(self):
-        print('Start thread %s...' % self.id)
-        indices = []
-        for it in self.itemsets:
-            patterns_to_check = get_attribute_intersection(it, self.attribute_mapping, self.support_mapping)
-            if len(patterns_to_check) <= 1:
-                indices.append(it.id)
-                continue
-        print('Stop thread %s...' % self.id)
-        return indices
-
 
 
 default_parameters = 'config.ini'
@@ -66,24 +42,6 @@ def sergeylog(s): #dump info into the log file
         logfile.write(s)
 
 
-
-# Method for mining frequent patterns
-def fpMining(inputs):
-    if inputs['type'] == 'graph':
-        method = gSpan(inputs)
-    elif inputs['type'] == 'sequence':
-        method = prefixSpan(inputs)
-    elif inputs['type'] == 'itemset':
-        method = eclat(inputs)
-    else:
-        print 'Does not support "type == %s"!' % inputs['type']
-        sys.exit(2)
-
-    output = method.mining()
-    patterns = method.parser(output)
-    return patterns
-
-
 @logger
 def fpMining_pure(inputs):
     if inputs['type'] == 'graph':
@@ -103,16 +61,18 @@ def fpMining_pure(inputs):
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
-    output = method.mining()
+    start1   = time.time()
+    output   = method.mining()
     patterns = method.parser(output)
+    end1     = time.time()
     print "\n*************************************"
     print 'Number of frequent patterns with constraints (pure exec): %s' % len(patterns)
 
-    return patterns
+    return patterns, end1-start1
 
 
 @logger
-def fpMining_IDP(inputs):
+def fpMining_postpro(inputs):
     if inputs['type'] == 'graph':
         if 'data/' not in inputs['data']:
             inputs['data'] = 'data/gSpan/' + inputs['data']
@@ -137,141 +97,96 @@ def fpMining_IDP(inputs):
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
-    
-    start1 = time.time()
-    output = method.mining()
-    patterns = method.parser(output)    # frequent patterns, not closed, not constrainted
-    end1 = time.time()
 
-    if params['type'] == 'itemset':
-        # indices = itemset_idp(params, patterns)
-        pass
-    else:
-        
-        print "# of patterns", len(patterns)
-        start2 = time.time()
-        patterns_pruned = list(process_constraints(params, patterns))
-        end2 = time.time()
-        print "# of constrained patterns", len(patterns_pruned)
-        start3 = time.time()
-        final_patterns  = list(dominance_check(params, patterns_pruned))
-        print "# of dominance patterns", len(final_patterns)
-        end3 = time.time()
+    params = inputs
+    # step 1 time cost
+    start1   = time.time()
+    output   = method.mining()
+    patterns = method.parser(output)    # frequent patterns, not closed, not constrainted
+    end1     = time.time()
+    print "# of patterns", len(patterns)
+    start2   = time.time()
+    patterns_pruned = process_constraints(params, patterns)
+    if patterns_pruned:
+        patterns_pruned = list(patterns_pruned)
+    else: patterns_pruned = []
+    end2     = time.time()
+    print "# of constrained patterns", len(patterns_pruned)
+    start3   = time.time()
+    final_patterns = dominance_check(params, patterns_pruned)
+    if final_patterns:
+        final_patterns = list(final_patterns)
+    else: final_patterns = []
+    print "# of dominance patterns", len(final_patterns)
+    end3     = time.time()
  
     print("step1:", end1-start1, "step2:", end2-start2, "step3:", end3-start3)
-    return final_patterns
-    '''
-    if params['type'] == 'itemset':
-        indices = itemset_mining(params, patterns)
-        pass
-    elif params['type'] == 'sequence':
-        patterns_pruned = list(process_constraints(params, patterns))
-        indices = sequence_mining(params, patterns_pruned)
-    elif params['type'] == 'graph':
-        patterns_pruned = list(process_constraints(params, patterns))
-        indices = graph_mining(params, patterns_pruned)
-
-    closed_patterns = []
-    for p in patterns:
-        if p.id in indices:
-            closed_patterns.append(p)
-    print "\n*************************************"
-    print "\nNumber of {0} frequent patterns: {1}\n".format(params['dominance'], len(closed_patterns))
-
-    return closed_patterns
-    '''
-
-
-def itemset_mining(params, patterns):
-    indices = []
-
-    if params['dominance'] == 'closed' or params['dominance'] == 'free' :
-        support_mapping = make_grouping_by_support(patterns)
-    else:
-        support_mapping = None
-
-    attribute_mapping = make_attribute_mapping(patterns)
-
-    ''' Multiple threads test
-    patterns_part = []
-    indices_parts = []
-    for i in range(9):
-        chunk_size = int(math.ceil(float(len(patterns))/10.0))
-        patterns_part.append(patterns[i*chunk_size:(i+1)*chunk_size])
-    patterns_part.append(patterns[9*chunk_size:])
-
-    threads = []
-    for i in range(10):
-        thread = itemsetThread(i, patterns_part[i], attribute_mapping, support_mapping)
-        indices_parts.append(thread.start())
-        threads.append(thread)
-
-    for t in threads:
-        t.join
-
-    print indices_parts
-    return indices
-    '''
-
-    for it in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
-
-        patterns_to_check = get_attribute_intersection(it, attribute_mapping, support_mapping)
-        if len(patterns_to_check) <= 1:
-            indices.append(it.id)
-            continue
-
-    return indices
+    return final_patterns, end1-start1, end2-start2, end3-start3
 
 
 def dominance_check(params, patterns):
-    indices = []
-
-    if params['dominance'] == "closed" or params['dominance'] == "free" :
-      support_mapping = make_grouping_by_support(patterns)
-    else:
-      support_mapping = None
-
-    subsumLattice = SubsumptionLattice(patterns)
-    skip_set = set([])
-
-    if params['type'] == "graph":
-      print('using pareto front')
-      ordered_patterns = sorted(patterns, cmp=lambda x,y: subsumLattice.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
-    else:
-      ordered_patterns = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
-
-
-    for pattern in tqdm(ordered_patterns):
-        if pattern in skip_set:
-          # print('skipping the sequence', seq)
-            continue
-
-        children = set(subsumLattice.get_all_children(pattern))
-
-        if params['dominance'] == "closed":
-            the_same_sup   = set(support_mapping[pattern.get_support()])
-           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
-            prune_patterns = children.intersection(the_same_sup)
-            indices.append(pattern.id)
-        elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
-            prune_patterns = children 
-            indices.append(pattern.id)
-        elif params['dominance'] == "free":
-            the_same_sup   = set(support_mapping[pattern.get_support()])
-           #prune_patterns = get_the_same_cover_sequences(seq,children.intersection(the_same_sup)) # need to use only if the tree is based not on the sub-pattern relationalship
-            prune_patterns = children.intersection(the_same_sup)
-            prune_patterns.add(pattern)
-            leaves         = subsumLattice.get_leaves(prune_patterns)
-            for leaf in leaves:
-                indices.append(leaf.id)
-
-        skip_set |= prune_patterns
-
     output_patterns = []
-    for p in patterns:
-        if p.id in indices:
-            output_patterns.append(p)
+    if params['type'] == 'itemset':
+        indices = []
+
+        if params['dominance'] == "closed" or params['dominance'] == "free":
+          support_mapping = make_grouping_by_support(patterns)
+        else:
+          support_mapping = None
+        attribute_mapping = make_attribute_mapping(patterns)
+
+        for it in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
+            patterns_to_check = get_attribute_intersection(it, attribute_mapping, support_mapping)
+            if len(patterns_to_check) <= 1:
+                indices.append(it.id)
+                continue
+
+        for p in patterns:
+            if p.id in indices:
+                output_patterns.append(p)
+    else :
+        subsumLattice = SubsumptionLattice()
+        output_patterns = subsumLattice.check_dominance(patterns,params)
     return output_patterns
+#   skip_set = set([])
+
+#   if params['type'] == "graph":
+#     print('using pareto front')
+#     ordered_patterns = sorted(patterns, cmp=lambda x,y: subsumLattice.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+#   else:
+#     ordered_patterns = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
+
+
+#   for pattern in tqdm(ordered_patterns):
+#       if pattern in skip_set:
+#         # print('skipping the sequence', seq)
+#           continue
+
+#       children = set(subsumLattice.get_all_children(pattern))
+
+#       if params['dominance'] == "closed":
+#           the_same_sup   = set(support_mapping[pattern.get_support()])
+#           prune_patterns = children.intersection(the_same_sup)
+#           indices.append(pattern.id)
+#       elif params['dominance'] == "maximal":  # simply speaking in case of maximal -- prune the whole subtree
+#           prune_patterns = children 
+#           indices.append(pattern.id)
+#       elif params['dominance'] == "free":
+#           the_same_sup   = set(support_mapping[pattern.get_support()])
+#           prune_patterns = children.intersection(the_same_sup)
+#           prune_patterns.add(pattern)
+#           leaves         = subsumLattice.get_leaves(prune_patterns)
+#           for leaf in leaves:
+#               indices.append(leaf.id)
+
+
+#       skip_set |= prune_patterns
+
+#   output_patterns = []
+#   for p in patterns:
+#       if p.id in indices:
+#           output_patterns.append(p)
+#   return output_patterns
 
 
 if __name__ == "__main__":
@@ -340,7 +255,7 @@ if __name__ == "__main__":
     patterns = fpMining_pure(params)
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
-    closed_patterns = fpMining_IDP(params)
+    closed_patterns = fpMining_postpro(params)
 
 
     print "\n*************************************"

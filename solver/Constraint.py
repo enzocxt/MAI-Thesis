@@ -27,11 +27,7 @@ class LengthConstraint(Constraint):
     return seq.get_pattern_len() < self.max_len
 
   def is_valid_graph(self, graph):
-<<<<<<< HEAD
-    return graph.get_pattern_len() < self.max_len
-=======
     return graph.get_number_of_nodes() < self.max_len
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
 
 
 class IfThenConstraint(Constraint):
@@ -163,13 +159,7 @@ class GraphLengthConstraint(Constraint):
     return self.max_len
 
   def is_valid(self, graph):
-<<<<<<< HEAD
-    return graph.get_pattern_len() < self.max_len
-=======
-    print(graph.get_number_of_nodes())
-    print(max_len)
     return graph.get_number_of_nodes() < self.max_len
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
 
 
 class GraphIfThenConstraint(Constraint):

@@ -71,6 +71,7 @@ class gSpan(Mining):
 
     def __init__(self, inputs):
         Mining.__init__(self, inputs)
+        Pattern.id2pattern = {}
 
     def mining(self):
         gSpan_exec = ''
@@ -82,13 +83,6 @@ class gSpan(Mining):
         options = ''
         if self.support:
             options = ''.join('-support %s' % self.support)
-<<<<<<< HEAD
-        print self.support
-
-        command = '{exe} -file {data} -output {output} -support {support}'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
-        print('%s' % command)
-        #child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
-=======
 
       #  child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
       # with open("tmp/FNULL","w") as devnull:
@@ -102,17 +96,11 @@ class gSpan(Mining):
          # print result
          # child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], shell=False, stderr=devnull)
 
-
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
         #child = subprocess.Popen(command, stdout=subprocess.PIPE)
         #child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], stdout=subprocess.PIPE)
 
         '''
         print([gSpan, "-file", self.data, options])
-<<<<<<< HEAD
-        child = subprocess.Popen([gSpan, "-file", self.data, options, "&>", self.output], shell=False, stdout=subprocess.PIPE)
-=======
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
         try:
             output = subprocess.check_output([gSpan, "-file", self.datafile, "-output", self.output, options])
             returncode = 0
@@ -122,27 +110,16 @@ class gSpan(Mining):
         '''
         #print(returncode)
 
-<<<<<<< HEAD
-        #result = child.stdout.read()
-=======
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
         #result = child.communicate()[0]
-        #print result
+        #print resul
         #self.parser(result)
 
-<<<<<<< HEAD
-        os.system('rm %s' % self.output)
-        os.system(command)
-        fout = open(self.output, 'r')
-        result = fout.read()
-        fout.close()
-
-=======
+        #os.system('rm %s' % self.output)
        #os.system(command)
         with open(self.output, 'r') as fout:
           print(self.output)
           result = fout.read()
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
+
         return result
 
     def parser(self, stdOutput, path=None):
@@ -152,7 +129,6 @@ class gSpan(Mining):
         return self.patternSet
 
     def parserGraph(self, stdOutput, path=None):
-<<<<<<< HEAD
         if path:
             fg = open(path, 'r')
             stdOutput = fg.readlines()
@@ -193,52 +169,6 @@ class gSpan(Mining):
                 graph.build_coverage(coverage)
 
         return graph
-=======
-        if not path:
-            lines = stdOutput.split('\n')
-        else:
-            fg = open(path, 'r')
-            lines = fg.readlines()
-            fg.close()
-        graphs = []
-        i = 0
-        while i < len(lines):
-            line = lines[i]
-            if 't #' in line:  # t # 0 * 45
-                t = line.split(' ')
-                graph = Graph(t[2], t[4])     # id, support
-                i += 1
-
-                while i < len(lines):
-                    line = lines[i]
-                    if 'parent' in lines[i]:
-                        graph.set_parent(int(lines[i].split()[-1]))
-                        i += 1
-                    elif 'v ' in line:
-                        v = line.split(' ')  # v 0 2
-                        v_id = v[1]
-                        v_label = v[2]
-                        graph.add_node(int(v_id), v_label)
-                        i += 1
-                    elif 'e ' in line:
-                        e = line.split(' ')  # e 0 1 0
-                        e_from_node = e[1]
-                        e_to_node = e[2]
-                        e_label = e[3]
-                        graph.add_edge(int(e_from_node), int(e_to_node), e_label)
-                        i += 1
-                    else:
-                        break
-                graphs.append(graph)
-                if i < len(lines) and 't #' not in lines[i]:
-                    i += 1
-                elif i < len(lines) and 't #' in lines[i]:
-                    continue
-            else:
-                i += 1
-
-        return graphs
->>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
 
     def getPatterns(self):
         return self.patternSet
@@ -247,8 +177,10 @@ class gSpan(Mining):
 class prefixSpan(Mining):
     """Use prefixSpan to mining frequent sequences"""
 
+
     def __init__(self, inputs):
         Mining.__init__(self, inputs)
+        Pattern.id2pattern = {}
 
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
@@ -310,7 +242,9 @@ class prefixSpan(Mining):
                     continue
                 coverage, freq = map(lambda x: x.strip(" ()"), lines[2*i+1].strip().split(':'))
                 coverage = map(lambda x: int(x),coverage.split())
-                patterns.append(Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)) # coverage is the set of transactions covered by the
+                seq = Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)
+                patterns.append(seq) # coverage is the set of transactions covered by the
+                Pattern.id2pattern[index] = seq
                 index += 1
         else:
             with open(path, 'r') as fin:
