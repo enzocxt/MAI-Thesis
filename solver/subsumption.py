@@ -1,7 +1,8 @@
 #from solver.method import prefixSpan#for debugging           
-from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection
+from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset
 from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph
+from tqdm import tqdm
 
 # def main():
 #   with open("output/prefix_sequence_user_pos.txt","r") as datafile:
@@ -65,30 +66,78 @@ class SubsumptionLattice:
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
 
+  def get_all_parents(self,pattern, subsumed_by):
+    for parent in subsumed_by[pattern]:
+      yield parent
+      for indirect_parent in self.get_all_parents(parent,subsumed_by):
+        yield indirect_parent
+
+  @staticmethod
+  def create_initial_parent_tree(patterns):
+    initial_subsumption_tree = {}
+    initial_subsumed_by_tree = {}
+    for pattern in patterns:
+        if pattern.parent == -1:
+            continue
+      
+        initial_subsumption_tree[pattern.id] = pattern.parent  
+        initial_subsumed_by_tree[pattern.parent] = pattern.id
+
+    return initial_subsumed_by_tree
+
+  @staticmethod
+  def get_all_initial_descendants(pattern, initial_subsumed_by_tree):
+    parents = []
+    current_id = pattern.id
+    while True:
+      current_parent = initial_subsumed_by_tree.get(current_id, -5)
+      if current_parent == -5:
+        return parents
+      else:
+        current_id = current_parent.id
+        parents.append(current_id)
+
+
+   
+
+
   def create_subsumption_lattice_graph(self, patterns):
     print('\nCreating subsumption lattice for graphs...')
-    '''
-    subsumption_tree_id = defaultdict(set)  # parent_id: children set
-    for graph in patterns:
-      subsumption_tree_id[int(graph.get_parent())].add(graph)
 
-    subsumption_tree = defaultdict(set)
-    for graph in patterns:
-      subsumption_tree[graph] = subsumption_tree_id[int(graph.id)]
-    '''
-
-    subsumption_tree = defaultdict(set)
     self.mapping_by_len = group_by_len(patterns)
     self.attribute_mapping = make_attribute_mapping(patterns)
 
-    for l in sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True): # maximal are not subsumed by anything
+    subsumed_by = defaultdict(list)
+    subsumption_tree = defaultdict(set)
+    
+    initial_parent_subsumed_by_tree = self.create_initial_parent_tree(patterns)
+
+
+    for l in tqdm(sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)): # maximal are not subsumed by anything
         print('Processing graph of size = {size}'.format(size=l))
+        # PARALELLIZATION_MARKER for different graphs of the same len
         graphs_with_len_l = self.mapping_by_len[l]
+        print('we have l graphs with len l', len(graphs_with_len_l))
         for graph in graphs_with_len_l:
+        #  print("attribute interstionction started")
            candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, get_attribute_intersection(graph, self.attribute_mapping))
-           for candidate in candidates:
-               if graph.is_subgraph_of(candidate):
+           candidates = list(get_attribute_superset(graph, candidates))
+         # print("attribute interstionction done")
+         # print("candidates setsize", len(candidates))
+           skip_set   = set()
+           all_descendants = self.get_all_initial_descendants(graph, initial_parent_subsumed_by_tree)
+           print("initial descendants len", len(all_descendants))
+           sorted_candidates = sorted(candidates, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()))
+           for candidate in sorted_candidates:
+
+               if candidate in skip_set:
+                   continue
+                      
+               if candidate.id in all_descendants or graph.is_subgraph_of(candidate):
+                   subsumed_by[graph].append(candidate)
                    subsumption_tree[candidate].add(graph)
+                   parents = set(self.get_all_parents(candidate,subsumed_by))
+                   skip_set |= parents
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
@@ -116,7 +165,7 @@ class SubsumptionLattice:
         cover_neg.add(seq.id)
     return cover_neg
 
-  def get_leaves(self, patterns):
+  def get_leaves(self, patterns, lattice=None):
     output = []
     for pattern in patterns:
       direct_children = self.get_direct_children(pattern)

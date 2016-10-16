@@ -90,11 +90,18 @@ class gSpan(Mining):
         #child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
 =======
 
-      # command = '{exe} -file {data} -output {output} -support {support} &> tmp/FNULL'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
       #  child = subprocess.Popen([gSpan, "-f", self.data, "-s", self.support, "-o -i"], stdout=subprocess.PIPE)
-        with open("tmp/FNULL","w") as devnull:
-        #  print(gSpan_exec, "-file", self.data, "-output", self.output, options)
-           child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], shell=False, stderr=devnull)
+      # with open("tmp/FNULL","w") as devnull:
+         # print(gSpan_exec, "-file", self.data, "-output", self.output, options)
+        command = '{exe} -file {data} -output {output} -support {support} 1> tmp/FNULL'.format(exe=gSpan_exec, data=self.data, output=self.output, support=self.support)
+        with open(self.output,"w") as outputfile:
+         print(command) #cleaning output
+        os.system(command)
+          #child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], shell=False, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+         # result = child.stdout.read()
+         # print result
+         # child = subprocess.Popen([gSpan_exec, "-file", self.data, "-output", self.output, options], shell=False, stderr=devnull)
+
 
 >>>>>>> e90f3f4252cfe756fa88a77ed80f713be6f2d800
         #child = subprocess.Popen(command, stdout=subprocess.PIPE)

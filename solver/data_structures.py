@@ -82,3 +82,9 @@ def get_attribute_intersection(pattern, mapping, support_mapping=None):
       patterns_to_check = patterns_to_check.intersection(the_same_support_patterns)
     return patterns_to_check
 
+
+def get_attribute_superset(pattern, patternset):
+  for candidate in patternset:
+    if candidate.is_superset_by_attributes(pattern):
+      yield candidate
+
