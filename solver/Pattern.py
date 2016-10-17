@@ -242,7 +242,7 @@ class Itemset(Pattern):
         self.id2pattern = {}
 
     def get_pattern_len(self):
-        return len(self.itemset)
+        return self.size
 
     def get_attributes(self):
         return self.attributes
