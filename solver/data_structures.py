@@ -46,9 +46,7 @@ def create_greater_or_eq_by_len_mapping_sequences(len_mapping):
   greater_or_eq = defaultdict(set)
   for k in len_mapping.keys():
     greater_or_eq[k] = greater_or_eq[k].union(len_mapping[k+1]) 
-  return smaller_or_eq
-
-
+  return greater_or_eq
 
 def get_other_smaller_or_eq_patterns(pattern, smaller_or_eq_mapping):
   l = pattern.get_pattern_len()
@@ -79,7 +77,9 @@ def get_attribute_intersection(pattern, mapping, support_mapping=None):
         else:
             patterns_to_check = patterns_to_check.intersection(mapping[attribute])
     if support_mapping: # if mining closed ones we can make use
-      the_same_support_patterns = support_mapping[pattern.get_support()] 
+      the_same_support_patterns = support_mapping[pattern.get_support()]
+    if support_mapping: # if mining closed ones we can make use
+      the_same_support_patterns = support_mapping[pattern.get_support()]
       patterns_to_check = patterns_to_check.intersection(the_same_support_patterns)
     return patterns_to_check
 

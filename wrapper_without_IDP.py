@@ -5,14 +5,14 @@
 import getopt
 import ConfigParser
 import collections
+import time
 from tqdm import tqdm
 from solver.method import *
 from solver.generator import *
 from solver.utils import logger
-from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_sequences
+from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, get_other_smaller_or_eq_patterns, group_by_len, create_smaller_or_eq_by_len_mapping, get_the_same_cover_itemsets, get_the_same_cover_sequences, get_the_same_cover_graphs
 from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
-import time
 
 
 default_parameters = 'config.ini'
@@ -42,29 +42,12 @@ def sergeylog(s): #dump info into the log file
         logfile.write(s)
 
 
-
-# Method for mining frequent patterns
-def fpMining(inputs):
-    if inputs['type'] == 'graph':
-        method = gSpan(inputs)
-    elif inputs['type'] == 'sequence':
-        method = prefixSpan(inputs)
-    elif inputs['type'] == 'itemset':
-        method = eclat(inputs)
-    else:
-        print 'Does not support "type == %s"!' % inputs['type']
-        sys.exit(2)
-
-    output = method.mining()
-    patterns = method.parser(output)
-    return patterns
-
-
 @logger
 def fpMining_pure(inputs):
     if inputs['type'] == 'graph':
         inputs['data'] = 'data/gSpan/' + inputs['data']
-        inputs['output'] = 'output/gSpan' + inputs['output']
+        inputs['output'] = 'output/gSpan/' + inputs['output']
+        #inputs['output'] = 'output/gSpan_' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         inputs['data'] = 'data/prefixSpan/' + inputs['data']
@@ -78,20 +61,23 @@ def fpMining_pure(inputs):
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
 
-    output = method.mining()
+    start1   = time.time()
+    output   = method.mining()
     patterns = method.parser(output)
+    end1     = time.time()
     print "\n*************************************"
     print 'Number of frequent patterns with constraints (pure exec): %s' % len(patterns)
 
-    return patterns
+    return patterns, end1-start1
 
 
 @logger
-def fpMining_IDP(inputs):
+def fpMining_postpro(inputs):
     if inputs['type'] == 'graph':
         if 'data/' not in inputs['data']:
             inputs['data'] = 'data/gSpan/' + inputs['data']
-            inputs['output'] = 'output/gSpan_' + inputs['output']
+            inputs['output'] = 'output/gSpan/' + inputs['output']
+            #inputs['output'] = 'output/gSpan_' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         if 'data/' not in inputs['data']:
@@ -111,42 +97,57 @@ def fpMining_IDP(inputs):
     else:
         print 'Does not support "type == %s"!' % inputs['type']
         sys.exit(2)
-    
-    start1 = time.time()
-    output = method.mining()
-    patterns = method.parser(output)    # frequent patterns, not closed, not constrainted
-    end1 = time.time()
 
-    if params['type'] == 'itemset':
-        # indices = itemset_idp(params, patterns)
-        pass
-    else:
-        
-        print "# of patterns", len(patterns)
-        start2 = time.time()
-        patterns_pruned = list(process_constraints(params, patterns))
-        end2 = time.time()
-        print "# of constrained patterns", len(patterns_pruned)
-        start3 = time.time()
-        final_patterns  = list(dominance_check(params, patterns_pruned))
-        print "# of dominance patterns", len(final_patterns)
-        end3 = time.time()
+    params = inputs
+    # step 1 time cost
+    start1   = time.time()
+    output   = method.mining()
+    patterns = method.parser(output)    # frequent patterns, not closed, not constrainted
+    end1     = time.time()
+    print "# of patterns", len(patterns)
+    start2   = time.time()
+    patterns_pruned = process_constraints(params, patterns)
+    if patterns_pruned:
+        patterns_pruned = list(patterns_pruned)
+    else: patterns_pruned = []
+    end2     = time.time()
+    print "# of constrained patterns", len(patterns_pruned)
+    start3   = time.time()
+    final_patterns = dominance_check(params, patterns_pruned)
+    if final_patterns:
+        final_patterns = list(final_patterns)
+    else: final_patterns = []
+    print "# of dominance patterns", len(final_patterns)
+    end3     = time.time()
  
     print("step1:", end1-start1, "step2:", end2-start2, "step3:", end3-start3)
-    return final_patterns
+    return final_patterns, end1-start1, end2-start2, end3-start3
 
 
 def dominance_check(params, patterns):
-#   indices = []
+    output_patterns = []
+    if params['type'] == 'itemset':
+        indices = []
 
-#   if params['dominance'] == "closed" or params['dominance'] == "free" :
-#     support_mapping = make_grouping_by_support(patterns)
-#   else:
-#     support_mapping = None
+        if params['dominance'] == "closed" or params['dominance'] == "free":
+          support_mapping = make_grouping_by_support(patterns)
+        else:
+          support_mapping = None
+        attribute_mapping = make_attribute_mapping(patterns)
 
-    subsumLattice = SubsumptionLattice()
-    patterns = subsumLattice.check_dominance(patterns,params)
-    return patterns
+        for it in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
+            patterns_to_check = get_attribute_intersection(it, attribute_mapping, support_mapping)
+            if len(patterns_to_check) <= 1:
+                indices.append(it.id)
+                continue
+
+        for p in patterns:
+            if p.id in indices:
+                output_patterns.append(p)
+    else :
+        subsumLattice = SubsumptionLattice()
+        output_patterns = subsumLattice.check_dominance(patterns,params)
+    return output_patterns
 #   skip_set = set([])
 
 #   if params['type'] == "graph":
@@ -186,8 +187,6 @@ def dominance_check(params, patterns):
 #       if p.id in indices:
 #           output_patterns.append(p)
 #   return output_patterns
-
-
 
 
 if __name__ == "__main__":
@@ -253,12 +252,13 @@ if __name__ == "__main__":
 
 
     # frequent pattern mining
-    #patterns = fpMining_pure(params)
+    patterns = fpMining_pure(params)
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
-    closed_patterns = fpMining_IDP(params)
+    closed_patterns = fpMining_postpro(params)
 
 
     print "\n*************************************"
   # print "Number of frequent patterns: {0}".format(len(patterns))
     print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
+

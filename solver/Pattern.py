@@ -45,7 +45,7 @@ class Node(object):
 
 
 class Graph(Pattern):
-    def __init__(self, id, nsupport=None):
+    def __init__(self, id=None, nsupport=None):
         self.id = int(id)
         self.nsupport = int(nsupport)
         self.parent = -1
@@ -57,7 +57,12 @@ class Graph(Pattern):
         self.number_of_edges = 0
         self.computed_attributes = False
         self.is_attributes_with_arities_computed = False
-    
+
+    def set_id(self, id):
+        self.id = int(id)
+
+    def set_support(self, support):
+        self.nsupport = support
 
     def get_attributes(self):
       #TODO TO DEBUG!
@@ -104,6 +109,9 @@ class Graph(Pattern):
         self.edges[(int(e_from_node),int(e_to_node))] = int(e_label)
         self.number_of_edges += 1
 
+    def build_coverage(self, coverage):
+        self.coverage = coverage
+
     def get_pattern_len(self): # it returns a pair
         return (self.number_of_nodes,self.number_of_edges)
 
@@ -113,7 +121,32 @@ class Graph(Pattern):
     def set_parent(self, parent_id):
         self.parent = int(parent_id)
 
-   
+    def get_parent(self):
+        return self.parent
+
+    def get_graphx(self):
+        return self.graphx
+
+    def get_attributes(self):
+        return self.graphx.nodes(data=False)
+
+    def get_coverage(self):
+      return self.coverage
+
+    def has_node(self, node):
+        return self.graphx.has_node(node)
+
+    def __str__(self):
+        output = 't # {id} * {support}'.format(id=self.id, support=self.nsupport)
+        output += '\nparent : {0}'.format(self.parent)
+        for v, l in self.graphx.nodes_iter(data='label'):
+            output += '\nv {id} {label}'.format(id=v, label=l['label'])
+        output += '\n'
+        return output
+
+    def has_node(self, node):
+        return self.graphx.has_node(node)
+
     @staticmethod
     def _edge_match_(e1,e2):
       return e1['label'] == e2['label']
@@ -125,7 +158,7 @@ class Graph(Pattern):
 
     def is_subgraph_of(self, graph):
       matcher = nx.isomorphism.GraphMatcher(graph.graphx,self.graphx,edge_match=self._edge_match_, node_match=self._node_match_) 
-      return matcher.subgraph_is_isomorphic() 
+      return matcher.subgraph_is_isomorphic()
 
 
 # Sequence class
@@ -226,8 +259,6 @@ class Sequence(Pattern):
         else:
           j += 1
       return True
-
-
 
 
 class Itemset(Pattern):

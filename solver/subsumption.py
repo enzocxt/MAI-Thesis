@@ -4,13 +4,6 @@ from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph
 from tqdm import tqdm
 
-# def main():
-#   with open("output/prefix_sequence_user_pos.txt","r") as datafile:
-#     data = datafile.read()
-#   patterns = prefixSpan.parserSequence(data) 
-#   subsumption_tree = create_subsumption_lattice(patterns)
-#   print(subsumption_tree)
-
 
 class SubsumptionLattice:
 
@@ -21,6 +14,7 @@ class SubsumptionLattice:
 
   def check_dominance(self, patterns, params):
     if len(patterns) == 0: return None
+
     if isinstance(patterns[0], Itemset):
       return self.create_subsumption_lattice_itemset(patterns)
     elif isinstance(patterns[0], Sequence):
@@ -40,9 +34,9 @@ class SubsumptionLattice:
    #  print('Processing len: %s' % l)
       itemsets_with_len_l = mapping_by_len[l]
       for it in itemsets_with_len_l:
-          candidates = filter(lambda x: x.get_pattern_len() > l, get_attribute_intersection(it, attribute_mapping))
-          for candidate in candidates:
-              subsumption_tree[candidate].add(it)
+        candidates = filter(lambda x: x.get_pattern_len() > l, get_attribute_intersection(it, attribute_mapping))
+        for candidate in candidates:
+            subsumption_tree[candidate].add(it)
 
     print('Creating subsumption lattice done...\n')
     return subsumption_tree
@@ -53,7 +47,6 @@ class SubsumptionLattice:
       if candidate.get_pattern_len() > min_length:
         output.append(candidate)
     return output
-
 
   def create_subsumption_lattice_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
@@ -86,7 +79,8 @@ class SubsumptionLattice:
               skip_set.add(candidate)
 
     print('dominance check done')
-    print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
+    if len(all_candidate_sizes) != 0:
+        print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
     return set(patterns) - set(skip_set)                                               
 
   
@@ -187,8 +181,6 @@ class SubsumptionLattice:
 
     return skip_set
 
-
-
   def apply_extra_dominance_constraints(self, graph, candidates, params):
       output = []
       if params['dominance'] == "maximal":
@@ -198,10 +190,6 @@ class SubsumptionLattice:
           if graph.get_support() == pattern.get_support():
             output.append(pattern)
       return output
-    
-          
-
-
       
 
                                                                           
@@ -215,7 +203,7 @@ class SubsumptionLattice:
                                                                           
                                                                           
                                                                           
-  def read_negative_dataset_sequences(self, params):                      
+  def read_negative_dataset_sequences(self, params):
     filename = params['negative']
     with open(filename,"r") as negativefile:
       lines = negativefile.read().splitlines()
@@ -231,7 +219,6 @@ class SubsumptionLattice:
       if seq.is_subsequence_of(transaction_seq):
         cover_neg.add(seq.id)
     return cover_neg
-
 
   def get_leaves(self, patterns, lattice=None):
     output = []
@@ -259,8 +246,6 @@ class SubsumptionLattice:
   
 # print mapping_by_len
 # print attribute_mapping
-  
-  
 
 if __name__ == "__main__":
   pass

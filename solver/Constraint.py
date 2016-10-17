@@ -159,8 +159,6 @@ class GraphLengthConstraint(Constraint):
     return self.max_len
 
   def is_valid(self, graph):
-    print(graph.get_number_of_nodes())
-    print(max_len)
     return graph.get_number_of_nodes() < self.max_len
 
 
