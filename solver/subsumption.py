@@ -7,7 +7,9 @@ from tqdm import tqdm
 
 class SubsumptionLattice:
 
+  # currently not used anywhere
   MAGIC_NUMBER = 4 # upper bound for early stopping of local constraint check, if local group is smaller then this, goto direct constraint validation
+                   
 
   def __init__(self):
     pass
@@ -95,13 +97,14 @@ class SubsumptionLattice:
     print("initial skip set", len(skip_set))
     all_candidate_sizes = []
     different_lenghts = sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)
+    survivers = set(patterns) - skip_set
     for l in tqdm(different_lenghts): # maximal are not subsumed by anything
         graphs_with_len_l = self.mapping_by_len[l]
         for graph in graphs_with_len_l:
           if graph in skip_set:
             continue
 
-          candidates = set(patterns) - skip_set
+          candidates = survivers
           candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) > 0, candidates)
           candidates = get_attribute_superset(graph, candidates)
           candidates = self.apply_extra_dominance_constraints(graph,candidates, params)
@@ -120,6 +123,8 @@ class SubsumptionLattice:
 
                 if params['dominance'] == 'free':
                   skip_set.add(candidate)
+
+          survivers = survivers - skip_set
 
 
     print 'done dominance check'                                                                   

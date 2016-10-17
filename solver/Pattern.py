@@ -46,8 +46,8 @@ class Node(object):
 
 class Graph(Pattern):
     def __init__(self, id=None, nsupport=None):
-        self.id = int(id)
-        self.nsupport = int(nsupport)
+        self.id = id
+        self.nsupport = nsupport
         self.parent = -1
         self.graphx = nx.Graph()
         self.id2pattern = {}

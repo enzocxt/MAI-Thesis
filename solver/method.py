@@ -149,7 +149,9 @@ class gSpan(Mining):
         for line in text.splitlines():
             if '*' in line:
                 graph_id, support = line.split('*')
-                graph.set_id(int(graph_id))
+                graph_id = int(graph_id)
+                graph.set_id(graph_id)
+                Graph.id2pattern[graph_id] = graph
                 graph.set_support(int(support))
             if 'parent' in line:
                 _, parent_id = line.split(':')
