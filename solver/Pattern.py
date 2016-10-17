@@ -3,10 +3,13 @@ import networkx as nx
 import sys
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
-from collections import Counter
+from collections import Counter, defaultdict
 
 # Pattern abstract class
 class Pattern(object):
+    
+    stats = defaultdict(int)
+    attribute_mapping = defaultdict(set)
     
     id2pattern = {}
 
@@ -25,6 +28,26 @@ class Pattern(object):
 
     def __str__(self):
         pass
+
+    def set_stats_and_mapping(self):
+      attributes = self.get_attributes()
+      for attribute in self.set_of_attributes:
+        Pattern.stats[attribute] += 1 
+        (Pattern.attribute_mapping[attribute]).add(self)
+    
+    def get_best_superpattern_set_approximation(self):
+      is_first = True
+      for attr in self.get_attributes():
+        if is_first:
+          min_attr = attr
+          min_attr_val = Pattern.stats[attr] 
+          is_first = False
+        else:
+          if Pattern.stats[attr] < min_attr_val:
+            min_attr = attr
+            min_attr_val = Pattern.stats[attr]
+      return Pattern.attribute_mapping[min_attr]
+
 
 
 # Edge class for Graph
@@ -58,6 +81,7 @@ class Graph(Pattern):
         self.computed_attributes = False
         self.is_attributes_with_arities_computed = False
 
+
     def set_id(self, id):
         self.id = int(id)
 
@@ -67,8 +91,8 @@ class Graph(Pattern):
     def get_attributes(self):
       #TODO TO DEBUG!
       if self.computed_attributes is False:
-          nodes = map(lambda x: "v_"+str(x),self.nodes.keys())
-          edges = map(lambda x: "e_"+str(x),self.edges.keys())
+          nodes = map(lambda x: "v_"+str(x),self.nodes.values())
+          edges = map(lambda x: "e_"+str(x),self.edges.values())
           self.attributes = nodes + edges
           self.computed_attributes = True
           self.set_of_attributes = set(self.attributes)
@@ -126,9 +150,6 @@ class Graph(Pattern):
 
     def get_graphx(self):
         return self.graphx
-
-    def get_attributes(self):
-        return self.graphx.nodes(data=False)
 
     def get_coverage(self):
       return self.coverage
@@ -267,8 +288,9 @@ class Itemset(Pattern):
         # self.itemset = itemset
         self.id = id
         self.itemset = set(itemset)
+        self.set_of_attributes = self.itemset
         self.attributes = itemset
-        self.support = support
+        self.support = int(support)
         self.size = len(itemset)
         self.id2pattern = {}
 

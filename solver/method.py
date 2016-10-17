@@ -169,7 +169,7 @@ class gSpan(Mining):
                     if 'x' not in t and t != '':
                         coverage.add(int(t))
                 graph.build_coverage(coverage)
-
+        graph.set_stats_and_mapping()
         return graph
 
     def getPatterns(self):
@@ -377,6 +377,7 @@ class eclat(Mining):
                 # e.g.: 22 32 20 (46)
                 support = int(support[1:-1])
                 itemset = Itemset(i+1, items, support)
+                itemset.set_stats_and_mapping()
                 itemsets.append(itemset)
 
         return itemsets

@@ -125,28 +125,8 @@ def fpMining_postpro(inputs):
 
 
 def dominance_check(params, patterns):
-    output_patterns = []
-    if params['type'] == 'itemset':
-        indices = []
-
-        if params['dominance'] == "closed" or params['dominance'] == "free":
-          support_mapping = make_grouping_by_support(patterns)
-        else:
-          support_mapping = None
-        attribute_mapping = make_attribute_mapping(patterns)
-
-        for it in tqdm(sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)):
-            patterns_to_check = get_attribute_intersection(it, attribute_mapping, support_mapping)
-            if len(patterns_to_check) <= 1:
-                indices.append(it.id)
-                continue
-
-        for p in patterns:
-            if p.id in indices:
-                output_patterns.append(p)
-    else :
-        subsumLattice = SubsumptionLattice()
-        output_patterns = subsumLattice.check_dominance(patterns,params)
+    subsumLattice = SubsumptionLattice()
+    output_patterns = subsumLattice.check_dominance(patterns,params)
     return output_patterns
 #   skip_set = set([])
 
@@ -255,7 +235,7 @@ if __name__ == "__main__":
     patterns = fpMining_pure(params)
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
-    closed_patterns = fpMining_postpro(params)
+    closed_patterns, time_step1, time_step2, time_step3 = fpMining_postpro(params)
 
 
     print "\n*************************************"

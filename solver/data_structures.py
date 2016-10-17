@@ -90,3 +90,13 @@ def get_attribute_superset(pattern, patternset):
     if candidate.is_superset_by_attributes(pattern):
       output.append(candidate)
   return output
+
+def get_attribute_subset(pattern, patternset):
+  output = []
+  for candidate in patternset:
+    if pattern.is_superset_by_attributes(candidate):
+      output.append(candidate)
+  return output
+
+
+
