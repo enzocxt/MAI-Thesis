@@ -5,11 +5,10 @@
 import getopt
 import ConfigParser
 import collections
-from collections import defaultdict
-from tqdm import tqdm
+
 from solver.method import *
-from solver.generator import *
-from solver.groupIDP import *
+from thesis.idpSolver.generator import *
+from thesis.idpSolver.groupIDP import *
 from solver.utils import logger
 from solver.data_structures import make_attribute_mapping, get_attribute_intersection, make_grouping_by_support, group_by_len
 

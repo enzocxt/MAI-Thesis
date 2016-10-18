@@ -18,19 +18,17 @@ class SubsumptionLattice:
     if len(patterns) == 0: return None
 
     if isinstance(patterns[0], Itemset):
-      return self.create_subsumption_lattice_itemset(patterns,params)
+      return self.subsumption_lattice_check_itemset(patterns,params)
     elif isinstance(patterns[0], Sequence):
-      return self.create_subsumption_lattice_sequence(patterns,params)
+      return self.subsumption_lattice_check_sequence(patterns,params)
     elif isinstance(patterns[0], Graph):
-      return self.create_subsumption_lattice_graph(patterns,params)
+      return self.subsumption_lattice_check_graph(patterns,params)
 
-  #TODO check and rewrite -- Sergey, modified a bit
-  def create_subsumption_lattice_itemset(self, patterns,params):
-    print('\nCreating subsumption lattice for itemsets...')
-    subsumption_tree = defaultdict(set)
+  def subsumption_lattice_check_itemset(self, patterns,params):
+    print('\nStarting dominance check for itemsets...')
+
     mapping_by_len = group_by_len(patterns)
     max_len = max(mapping_by_len.keys())
-#   attribute_mapping = make_attribute_mapping(patterns)
     skip_set = set()
     survivers = set(patterns)
     all_candidate_sizes = []
@@ -57,7 +55,7 @@ class SubsumptionLattice:
 
         survivers = survivers - skip_set
     
-    print('dominance check done')
+    print('Dominance check done...')
     if len(all_candidate_sizes) != 0:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
 
@@ -70,10 +68,9 @@ class SubsumptionLattice:
         output.append(candidate)
     return output
 
-  def create_subsumption_lattice_sequence(self, patterns,params):
+  def subsumption_lattice_check_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
     mapping_by_len = group_by_len(patterns)
-#   attribute_mapping = make_attribute_mapping(patterns)
     max_len = max(mapping_by_len.keys())
     skip_set = set()
     all_candidate_sizes = []
@@ -86,10 +83,11 @@ class SubsumptionLattice:
           continue
 
         candidates = survivers
-        candidates = self.get_smaller_sequences(l, candidates)
+        candidates = filter(lambda x: x.get_pattern_len() < l, candidates)
+        #candidates = self.get_smaller_sequences(l, candidates)
         candidates = get_attribute_subset(seq, candidates)
         candidates = self.apply_extra_dominance_constraints(seq, candidates, params)
-        candidates = filter(lambda x: graph.is_superset_by_attributes(x), candidates)
+        candidates = filter(lambda x: seq.is_superset_by_attributes(x), candidates)
         all_candidate_sizes.append(len(candidates))
 
         for candidate in candidates:
@@ -107,12 +105,9 @@ class SubsumptionLattice:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
     return set(patterns) - set(skip_set)                                               
 
-  
-  def create_subsumption_lattice_graph(self, patterns, params):
-    print '\n Starting dominance check \n'
+  def subsumption_lattice_check__graph(self, patterns, params):
+    print '\n Starting dominance check for graphs...\n'
     self.mapping_by_len = group_by_len(patterns)
-  # attribute_mapping = make_attribute_mapping(patterns)
-
     
     initial_subsumption_tree, initial_subsumed_by_tree = self.create_initial_parent_tree(patterns)
     skip_set = self.initialize_skip_set_with_parent_info(patterns, initial_subsumption_tree, initial_subsumed_by_tree, params)
@@ -148,15 +143,10 @@ class SubsumptionLattice:
           survivers = survivers - skip_set
 
 
-    print 'done dominance check'                                                                   
-    print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
+    print 'done dominance check'
+    if len(all_candidate_sizes) != 0:
+      print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
     return set(patterns) - set(skip_set)                                               
-
-  def get_all_parents(self,pattern, subsumed_by):
-    for parent in subsumed_by[pattern]:
-      yield parent
-      for indirect_parent in self.get_all_parents(parent,subsumed_by):
-        yield indirect_parent
 
   @staticmethod
   def create_initial_parent_tree(patterns):
@@ -216,9 +206,6 @@ class SubsumptionLattice:
           if pattern.get_support() == candidate.get_support():
             output.append(candidate)
       return output
-      
-
-                                                                          
                                                                           
                                                                           
   @staticmethod                                                         
@@ -227,7 +214,12 @@ class SubsumptionLattice:
     if x[0] >= y[0] and x[1] >= y[1]: return 1                            
     else: return -1                                                       
                                                                           
-                                                                          
+  def get_all_parents(self,pattern, subsumed_by):
+    for parent in subsumed_by[pattern]:
+      yield parent
+      for indirect_parent in self.get_all_parents(parent,subsumed_by):
+        yield indirect_parent
+
                                                                           
   def read_negative_dataset_sequences(self, params):
     filename = params['negative']
@@ -265,9 +257,6 @@ class SubsumptionLattice:
 
   def get_direct_children(self, pattern):
     return self.lattice[pattern]
-
-  def get_lattice(self):
-    return self.lattice
 
   
 # print mapping_by_len
