@@ -89,7 +89,7 @@ class SubsumptionLattice:
         candidates = self.get_smaller_sequences(l, candidates)
         candidates = get_attribute_subset(seq, candidates)
         candidates = self.apply_extra_dominance_constraints(seq, candidates, params)
-        candidates = filter(lambda x: graph.is_superset_by_attributes(x), candidates)
+        candidates = filter(lambda x: seq.is_superset_by_attributes(x), candidates)
         all_candidate_sizes.append(len(candidates))
 
         for candidate in candidates:
