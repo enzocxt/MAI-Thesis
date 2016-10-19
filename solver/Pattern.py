@@ -1,6 +1,7 @@
 import array
 import networkx as nx
 import sys
+import numpy as np
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 from collections import Counter, defaultdict
@@ -80,6 +81,7 @@ class Graph(Pattern):
         self.number_of_edges = 0
         self.computed_attributes = False
         self.is_attributes_with_arities_computed = False
+        self.all_labeled_counter = None
 
 
     def set_id(self, id):
@@ -87,6 +89,22 @@ class Graph(Pattern):
 
     def set_support(self, support):
         self.nsupport = support
+
+    def compute_labeled_edges_with_vertices(self):
+      labeled = []
+      for (e_from,e_to), e_label in self.edges.items():
+        labeled.append((self.nodes[e_from],e_label,self.nodes[e_to]))
+
+      self.all_labeled_counter = Counter(labeled)
+
+     
+    def get_labeled_edges(self):
+        if self.all_labeled_counter is None:
+            self.compute_labeled_edges_with_vertices()
+        return self.all_labeled_counter
+    
+    
+
 
     def get_attributes(self):
       #TODO TO DEBUG!
@@ -162,8 +180,21 @@ class Graph(Pattern):
         output += '\nparent : {0}'.format(self.parent)
         for v, l in self.graphx.nodes_iter(data='label'):
             output += '\nv {id} {label}'.format(id=v, label=l['label'])
+        for (e1,e2),l in self.edges.items():
+            output += '\ne {e1} {e2} {label}'.format(e1=e1,e2=e2, label=l)
+
         output += '\n'
         return output
+
+    def is_combined_labeled_supergraph(self, graph):
+        counter1 = self.get_labeled_edges()
+        counter2 = graph.get_labeled_edges()
+        for key in counter1.keys():
+            if counter1[key] < counter2[key]:
+                return False
+        return True
+
+
 
     def has_node(self, node):
         return self.graphx.has_node(node)
@@ -293,6 +324,17 @@ class Itemset(Pattern):
         self.support = int(support)
         self.size = len(itemset)
         self.id2pattern = {}
+        self.min_val = min(itemset)
+        self.max_val = max(itemset)
+#       binary = np.zeros(200, dtype=np.int)
+#       binary[itemset] = 1
+#       self.bitvector = np.packbits(binary)
+
+#   def is_subset(self, itemset):
+#       return all(~self.bitvector & itemset.bitvector == 255)
+
+        
+
 
     def get_pattern_len(self):
         return self.size

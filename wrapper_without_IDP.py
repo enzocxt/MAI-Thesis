@@ -7,7 +7,7 @@ import ConfigParser
 import collections
 
 from solver.method import *
-from thesis.idpSolver.generator import *
+#from thesis.idpSolver.generator import *
 from solver.utils import logger
 from solver.subsumption import SubsumptionLattice
 from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
@@ -193,6 +193,7 @@ if __name__ == "__main__":
             print("Does not support this type of constraint: %s" % option)
 
 
+
     # frequent pattern mining
     patterns = fpMining_pure(params)
     #for i in range(10):
@@ -203,4 +204,8 @@ if __name__ == "__main__":
     print "\n*************************************"
   # print "Number of frequent patterns: {0}".format(len(patterns))
     print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
+    print params['output']
+#   with open("{outputfile}".format(outputfile=params['output']),"w") as outputfile:
+#       for pattern in closed_patterns:
+#         outputfile.write(str(pattern))
 

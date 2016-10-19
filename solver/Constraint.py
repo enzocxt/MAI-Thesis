@@ -1,4 +1,4 @@
-from solver.Pattern import Sequence, Graph
+from solver.Pattern import Sequence, Graph, Itemset
 
 class Constraint:
   constraint_type = "abstract"
@@ -20,14 +20,18 @@ class LengthConstraint(Constraint):
       return self.is_valid_sequence(pattern)
     elif isinstance(pattern, Graph):
       return self.is_valid_graph(pattern)
-    else:
-      return True
+    elif isinstance(pattern, Itemset):
+      return self.is_valid_itemset(pattern)
 
   def is_valid_sequence(self,seq):
     return seq.get_pattern_len() < self.max_len
 
   def is_valid_graph(self, graph):
     return graph.get_number_of_nodes() < self.max_len
+
+  def is_valid_itemset(self, graph):
+    return graph.get_pattern_len() < self.max_len
+
 
 
 class IfThenConstraint(Constraint):
