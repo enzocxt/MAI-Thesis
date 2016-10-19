@@ -1,0 +1,7 @@
+dataset,step1,step2,step3
+fifa.dat,219.9985,0.1283,0.5326
+iprg_neg.dat,0.1182,0.0011,0.0140
+iprg_pos.dat,0.4052,0.0008,0.0063
+jmlr.dat,1.9575,0.0024,0.0126
+unix_users_neg.dat,0.7946,0.0002,0.0009
+unix_users_pos.dat,0.0534,0.0003,0.0026

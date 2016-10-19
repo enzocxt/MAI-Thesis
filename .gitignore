@@ -1,3 +1,4 @@
 *.pyc
 tmp/*
 tmp/seq_out
+.idea/*

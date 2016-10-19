@@ -1,0 +1,8 @@
+dataset,step1,step2,step3
+zoo-1.txt,0.3175,0.0352,1.6490
+vote.txt,0.0820,0.0017,3.5649
+tic-tac-toe.txt,0.0120,0.0001,0.0029
+splice-1.txt,0.0994,0.0022,0.0477
+soybean.txt,0.2382,0.0059,0.8142
+primary-tumor.txt,0.1528,0.0568,27.6326
+mushroom.txt,0.5550,0.0163,1.5532
