@@ -65,7 +65,12 @@ def fpMining_postpro(inputs):
         if 'data/' not in inputs['data']:
             inputs['data'] = 'data/prefixSpan/' + inputs['data']
             inputs['output'] = 'output/prefixSpan/' + inputs['output']
-        method = prefixSpan(inputs)
+        if 'dominance' in inputs:
+            seq_inputs = dict()
+            for key in inputs:
+                seq_inputs[key] = inputs[key]
+            seq_inputs['dominance'] = ''
+        method = prefixSpan(seq_inputs)
     elif inputs['type'] == 'itemset':
         if 'data/' not in inputs['data']:
             inputs['data'] = 'data/eclat/' + inputs['data']

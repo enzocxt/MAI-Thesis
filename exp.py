@@ -52,9 +52,6 @@ def experiment():
     # experiment 2
     for t in typeList:
         params['type'] = t
-        fout = open('{path}{type}.csv'.format(path=exp1_path, type=t), 'wb')
-        writer = csv.writer(fout)
-        writer.writerow(['dataset', 'step1', 'step2', 'step3'])
         #if t == 'graph': sys.exit(2)
         for s in supports:
             params['support'] = s
