@@ -7,7 +7,7 @@ import os, sys
 import platform
 import subprocess
 from string import Template
-from Pattern import *
+from thesis.solver.Pattern import *
 import time
 
 

@@ -8,29 +8,6 @@ from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
 from wrapper_without_IDP import fpMining_pure, fpMining_postpro
 
 
-def test_perf(config_file):
-    #config_file = 'config.ini'
-    # input_path = os.getcwd() + '/data/eclat/'
-    # output_path = os.getcwd() + '/output/eclat/'
-    input_path = './data/eclat/'
-    output_path = './output/eclat/'
-    input_files = os.listdir(input_path)
-    perfFin = open('./output/performance_max.txt', 'a')
-
-    files = ['hepatitis.txt', 'lymph.txt', 'primary-tumor.txt', 'soybean.txt', 'zoo-1.txt']
-    files = ['zoo-1.txt']
-    for input_file in files:
-        child = subprocess.Popen(['python', 'wrapper.py',
-                                  '-c', config_file,
-                                  '-i', input_path + input_file,
-                                  '-o', output_path + input_file],
-                                 stdout=subprocess.PIPE)
-        stdOutput = child.stdout.read()
-        perfFin.write(stdOutput)
-
-    perfFin.close()
-
-
 def experiment():
     typeList = ['itemset', 'sequence', 'graph']
     supports = [0.5, 0.45, 0.4, 0.35, 0.3]
@@ -63,6 +40,7 @@ def experiment():
                 for dataset in datasets[t]:
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'
+                    print "\n****************************************************\n"
                     _, timecost_pure = fpMining_pure(params)
                     fout.write('Pure\t:{type},{support},{dominance},{dataset}:{timecost:.4f}\n'.format(
                         type=params['type'], support=params['support'], dominance=params['dominance'],
@@ -74,6 +52,7 @@ def experiment():
                         type=params['type'], support=params['support'], dominance=params['dominance'], dataset=params['data'].split('/')[-1],
                         timecost=timecost_postpro, step1=step1_tc, step2=step2_tc, step3=step3_tc
                     ))
+                    print "\n****************************************************\n"
     fout.close()
 
 
