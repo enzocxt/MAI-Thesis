@@ -297,7 +297,10 @@ class eclat(Mining):
                 support = items.pop().strip()
                 # e.g.: 22 32 20 (46)
                 support = int(support[1:-1])
-                itemset = Itemset(i+1, map(lambda x: int(x), items), support)
+                int_items = []
+                for x in items:
+                    int_items.append(int(x))
+                itemset = Itemset(i+1, int_items, support)
                 itemset.set_stats_and_mapping()
                 itemsets.append(itemset)
 

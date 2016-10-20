@@ -171,6 +171,15 @@ def check_bounds_and_size(l, min_val, max_val, candidates):
       output.append(candidate)
   return output
 
+def check_larger_and_out_bounds(l, min_val, max_val, candidates):
+  output = []
+  for candidate in candidates:
+    if min_val >= candidate.min_val and candidate.max_val >= max_val and candidate.get_pattern_len() > l :
+      output.append(candidate)
+  return output
+
+
+
 def check_candidate_constraints(candidate, l, min_val, max_val, itemset):
     if min_val <= candidate.min_val and candidate.max_val <= max_val and candidate.get_pattern_len() < l :
       if (candidate.itemset).issubset(itemset.itemset):
