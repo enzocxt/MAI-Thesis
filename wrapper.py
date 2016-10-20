@@ -2,7 +2,7 @@
     author: Tao Chen
 """
 
-import getopt
+import getopt, time
 import ConfigParser
 import collections
 
@@ -28,16 +28,16 @@ def sergeylog(s): #dump info into the log file
 
 @logger
 def fpMining_pure(inputs):
-    if inputs['type'] == 'graph':
-        inputs['data'] = 'data/gSpan/' + inputs['data']
+    if inputs['type']   == 'graph':
+        inputs['data']   = 'data/gSpan/' + inputs['data']
         inputs['output'] = 'output/gSpan/' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
-        inputs['data'] = 'data/prefixSpan/' + inputs['data']
+        inputs['data']   = 'data/prefixSpan/' + inputs['data']
         inputs['output'] = 'output/prefixSpan/' + inputs['output']
         method = prefixSpan(inputs)
     elif inputs['type'] == 'itemset':
-        inputs['data'] = 'data/eclat/' + inputs['data']
+        inputs['data']   = 'data/eclat/' + inputs['data']
         inputs['output'] = 'output/eclat/' + inputs['output']
         method = eclat(inputs)
     else:
@@ -58,12 +58,12 @@ def fpMining_pure(inputs):
 def fpMining_postpro(inputs):
     if inputs['type'] == 'graph':
         if 'data/' not in inputs['data']:
-            inputs['data'] = 'data/gSpan/' + inputs['data']
+            inputs['data']   = 'data/gSpan/' + inputs['data']
             inputs['output'] = 'output/gSpan/' + inputs['output']
         method = gSpan(inputs)
     elif inputs['type'] == 'sequence':
         if 'data/' not in inputs['data']:
-            inputs['data'] = 'data/prefixSpan/' + inputs['data']
+            inputs['data']   = 'data/prefixSpan/' + inputs['data']
             inputs['output'] = 'output/prefixSpan/' + inputs['output']
         if 'dominance' in inputs:
             seq_inputs = dict()
@@ -73,7 +73,7 @@ def fpMining_postpro(inputs):
         method = prefixSpan(seq_inputs)
     elif inputs['type'] == 'itemset':
         if 'data/' not in inputs['data']:
-            inputs['data'] = 'data/eclat/' + inputs['data']
+            inputs['data']   = 'data/eclat/' + inputs['data']
             inputs['output'] = 'output/eclat/' + inputs['output']
         if 'dominance' in inputs:
             eclat_inputs = dict()
@@ -142,12 +142,13 @@ if __name__ == "__main__":
         sys.exit(2)
 
     config_file = default_parameters        # config file path
+    specialised = False
     params = {}     # Dict to store input parameters
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hc:', ['help=', 'config='])
+        opts, args = getopt.getopt(sys.argv[1:], 'hc:s:', ['help=', 'config='])
     except getopt.GetoptError:
-        print('wrapper.py -c <configfile>\nSet input data and output file in config file')
+        print('wrapper.py -c <configfile> -s <True or False>\nSet input data and output file in config file')
         sys.exit(2)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
@@ -155,6 +156,9 @@ if __name__ == "__main__":
             sys.exit(2)
         elif opt in ('-c', '--config'):
             config_file = arg
+        elif opt in ('-s', '--specialised'):
+            if arg in ('true', 'True', 'T'):
+                specialised = True
 
     # read parameters from config file
     config = ConfigParser.ConfigParser()
@@ -198,13 +202,16 @@ if __name__ == "__main__":
 
 
     # frequent pattern mining
-    patterns = fpMining_pure(params)
+    if specialised:
+        patterns, time_pure = fpMining_pure(params)
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
     closed_patterns, time_step1, time_step2, time_step3 = fpMining_postpro(params)
 
 
     print "\n*************************************"
-  # print "Number of frequent patterns: {0}".format(len(patterns))
+    print "Number of frequent patterns: {0}".format(len(patterns))
     print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
-
+#   with open("{outputfile}".format(outputfile=params['output']),"w") as outputfile:
+#       for pattern in closed_patterns:
+#         outputfile.write(str(pattern))

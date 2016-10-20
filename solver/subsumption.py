@@ -1,8 +1,10 @@
 #from solver.method import prefixSpan#for debugging           
-from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset
+from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset, make_grouping_by_support, get_smaller_patterns, check_bounds_and_size, check_candidate_constraints
 from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph, Pattern
 from tqdm import tqdm
+import sys
+import numpy as np
 
 
 class SubsumptionLattice:
@@ -26,47 +28,45 @@ class SubsumptionLattice:
 
   def subsumption_lattice_check_itemset(self, patterns,params):
     print('\nStarting dominance check for itemsets...')
+    
+    check = np.vectorize(check_candidate_constraints)
 
-    mapping_by_len = group_by_len(patterns)
-    max_len = max(mapping_by_len.keys())
+    if params['dominance'] == "closed":
+      support_mapping = make_grouping_by_support(patterns)
+
+
     skip_set = set()
-    survivers = set(patterns)
     all_candidate_sizes = []
-    for l in tqdm(reversed(range(1,max_len+1))): # maximal are not subsumed by anything
-      print('Processing len: %s' % l)
-      itemsets_with_len_l = mapping_by_len[l]
-      for itemset in itemsets_with_len_l:
-        if itemset in skip_set:
-          continue
+   #map_of_maps = create_list_of_inverted_mappings(patterns, 3)
+    sorted_itemsets = sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)
+    for itemset in tqdm(sorted_itemsets): # maximal are not subsumed by anything
+      if itemset in skip_set:
+        continue
+      
+      if params['dominance'] == "closed":
+        candidates = support_mapping[itemset.get_support()] - skip_set
+        candidates = candidates.intersection(itemset.get_best_superpattern_set_approximation())
+      else:
+        candidates = itemset.get_best_superpattern_set_approximation() -skip_set
 
-      # candidates = survivers.intersection(itemset.get_best_superpattern_set_approximation())
-        candidates = survivers
-        candidates = filter(lambda x: x.get_pattern_len() < l, candidates)
-        candidates = self.apply_extra_dominance_constraints(itemset, candidates, params)
-        all_candidate_sizes.append(len(candidates))
+      l          = itemset.get_pattern_len()
+      candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
 
-        for candidate in candidates:
-          if (candidate.itemset).issubset(itemset.itemset):
-            if params['dominance'] == "maximal" or params['dominance'] == 'closed':
-              skip_set.add(candidate)
-            if params['dominance'] == 'free':
-              skip_set.add(itemset)
-              break
-
-        survivers = survivers - skip_set
+      for candidate in candidates:
+        if (candidate.itemset).issubset(itemset.itemset):
+          if params['dominance'] == "maximal" or params['dominance'] == 'closed':
+            skip_set.add(candidate)
+          if params['dominance'] == 'free':
+            skip_set.add(itemset)
+            break
+#     print("candidates len", len(candidates), "skipset", len(skip_set))
     
     print('Dominance check done...')
     if len(all_candidate_sizes) != 0:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
 
-    return survivers
+    return set(patterns) - skip_set
 
-  def get_smaller_sequences(self, min_length, candidates):
-    output = []
-    for candidate in candidates:
-      if candidate.get_pattern_len() < min_length:
-        output.append(candidate)
-    return output
 
   def subsumption_lattice_check_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
@@ -83,8 +83,7 @@ class SubsumptionLattice:
           continue
 
         candidates = survivers
-        candidates = filter(lambda x: x.get_pattern_len() < l, candidates)
-        #candidates = self.get_smaller_sequences(l, candidates)
+        candidates = get_smaller_patterns(l, candidates)
         candidates = get_attribute_subset(seq, candidates)
         candidates = self.apply_extra_dominance_constraints(seq, candidates, params)
         candidates = filter(lambda x: seq.is_superset_by_attributes(x), candidates)
@@ -121,26 +120,28 @@ class SubsumptionLattice:
         for graph in graphs_with_len_l:
           if graph in skip_set:
             continue
- 
+          
           candidates = survivers
           candidates = self.apply_extra_dominance_constraints(graph, candidates, params)
           candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) < 0, candidates)
           candidates = get_attribute_subset(graph, candidates)
           candidates = filter(lambda x: graph.is_superset_by_attributes(x), candidates)
+          candidates = filter(lambda x: graph.is_combined_labeled_supergraph(x), candidates)
 
-          all_candidate_sizes.append(len(candidates))
+          number_of_candidates = len(candidates)
+          all_candidate_sizes.append(number_of_candidates)
 
           for candidate in candidates:
                      
-              if graph.is_subgraph_of(candidate):
+              if candidate.is_subgraph_of(graph):
                 if params['dominance'] == "maximal" or params['dominance'] == 'closed':
+                  skip_set.add(candidate)
+
+                if params['dominance'] == 'free':
                   skip_set.add(graph)
                   break
 
-                if params['dominance'] == 'free':
-                  skip_set.add(candidate)
-
-          survivers = survivers - skip_set
+        survivers = survivers - skip_set
 
 
     print 'done dominance check'
@@ -258,9 +259,3 @@ class SubsumptionLattice:
   def get_direct_children(self, pattern):
     return self.lattice[pattern]
 
-  
-# print mapping_by_len
-# print attribute_mapping
-
-if __name__ == "__main__":
-  pass

@@ -1,6 +1,7 @@
 from Pattern import *
 from method import *
 from functools import wraps
+import time
 
 PLACE_HOLDER = '_'
 

@@ -47,8 +47,7 @@ def experiment():
                 writer.writerow(['dataset', 'step1', 'step2', 'step3'])
                 writer.writerows(results)
 
-    sys.exit(2)
-
+    '''
     # experiment 2
     for t in typeList:
         params['type'] = t
@@ -74,7 +73,7 @@ def experiment():
                     ))
                     print "\n****************************************************\n"
         fout.close()
-
+    '''
 
 
 

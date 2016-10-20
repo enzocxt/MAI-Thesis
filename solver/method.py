@@ -1,7 +1,6 @@
-import os, sys, time
+import os, sys
 import platform
 import subprocess
-import utils
 from tqdm import tqdm
 from Pattern import *
 
@@ -25,7 +24,6 @@ class Mining(object):
 
     def __init__(self, inputs):
         # example: inputs{'type': 'itemset', 'matching': 'exact', 'constraints': 'frequency', 'dominance': 'max'}
-        #self.inputs = inputs
         self.type = inputs['type']
         if 'matching' in inputs:
             self.matching = inputs['matching']
@@ -155,7 +153,14 @@ class prefixSpan(Mining):
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
         options = ''
-        if platform.system() == "Linux":
+        if platform.system() == "Linux" and self.dominance == 'closed':
+            prefixSpan = './exec/clospan'
+            self.data = self.data.split('.')[0] + '.bin'
+            command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
+            os.system(command)
+            with open('ClosedMaxset.txt', 'r') as seq_out:
+                result = seq_out.read()
+        elif platform.system() == "Linux":
      #      prefixSpan = "./exec/pspan" # it segfaults on my computer
             prefixSpan = "./exec/prefixspan_linux_64" # compiled for 64bit Linux, tried on Ubuntu 14.04
             if self.support <= 1:
@@ -191,7 +196,10 @@ class prefixSpan(Mining):
         return result
 
     def parser(self, stdOutput, path=None):
-        self.patternSet = self.parserSequence(stdOutput)
+        if self.dominance == 'closed':
+            self.patternSet = self.parserDomiSequence(stdOutput)
+        else:
+            self.patternSet = self.parserSequence(stdOutput)
         return self.patternSet
     
     @staticmethod
@@ -212,6 +220,22 @@ class prefixSpan(Mining):
         else:
             with open(path, 'r') as fin:
                 pass
+        return patterns
+
+    @staticmethod
+    def parserDomiSequence(stdOutput):
+        patterns = []
+        lines = stdOutput.split('\n')
+        index = 1
+        for i in range(len(lines)):
+            if '<(' not in lines[i]:
+                continue
+            line = lines[i].strip().split()
+            seq = (line[0].replace('<', '').replace('>', '').replace('(', '')).split(')')[:-1]
+            seq = Sequence(index, seq, int(line[5]))
+            patterns.append(seq)
+            Pattern.id2pattern[index] = seq
+            index += 1
         return patterns
 
     def getPatterns(self):
@@ -260,25 +284,6 @@ class eclat(Mining):
         '''
         return stdOutput
 
-    def closedMining(self):
-        """
-        if mining closed frequent itemsets
-        use eclat to find frequent itemset
-        and use python post-process to find closed itemsets
-        """
-        if platform.system() == "Linux":
-            eclat = "./exec/eclat"
-        else:
-            eclat = "eclat"
-
-        child = subprocess.Popen([eclat, "-s%s" % self.support, self.datafile, ""], stdout=subprocess.PIPE)
-        result = child.stdout.read()
-        if self.dominance == 'max':
-            self.maxParser(result)
-        elif self.dominance == 'closed':
-            closedPatterns = self.closedParser(result)
-            return closedPatterns
-
     def parser(self, stdOutput, path=None):
         return [itemset for itemset in self.parserItemset_output(stdOutput)]
 
@@ -324,7 +329,7 @@ class eclat(Mining):
                 support = items.pop().strip()
                 # e.g.: 22 32 20 (46)
                 support = int(support[1:-1])
-                itemset = Itemset(i+1, items, support)
+                itemset = Itemset(i+1, map(lambda x: int(x), items), support)
                 itemset.set_stats_and_mapping()
                 itemsets.append(itemset)
 
@@ -333,58 +338,6 @@ class eclat(Mining):
     def maxParser(self, stdOutput):
         """For maximal item sets"""
         pass
-
-    def closedParser(self, stdOutput):
-        """
-        For closed item sets
-        Directly check closed itemsets
-        Do not store them into python objects,
-        and not use objects.method to check closed
-        """
-        #closedParserTime0 = time.time()
-        # itemsets: a dictionary of itemset list
-        # itemsets of the same list have same support
-        itemsets = {}
-        stdOutput = stdOutput.split('\n')
-        # pass the description lines
-        tmp = stdOutput.pop()
-        tmpList = tmp.split()
-        while not tmpList[0].isdigit():
-            tmp = stdOutput.pop()
-            tmpList = tmp.split(' ')
-        stdOutput.append(tmp)
-
-        for line in stdOutput:
-            line.strip('\n')
-            items = line.split(' ')
-            support = items.pop()
-            support = float(support[1:-1])
-            itemset = (support, set(items))
-
-            # if itemsets dictionary has support of this itemset
-            # add this itemset to that list
-            # else add this itemset as a new itemset list
-            if itemsets.has_key(itemset[0]):
-                itemsets[itemset[0]].append(itemset[1])
-            else:
-                itemsets[itemset[0]] = [itemset[1]]
-
-        def checkClosed(itemset, itemsetList):
-            for it in itemsetList:
-                if len(itemset) >= len(it):
-                    continue
-                elif itemset < it:
-                    return False
-            return True
-
-        # find closed itemset
-        closedItemset = []
-        for list in itemsets.values():
-            for i in range(len(list)):
-                if checkClosed(list[i], list):
-                    closedItemset.append(list[i])
-
-        return closedItemset
 
     def getPatterns(self):
         return self.patternSet
