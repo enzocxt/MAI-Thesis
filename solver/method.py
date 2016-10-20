@@ -280,11 +280,29 @@ class eclat(Mining):
             return closedPatterns
 
     def parser(self, stdOutput, path=None):
-        self.patternSet = self.parserItemset(stdOutput)
-        #self.patternSet = utils.parser(self, None, "output/closed_eclat.txt")
-        return self.patternSet
+        return [itemset for itemset in self.parserItemset_output(stdOutput)]
 
-    def parserItemset(self, stdOutput, path=None):
+    def parserItemset_output(self, stdOutput):
+        data = stdOutput.split('\n')
+        for i in tqdm(range(len(data))):
+            itemset_txt = data[i]
+            itemset = self.parserItemset(i, itemset_txt)
+            if itemset:
+                yield itemset
+
+    def parserItemset(self, index, text):
+        line = text.strip()
+        items = line.split()
+        if not items[0].isdigit():
+            return None
+        if '(' in items[-1]:
+            support = items.pop().strip()
+            support = int(support[1:-1])
+            itemset = Itemset(index+1, items, support)
+            #itemset.set_stats_and_mapping()
+            return itemset
+
+    def parserItemset_old(self, stdOutput, path=None):
         """
             If path == "" or path == "-",
             means that do not write results into a file
@@ -296,7 +314,8 @@ class eclat(Mining):
             result = fin.readlines()
             fin.close()
         itemsets = []
-        for i, line in enumerate(result):
+        for i in tqdm(xrange(len(result))):
+            line = result[i]
             line.strip()
             items = line.split(' ')
             if not items[0].isdigit():
