@@ -1,5 +1,5 @@
 #from solver.method import prefixSpan#for debugging           
-from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset, make_grouping_by_support, get_smaller_patterns, check_bounds_and_size, check_candidate_constraints
+from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset, make_grouping_by_support, get_smaller_patterns, check_bounds_and_size, check_candidate_constraints, check_larger_and_out_bounds
 from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph, Pattern
 from tqdm import tqdm
@@ -31,34 +31,40 @@ class SubsumptionLattice:
     
     check = np.vectorize(check_candidate_constraints)
 
-    if params['dominance'] == "closed":
+    is_free = params['dominance'] == "free"
+    if params['dominance'] == "closed" or is_free:
       support_mapping = make_grouping_by_support(patterns)
-
 
     skip_set = set()
     all_candidate_sizes = []
    #map_of_maps = create_list_of_inverted_mappings(patterns, 3)
-    sorted_itemsets = sorted(patterns, key=lambda x: x.get_pattern_len(), reverse=True)
+    sorted_itemsets = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=(not is_free))
     for itemset in tqdm(sorted_itemsets): # maximal are not subsumed by anything
       if itemset in skip_set:
         continue
       
-      if params['dominance'] == "closed":
+      if params['dominance'] == "closed" or is_free:
+        candidates = support_mapping[itemset.get_support()] - skip_set
+      if is_free:
         candidates = support_mapping[itemset.get_support()] - skip_set
         candidates = candidates.intersection(itemset.get_best_superpattern_set_approximation())
-      else:
-        candidates = itemset.get_best_superpattern_set_approximation() -skip_set
+      if params['dominance'] == "maximal":
+        candidates = set(patterns) - skip_set
 
-      l          = itemset.get_pattern_len()
-      candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
+      l = itemset.get_pattern_len()
+      if params['dominance'] == "closed" or params['dominance'] == "maximal":
+        candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
+      if is_free:
+        candidates = check_larger_and_out_bounds(l, itemset.min_val, itemset.max_val, candidates)
 
       for candidate in candidates:
-        if (candidate.itemset).issubset(itemset.itemset):
-          if params['dominance'] == "maximal" or params['dominance'] == 'closed':
-            skip_set.add(candidate)
-          if params['dominance'] == 'free':
-            skip_set.add(itemset)
-            break
+        if params['dominance'] == "closed" or params['dominance'] == "maximal":
+          if (candidate.itemset).issubset(itemset.itemset):
+              skip_set.add(candidate)
+        if is_free:
+          if (itemset.itemset).issubset(candidate.itemset):
+              skip_set.add(candidate)
+
 #     print("candidates len", len(candidates), "skipset", len(skip_set))
     
     print('Dominance check done...')
