@@ -324,7 +324,7 @@ class eclat(Mining):
             line.strip()
             items = line.split(' ')
             if not items[0].isdigit():
-                continue
+              continue
             if '(' in items[-1]:
                 support = items.pop().strip()
                 # e.g.: 22 32 20 (46)

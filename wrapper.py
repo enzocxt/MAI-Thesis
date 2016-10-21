@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
 
     print "\n*************************************"
-    print "Number of frequent patterns: {0}".format(len(patterns))
+#   print "Number of frequent patterns: {0}".format(len(patterns))
     print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
 #   with open("{outputfile}".format(outputfile=params['output']),"w") as outputfile:
 #       for pattern in closed_patterns:

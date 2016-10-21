@@ -45,9 +45,6 @@ class SubsumptionLattice:
       
       if params['dominance'] == "closed" or is_free:
         candidates = support_mapping[itemset.get_support()] - skip_set
-      if is_free:
-        candidates = support_mapping[itemset.get_support()] - skip_set
-        candidates = candidates.intersection(itemset.get_best_superpattern_set_approximation())
       if params['dominance'] == "maximal":
         candidates = set(patterns) - skip_set
 
@@ -80,7 +77,7 @@ class SubsumptionLattice:
     max_len = max(mapping_by_len.keys())
     skip_set = set()
     all_candidate_sizes = []
-    survivers = set(patterns)
+
     for l in tqdm(reversed(range(1,max_len+1))): # maximal are not subsumed by anything
       print('Processing len: %s' % l)
       sequences_with_len_l = mapping_by_len[l]
@@ -88,10 +85,10 @@ class SubsumptionLattice:
         if seq in skip_set:
           continue
 
+        
         candidates = survivers
         candidates = get_smaller_patterns(l, candidates)
         candidates = get_attribute_subset(seq, candidates)
-        candidates = self.apply_extra_dominance_constraints(seq, candidates, params)
         candidates = filter(lambda x: seq.is_superset_by_attributes(x), candidates)
         all_candidate_sizes.append(len(candidates))
 
@@ -119,16 +116,22 @@ class SubsumptionLattice:
     print("initial skip set", len(skip_set))
     all_candidate_sizes = []
     different_lenghts = sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)
-    survivers = set(patterns) - skip_set
     
+    is_free = params['dominance'] == "free"
+    if params['dominance'] == "closed" or is_free:
+      support_mapping = make_grouping_by_support(patterns)
+    #TODO rewrite free dominance part or should I leave it like that? probably can be optimized
     for l in tqdm(different_lenghts): # maximal are not subsumed by anything
         graphs_with_len_l = self.mapping_by_len[l]
         for graph in graphs_with_len_l:
           if graph in skip_set:
             continue
           
-          candidates = survivers
-          candidates = self.apply_extra_dominance_constraints(graph, candidates, params)
+        if params['dominance'] == "closed" or is_free:
+          candidates = support_mapping[itemset.get_support()] - skip_set
+        if params['dominance'] == "maximal":
+          candidates = set(patterns) - skip_set
+
           candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) < 0, candidates)
           candidates = get_attribute_subset(graph, candidates)
           candidates = filter(lambda x: graph.is_superset_by_attributes(x), candidates)
@@ -147,7 +150,6 @@ class SubsumptionLattice:
                   skip_set.add(graph)
                   break
 
-        survivers = survivers - skip_set
 
 
     print 'done dominance check'
