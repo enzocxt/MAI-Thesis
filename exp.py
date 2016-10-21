@@ -16,7 +16,7 @@ def experiment():
                       'mushroom.txt'] # 'lymph.txt' is too large
     seq_datasets   = ['iprg_neg.dat', 'iprg_pos.dat', 'jmlr.dat',
                       'unix_users_neg.dat', 'unix_users_pos.dat']
-    graph_datasets = ['Chemical_340', 'Compound_422', 'graph.data']
+    graph_datasets = ['Chemical_340', 'Compound_422', 'nctrer.gsp','yoshida.gsp', 'bloodbarr.gsp']
     datasets = {
         'itemset'  : it_datasets,
         'sequence' : seq_datasets,
