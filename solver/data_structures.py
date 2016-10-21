@@ -188,3 +188,11 @@ def check_candidate_constraints(candidate, l, min_val, max_val, itemset):
       return None
 
 
+def get_combined_subset(graph, candidates):
+  output = []
+  for candidate in candidates:
+    if graph.is_combined_labeled_supergraph(candidate):
+      output.append(candidate)
+  return output
+
+

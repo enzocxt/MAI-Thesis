@@ -1,5 +1,5 @@
-#from solver.method import prefixSpan#for debugging           
-from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset, make_grouping_by_support, get_smaller_patterns, check_bounds_and_size, check_candidate_constraints, check_larger_and_out_bounds
+  #from solver.method import prefixSpan#for debugging           
+from solver.data_structures import group_by_len, make_attribute_mapping, get_attribute_intersection, get_attribute_superset, get_attribute_subset, make_grouping_by_support, get_smaller_patterns, check_bounds_and_size, check_candidate_constraints, check_larger_and_out_bounds, get_combined_subset
 from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph, Pattern
 from tqdm import tqdm
@@ -77,30 +77,26 @@ class SubsumptionLattice:
     max_len = max(mapping_by_len.keys())
     skip_set = set()
     all_candidate_sizes = []
+    
+    ordered_sequences = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
+    for seq in tqdm(ordered_sequences): # maximal are not subsumed by anything
+      if seq in skip_set:
+        continue
 
-    for l in tqdm(reversed(range(1,max_len+1))): # maximal are not subsumed by anything
-      print('Processing len: %s' % l)
-      sequences_with_len_l = mapping_by_len[l]
-      for seq in sequences_with_len_l:
-        if seq in skip_set:
-          continue
+      
+      candidates = set(patterns) - skip_set
+      candidates = get_smaller_patterns(seq.get_pattern_len(), candidates)
+      candidates = get_attribute_subset(seq, candidates)
+      all_candidate_sizes.append(len(candidates))
 
-        
-        candidates = survivers
-        candidates = get_smaller_patterns(l, candidates)
-        candidates = get_attribute_subset(seq, candidates)
-        candidates = filter(lambda x: seq.is_superset_by_attributes(x), candidates)
-        all_candidate_sizes.append(len(candidates))
+      for candidate in candidates:
+        if candidate.is_subsequence_of(seq):
+          if params['dominance'] == "maximal" or params['dominance'] == 'closed':
+            skip_set.add(candidate)
 
-        for candidate in candidates:
-          if candidate.is_subsequence_of(seq):
-            if params['dominance'] == "maximal" or params['dominance'] == 'closed':
-              skip_set.add(candidate)
-
-            if params['dominance'] == 'free':
-              skip_set.add(seq)
-              break
-      survivers = survivers - skip_set
+          if params['dominance'] == 'free':
+            skip_set.add(seq)
+            break
 
     print('dominance check done')
     if len(all_candidate_sizes) != 0:
@@ -109,52 +105,45 @@ class SubsumptionLattice:
 
   def subsumption_lattice_check_graph(self, patterns, params):
     print '\n Starting dominance check for graphs...\n'
-    self.mapping_by_len = group_by_len(patterns)
+   #self.mapping_by_len = group_by_len(patterns)
     
     initial_subsumption_tree, initial_subsumed_by_tree = self.create_initial_parent_tree(patterns)
     skip_set = self.initialize_skip_set_with_parent_info(patterns, initial_subsumption_tree, initial_subsumed_by_tree, params)
     print("initial skip set", len(skip_set))
     all_candidate_sizes = []
-    different_lenghts = sorted(self.mapping_by_len.keys(), cmp=self.pareto_front_pair,reverse=True)
-    
     is_free = params['dominance'] == "free"
     if params['dominance'] == "closed" or is_free:
       support_mapping = make_grouping_by_support(patterns)
     #TODO rewrite free dominance part or should I leave it like that? probably can be optimized
-    for l in tqdm(different_lenghts): # maximal are not subsumed by anything
-        graphs_with_len_l = self.mapping_by_len[l]
-        for graph in graphs_with_len_l:
-          if graph in skip_set:
-            continue
-          
-        if params['dominance'] == "closed" or is_free:
-          candidates = support_mapping[itemset.get_support()] - skip_set
-        if params['dominance'] == "maximal":
-          candidates = set(patterns) - skip_set
+    sorted_graphs = sorted(patterns, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+    for graph in tqdm(sorted_graphs): # maximal are not subsumed by anything
+      if graph in skip_set:
+          continue
+        
+      if params['dominance'] == "closed" or is_free:
+        candidates = support_mapping[graph.get_support()] - skip_set
+      if params['dominance'] == "maximal":
+        candidates = set(patterns) - skip_set
 
-          candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) < 0, candidates)
-          candidates = get_attribute_subset(graph, candidates)
-          candidates = filter(lambda x: graph.is_superset_by_attributes(x), candidates)
-          candidates = filter(lambda x: graph.is_combined_labeled_supergraph(x), candidates)
+      candidates = filter(lambda x: self.pareto_front_pair(x.get_pattern_len(),graph.get_pattern_len()) < 0, candidates)
+      candidates = get_attribute_subset(graph, candidates)
+      candidates = get_combined_subset(graph, candidates)
 
-          number_of_candidates = len(candidates)
-          all_candidate_sizes.append(number_of_candidates)
+      number_of_candidates = len(candidates)
+      all_candidate_sizes.append(number_of_candidates)
 
-          for candidate in candidates:
-                     
-              if candidate.is_subgraph_of(graph):
-                if params['dominance'] == "maximal" or params['dominance'] == 'closed':
-                  skip_set.add(candidate)
+      for candidate in candidates:
+          if candidate.is_subgraph_of(graph):
+            if params['dominance'] == "maximal" or params['dominance'] == 'closed':
+              skip_set.add(candidate)
 
-                if params['dominance'] == 'free':
-                  skip_set.add(graph)
-                  break
-
+            if params['dominance'] == 'free':
+              skip_set.add(graph)
+              break
 
 
     print 'done dominance check'
-    if len(all_candidate_sizes) != 0:
-      print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
+    print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
     return set(patterns) - set(skip_set)                                               
 
   @staticmethod

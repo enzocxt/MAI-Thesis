@@ -9,12 +9,12 @@ from wrapper import fpMining_pure, fpMining_postpro
 
 def experiment():
     typeList = ['itemset', 'sequence', 'graph']
-    supports = [0.5, 0.45, 0.4, 0.35, 0.3]
+    supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
     dominances = ['closed', 'maximal']
     it_datasets    = ['zoo-1.txt', 'vote.txt', 'tic-tac-toe.txt',
                       'splice-1.txt', 'soybean.txt', 'primary-tumor.txt',
                       'mushroom.txt'] # 'lymph.txt' is too large
-    seq_datasets   = ['fifa.dat', 'iprg_neg.dat', 'iprg_pos.dat', 'jmlr.dat',
+    seq_datasets   = ['iprg_neg.dat', 'iprg_pos.dat', 'jmlr.dat',
                       'unix_users_neg.dat', 'unix_users_pos.dat']
     graph_datasets = ['Chemical_340', 'Compound_422', 'graph.data']
     datasets = {
