@@ -298,11 +298,13 @@ class eclat(Mining):
     def parserItemset(self, index, text):
         line = text.strip()
         items = line.split()
-        if not items[0].isdigit():
+        #print items
+        if len(items) == 0 or not items[0].isdigit():
             return None
         if '(' in items[-1]:
             support = items.pop().strip()
             support = int(support[1:-1])
+            items = [int(i) for i in items]
             itemset = Itemset(index+1, items, support)
             #itemset.set_stats_and_mapping()
             return itemset
