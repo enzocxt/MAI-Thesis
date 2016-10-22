@@ -7,7 +7,7 @@ from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
 from wrapper import fpMining_pure, fpMining_postpro
 
 
-def experiment():
+def experiment(exp1=True, exp2=True, exp3=True):
     typeList = ['itemset', 'sequence', 'graph']
     supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
     dominances = ['closed', 'maximal']
@@ -29,53 +29,49 @@ def experiment():
     params['constraints']['cost']   = CostConstraint(100, collections.defaultdict(int))
 
     # experiment 1
-    exp1_path = 'output/exp1'
-    for t in typeList:
-        params['type'] = t
-        params['support'] = 0.2
-        for d in dominances:
-            results = []
-            params['dominance'] = d
-            for dataset in datasets[t]:
-                params['data'] = dataset
-                params['output'] = dataset.split('.')[0]+'.output'
-                _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
-                results.append((params['data'].split('/')[-1], '{0:.4f}'.format(step1_tc),
-                                '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
-            with open('{path}/{dominance}/{type}.csv'.format(path=exp1_path, dominance=d, type=t), 'wb') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(['dataset', 'step1', 'step2', 'step3'])
-                writer.writerows(results)
-
-    '''
-    # experiment 2
-    for t in typeList:
-        params['type'] = t
-        #if t == 'graph': sys.exit(2)
-        for s in supports:
-            params['support'] = s
+    if exp1:
+        exp1_path = 'output/exp1'
+        for t in typeList:
+            params['type'] = t
+            params['support'] = 0.2
             for d in dominances:
+                results = []
                 params['dominance'] = d
                 for dataset in datasets[t]:
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'
-                    print "\n****************************************************\n"
-                    _, timecost_pure = fpMining_pure(params)
-                    fout.write('Pure\t:{type},{support},{dominance},{dataset}:{timecost:.4f}\n'.format(
-                        type=params['type'], support=params['support'], dominance=params['dominance'],
-                        dataset=params['data'].split('/')[-1], timecost=timecost_pure
-                    ))
                     _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
-                    timecost_postpro = step1_tc + step2_tc + step3_tc
-                    fout.write('Postpro\t:{type},{support},{dominance},{dataset}:{timecost:.4f},{step1:.4f},{step2:.4f},{step3:.4f}\n'.format(
-                        type=params['type'], support=params['support'], dominance=params['dominance'], dataset=params['data'].split('/')[-1],
-                        timecost=timecost_postpro, step1=step1_tc, step2=step2_tc, step3=step3_tc
-                    ))
-                    print "\n****************************************************\n"
-        fout.close()
-    '''
+                    results.append((params['data'].split('/')[-1], '{0:.4f}'.format(step1_tc),
+                                    '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
+                with open('{path}/{dominance}/{type}.csv'.format(path=exp1_path, dominance=d, type=t), 'wb') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(['dataset', 'step1', 'step2', 'step3'])
+                    writer.writerows(results)
+
+    # experiment 2
+    if exp2:
+        exp2_path = 'output/exp2'
+        for t in typeList:
+            params['type'] = t
+            for dataset in datasets[t]:
+                results = []
+                params['data'] = dataset
+                params['output'] = dataset.split('.')[0]+'.output'
+                params['dominance'] = 'closed'
+                for s in supports:
+                    params['support'] = s
+                    params['data'] = dataset
+                    params['output'] = dataset.split('.')[0]+'.output'
+                    _, timecost_pure = fpMining_pure(params)
+                    _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
+                    results.append((s, '{0:.4f}'.format(timecost_pure), '{0:.4f}'.format(step1_tc+step2_tc,step3_tc),
+                                    '{0:.4f}'.format(step1_tc), '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
+                with open('{path}/{dominance}/{type}/{dataset}.csv'.format(path=exp2_path, dominance=params['dominance'], type=t, dataset=dataset.split('.')[0]), 'wb') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(['freq', 'specialised', 'postpro', 'step1', 'step2', 'step3'])
+                    writer.writerows(results)
 
 
 
 if __name__ == '__main__':
-    experiment()
+    experiment(False, True, True)

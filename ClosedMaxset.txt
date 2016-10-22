@@ -1,59 +1,76 @@
 CLOSED
-<(1)>  Num= 1190615255 Support = 7471   ItemsetNumber = 1
-<(2)>  Num= 1689621975 Support = 8186   ItemsetNumber = 1
-<(8)>  Num= 1191487259 Support = 7447   ItemsetNumber = 1
-<(10)>  Num= 1088522136 Support = 7324   ItemsetNumber = 1
-<(13)>  Num= 1790364013 Support = 8220   ItemsetNumber = 1
-<(14)>  Num= 1043226539 Support = 7275   ItemsetNumber = 1
-<(15)>  Num= 620971948 Support = 6918   ItemsetNumber = 1
-<(17)(1)>  Num= 480907876 Support = 6465   ItemsetNumber = 2
-<(17)>  Num= 1690133979 Support = 8054   ItemsetNumber = 1
-<(18)>  Num= 1816162666 Support = 8263   ItemsetNumber = 1
-<(21)>  Num= 1022402153 Support = 7240   ItemsetNumber = 1
-<(24)>  Num= 1030289734 Support = 7247   ItemsetNumber = 1
-<(30)>  Num= -2072869272 Support = 8776   ItemsetNumber = 1
-<(31)>  Num= 895624590 Support = 7051   ItemsetNumber = 1
-<(32)>  Num= 345121781 Support = 6692   ItemsetNumber = 1
-<(33)>  Num= 149503565 Support = 6616   ItemsetNumber = 1
-<(36)>  Num= 886868332 Support = 7165   ItemsetNumber = 1
-<(37)>  Num= 934476998 Support = 7167   ItemsetNumber = 1
-<(44)>  Num= 1197103286 Support = 7450   ItemsetNumber = 1
-<(45)>  Num= 902318720 Support = 7120   ItemsetNumber = 1
-<(46)>  Num= 1295114973 Support = 7598   ItemsetNumber = 1
-<(47)>  Num= 793882458 Support = 7077   ItemsetNumber = 1
-<(48)>  Num= 1250965177 Support = 7551   ItemsetNumber = 1
-<(50)>  Num= 1182833338 Support = 7423   ItemsetNumber = 1
-<(57)>  Num= 1083106524 Support = 7309   ItemsetNumber = 1
-<(59)>  Num= 954786035 Support = 7187   ItemsetNumber = 1
-<(67)>  Num= 931404145 Support = 7168   ItemsetNumber = 1
-<(68)>  Num= 660828047 Support = 6748   ItemsetNumber = 1
-<(70)>  Num= 1012973970 Support = 7206   ItemsetNumber = 1
-<(82)>  Num= 1008647944 Support = 7224   ItemsetNumber = 1
-<(90)>  Num= 1777597606 Support = 8191   ItemsetNumber = 1
-<(96)>  Num= 390779770 Support = 6527   ItemsetNumber = 1
-<(97)>  Num= 947512339 Support = 7130   ItemsetNumber = 1
-<(98)>  Num= 1636883685 Support = 8020   ItemsetNumber = 1
-<(117)>  Num= 660672786 Support = 6963   ItemsetNumber = 1
-<(118)>  Num= 567110838 Support = 6961   ItemsetNumber = 1
-<(131)>  Num= 1760699124 Support = 8162   ItemsetNumber = 1
-<(135)(21)>  Num= 231255056 Support = 6149   ItemsetNumber = 2
-<(135)(24)>  Num= 231303985 Support = 6141   ItemsetNumber = 2
-<(135)(36)>  Num= 155394541 Support = 6143   ItemsetNumber = 2
-<(135)(50)>  Num= 419118524 Support = 6360   ItemsetNumber = 2
-<(135)(57)>  Num= 263621912 Support = 6162   ItemsetNumber = 2
-<(135)>  Num= 1462643559 Support = 7827   ItemsetNumber = 1
-<(147)>  Num= 1442106949 Support = 7787   ItemsetNumber = 1
-<(155)(131)>  Num= 415197101 Support = 6352   ItemsetNumber = 2
-<(155)>  Num= 1312910901 Support = 7629   ItemsetNumber = 1
-<(181)>  Num= 834656982 Support = 7043   ItemsetNumber = 1
-0.156 seconds (
+<(13)>  Num= 497010 Support = 85   ItemsetNumber = 1
+<(15)>  Num= 1283499 Support = 131   ItemsetNumber = 1
+<(16)>  Num= 31888 Support = 193   ItemsetNumber = 1
+<(29)(2812)>  Num= 782133 Support = 148   ItemsetNumber = 2
+<(29)>  Num= 1264094 Support = 152   ItemsetNumber = 1
+<(32)(16)>  Num= 12409 Support = 83   ItemsetNumber = 2
+<(32)(2611)(16)>  Num= 12407 Support = 81   ItemsetNumber = 3
+<(32)(2611)>  Num= 419845 Support = 89   ItemsetNumber = 2
+<(32)>  Num= 556616 Support = 100   ItemsetNumber = 1
+<(103)(103)>  Num= 606292 Support = 76   ItemsetNumber = 2
+<(103)(2206)>  Num= 897034 Support = 102   ItemsetNumber = 2
+<(103)(2611)>  Num= 1237708 Support = 186   ItemsetNumber = 2
+<(103)(2745)>  Num= 1028051 Support = 102   ItemsetNumber = 2
+<(103)>  Num= 2333087 Support = 263   ItemsetNumber = 1
+<(398)>  Num= 850326 Support = 88   ItemsetNumber = 1
+<(404)>  Num= 601859 Support = 90   ItemsetNumber = 1
+<(405)>  Num= 1019171 Support = 85   ItemsetNumber = 1
+<(2206)(15)>  Num= 772869 Support = 83   ItemsetNumber = 2
+<(2206)(2206)(2206)>  Num= 1035236 Support = 105   ItemsetNumber = 3
+<(2206)(2206)(2745)(2745)>  Num= 755583 Support = 76   ItemsetNumber = 4
+<(2206)(2206)(2745)>  Num= 865002 Support = 91   ItemsetNumber = 3
+<(2206)(2206)>  Num= 1461986 Support = 150   ItemsetNumber = 2
+<(2206)(2237)(2206)>  Num= 679073 Support = 78   ItemsetNumber = 3
+<(2206)(2237)>  Num= 1098652 Support = 109   ItemsetNumber = 2
+<(2206)(2745)(2206)>  Num= 850662 Support = 96   ItemsetNumber = 3
+<(2206)(2745)(2745)(2206)>  Num= 685636 Support = 77   ItemsetNumber = 4
+<(2206)(2745)(2745)(2745)>  Num= 726839 Support = 80   ItemsetNumber = 4
+<(2206)(2745)(2745)>  Num= 1040167 Support = 114   ItemsetNumber = 3
+<(2206)(2745)>  Num= 1303435 Support = 144   ItemsetNumber = 2
+<(2206)>  Num= 2388660 Support = 263   ItemsetNumber = 1
+<(2237)(2206)>  Num= 866546 Support = 95   ItemsetNumber = 2
+<(2237)(2237)>  Num= 833543 Support = 82   ItemsetNumber = 2
+<(2237)(2745)>  Num= 679105 Support = 78   ItemsetNumber = 2
+<(2237)>  Num= 1360823 Support = 148   ItemsetNumber = 1
+<(2611)(16)>  Num= 12418 Support = 92   ItemsetNumber = 2
+<(2611)(2745)>  Num= 908318 Support = 92   ItemsetNumber = 2
+<(2611)>  Num= 1867624 Support = 329   ItemsetNumber = 1
+<(2745)(15)>  Num= 1097919 Support = 104   ItemsetNumber = 2
+<(2745)(405)>  Num= 998847 Support = 84   ItemsetNumber = 2
+<(2745)(2206)(2206)(2206)>  Num= 852720 Support = 83   ItemsetNumber = 4
+<(2745)(2206)(2206)>  Num= 1253972 Support = 122   ItemsetNumber = 3
+<(2745)(2206)(2237)>  Num= 845045 Support = 83   ItemsetNumber = 3
+<(2745)(2206)(2745)(2745)>  Num= 773925 Support = 77   ItemsetNumber = 4
+<(2745)(2206)(2745)>  Num= 904856 Support = 97   ItemsetNumber = 3
+<(2745)(2206)>  Num= 1765441 Support = 177   ItemsetNumber = 2
+<(2745)(2237)(2206)>  Num= 771790 Support = 79   ItemsetNumber = 3
+<(2745)(2237)>  Num= 1109987 Support = 115   ItemsetNumber = 2
+<(2745)(2745)(2206)(2206)>  Num= 810747 Support = 86   ItemsetNumber = 4
+<(2745)(2745)(2206)(2745)>  Num= 700218 Support = 76   ItemsetNumber = 4
+<(2745)(2745)(2206)>  Num= 1104942 Support = 124   ItemsetNumber = 3
+<(2745)(2745)(2237)>  Num= 722093 Support = 80   ItemsetNumber = 3
+<(2745)(2745)(2745)(2206)>  Num= 799407 Support = 85   ItemsetNumber = 4
+<(2745)(2745)(2745)(2745)(2745)(2745)>  Num= 870898 Support = 85   ItemsetNumber = 6
+<(2745)(2745)(2745)(2745)(2745)>  Num= 982490 Support = 95   ItemsetNumber = 5
+<(2745)(2745)(2745)(2745)>  Num= 1093692 Support = 112   ItemsetNumber = 4
+<(2745)(2745)(2745)>  Num= 1421984 Support = 148   ItemsetNumber = 3
+<(2745)(2745)>  Num= 1941813 Support = 210   ItemsetNumber = 2
+<(2745)(2833)>  Num= 1131773 Support = 103   ItemsetNumber = 2
+<(2745)>  Num= 3394019 Support = 327   ItemsetNumber = 1
+<(2812)>  Num= 928769 Support = 162   ItemsetNumber = 1
+0.005 seconds (
 Total running time)
 
-Total # of TreeNode: 47
-Closed/Max 1 : 40
-Closed/Max 2 : 7
+Total # of TreeNode: 61
+Closed/Max 1 : 14
+Closed/Max 2 : 22
+Closed/Max 3 : 13
+Closed/Max 4 : 9
+Closed/Max 5 : 1
+Closed/Max 6 : 1
 
-Total of 47 large items.
-# of projected datasets: 42
-Maximum memory usage: 2.229332MB
-0.156 seconds (Total running time after sort, and output.)
+Total of 61 large items.
+# of projected datasets: 50
+Maximum memory usage: 0.016380MB
+0.012 seconds (Total running time after sort, and output.)
