@@ -112,7 +112,7 @@ def fpMining_postpro(inputs):
     print "# of dominance patterns", len(final_patterns)
     end3     = time.time()
  
-    print("step1:", end1-start1, "step2:", end2-start2, "step3:", end3-start3)
+    print("step1: {0:.4f}, step2: {1:.4f}, step3: {2:.4f}".format(end1-start1, end2-start2, end3-start3))
     return final_patterns, end1-start1, end2-start2, end3-start3
 
 

@@ -128,6 +128,7 @@ def logger(fn):
         print "    arguments = {0} {1}".format(args, kwargs)
         # print "    return    = {0}".format(result)
         print "    time      = %.6f sec" % (te-ts)
+        print "************************************"
         return result
     return timer
 

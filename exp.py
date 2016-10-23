@@ -64,7 +64,7 @@ def experiment(exp1=True, exp2=True, exp3=True):
                     params['output'] = dataset.split('.')[0]+'.output'
                     _, timecost_pure = fpMining_pure(params)
                     _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
-                    results.append((s, '{0:.4f}'.format(timecost_pure), '{0:.4f}'.format(step1_tc+step2_tc,step3_tc),
+                    results.append((s, '{0:.4f}'.format(timecost_pure), '{0:.4f}'.format(step1_tc+step2_tc+step3_tc),
                                     '{0:.4f}'.format(step1_tc), '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
                 with open('{path}/{dominance}/{type}/{dataset}.csv'.format(path=exp2_path, dominance=params['dominance'], type=t, dataset=dataset.split('.')[0]), 'wb') as csvfile:
                     writer = csv.writer(csvfile)
