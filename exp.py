@@ -12,16 +12,27 @@ def experiment(exp1=True, exp2=True, exp3=True):
     supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
     seq_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05, 0.025]
     fifa_seq     = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2]
+    graph_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05]
 
-    suppport = {("itemset",'zoo-1.txt') : supports
-                ("itemset",'vote.txt'): : supports 
-                ("itemset",'tic-tac-toe.txt'): supports,
-                ("itemset", 'splice-1.txt'): supports, 
-                ('itemset','soybean.txt'): supports, 
-                ("itemset", 'primary-tumor.txt'): supports,
-                ("itemset", 'mushroom.txt'): supports,
-                ("itemset", 'german-credit.txt') : [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20],
-                #TODO do the same for seq and graphs
+    #TODO do the same for seq and graphs
+    suppport = {("itemset",'zoo-1.txt')             : supports,
+                ("itemset",'vote.txt')              : supports,
+                ("itemset",'tic-tac-toe.txt')       : supports,
+                ("itemset",'splice-1.txt')          : supports,
+                ('itemset','soybean.txt')           : supports,
+                ("itemset",'primary-tumor.txt')     : supports,
+                ("itemset",'mushroom.txt')          : supports,
+                ("itemset",'german-credit.txt')     : [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20],
+                ("sequence", 'jmlr.dat')            : seq_supports,
+                ("sequence", 'iprg_neg.dat')        : seq_supports,
+                ("sequence", 'iprg_pos.dat')        : seq_supports,
+                ("sequence", 'unix_users_neg.dat')  : seq_supports,
+                ("sequence", 'unix_users_pos.dat')  : seq_supports,
+                ("graph", 'Chemical_340')           : graph_supports,
+                ("graph", 'Compound_422')           : graph_supports,
+                ("graph", 'nctrer.gsp')             : graph_supports,
+                ("graph", 'yoshida.gsp')            : graph_supports,
+                ("graph", 'bloodbarr.gsp')          : graph_supports
                 }
     dominances = ['closed', 'maximal']
     it_datasets    = ['zoo-1.txt', 'vote.txt', 'tic-tac-toe.txt',
@@ -37,9 +48,9 @@ def experiment(exp1=True, exp2=True, exp3=True):
     }
     params = dict()
     params['constraints'] = dict()
-    params['constraints']['length'] = LengthConstraint(100)
+    params['constraints']['length'] = LengthConstraint(10000)
     params['constraints']['ifthen'] = IfThenConstraint(-1, -1)
-    params['constraints']['cost']   = CostConstraint(100, collections.defaultdict(int))
+    params['constraints']['cost']   = CostConstraint(10000, collections.defaultdict(int))
 
     # experiment 1
     if exp1:
@@ -75,13 +86,19 @@ def experiment(exp1=True, exp2=True, exp3=True):
                     params['support'] = s
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'
-                    _, timecost_pure = fpMining_pure(params)
-                    _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
-                    results.append((s, '{0:.4f}'.format(timecost_pure), '{0:.4f}'.format(step1_tc+step2_tc+step3_tc),
-                                    '{0:.4f}'.format(step1_tc), '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
+                    _, num_patterns, timecost_pure = fpMining_pure(params)
+                    _, num_patterns, num_final_patterns, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
+                    results.append((s, '{0:.4f}'.format(timecost_pure),
+                                    '{0:.4f}'.format(step1_tc+step2_tc+step3_tc),
+                                    '{0:.4f}'.format(step1_tc),
+                                    '{0:.4f}'.format(step2_tc),
+                                    '{0:.4f}'.format(step3_tc),
+                                    '{0}'.format(num_patterns),
+                                    '{0}'.format(num_final_patterns)
+                                    ))
                 with open('{path}/{dominance}/{type}/{dataset}.csv'.format(path=exp2_path, dominance=params['dominance'], type=t, dataset=dataset.split('.')[0]), 'wb') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writerow(['freq', 'specialised', 'postpro', 'step1', 'step2', 'step3'])
+                    writer.writerow(['freq', 'specialised', 'postpro', 'step1', 'step2', 'step3', 'num_of_freq_patterns', 'num_of_final_patterns'])
                     writer.writerows(results)
 
 
