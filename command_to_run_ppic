@@ -1,0 +1,2 @@
+java -jar exec/oscar.ppic.1.0.0.jar data/prefixSpan/jmlr.dat 1 0 --minsup 0.2 -v
+

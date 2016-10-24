@@ -1,7 +1,6 @@
 import array
 import networkx as nx
 import sys
-import numpy as np
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 from collections import Counter, defaultdict
@@ -110,7 +109,7 @@ class Graph(Pattern):
         if self.all_labeled_counter is None:
             self.compute_labeled_edges_with_vertices()
         return self.all_labeled_counter
-    
+
     
 
 
@@ -227,11 +226,9 @@ class Sequence(Pattern):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
-        self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
+        self.attributes = sequence # transform everything to int
         if coverage:
             self.coverage = set(coverage)
-        for s in sequence:
-            self.sequence.append(list(s)) # WHY?
         self.support = support
         self.number_of_attributes = len(sequence)
         self.attribute_array = array.array('i', self.attributes)
@@ -254,11 +251,11 @@ class Sequence(Pattern):
       return self.coverage
 
     def __str__(self):
-        output = str(self.id) + ':'
-        for i in self.sequence:
-            output += ''.join(i) + ' '
-        output = output[:-1] + ':%s' % self.support
-        return output
+      output = "id: "+str(self.id) + ' items: '
+      for i in self.attribute_array:
+          output += '{}'.format(i) + ' '
+      output = output[:-1] + ' support :%s' % self.support
+      return output
 
     def __repr__(self):
       return "seq_"+str(self.id)
@@ -384,11 +381,11 @@ class Itemset(Pattern):
 
 
     def __str__(self):
-        output = str(self.id) + ':'
+        output = [ "id:" + str(self.id) + ' items: ']
         for i in self.itemset:
-            output += ''.join(i) + ' '
-        output = output[:-1] + ':%s' % self.support
-        return output
+            output.append(str(i) + ' ')
+        output += ' support :%s' % self.support
+        return "".join(output)
 
 def add_leadin_zeros(number):
   if number < 9:
