@@ -195,8 +195,11 @@ if __name__ == "__main__":
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
     closed_patterns, time_step1, time_step2, time_step3 = fpMining_postpro(params)
-
-
+    
+    with open(params['output'], "w") as output_file:
+      for pattern in closed_patterns:
+        output_file.write(pattern)
+        output_file.write("\n")
     print "\n*************************************"
 #   print "Number of frequent patterns: {0}".format(len(patterns))
     print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
