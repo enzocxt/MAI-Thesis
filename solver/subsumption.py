@@ -4,7 +4,6 @@ from collections import defaultdict
 from Pattern import Itemset, Sequence, Graph, Pattern
 from tqdm import tqdm
 import sys
-import numpy as np
 
 
 class SubsumptionLattice:

@@ -1,7 +1,6 @@
 import array
 import networkx as nx
 import sys
-import numpy as np
 """Pattern classes"""
 PLACE_HOLDER = '_'  # for Sequence
 from collections import Counter, defaultdict
@@ -227,11 +226,9 @@ class Sequence(Pattern):
         #Pattern.__init__()
         self.id = id
         self.sequence = []
-        self.attributes = list(map (lambda x: int(x), sequence)) # transform everything to int
+        self.attributes = sequence # transform everything to int
         if coverage:
             self.coverage = set(coverage)
-        for s in sequence:
-            self.sequence.append(list(s)) # WHY?
         self.support = support
         self.number_of_attributes = len(sequence)
         self.attribute_array = array.array('i', self.attributes)

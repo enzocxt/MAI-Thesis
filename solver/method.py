@@ -153,29 +153,23 @@ class prefixSpan(Mining):
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
         options = ''
-        if platform.system() == "Linux" and self.dominance == 'closed':
-            prefixSpan = './exec/clospan'
-            self.data = self.data.split('.')[0] + '.bin'
-            command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
-            print(command)
-            os.system(command)
-            with open('ClosedMaxset.txt', 'r') as seq_out:
-                result = seq_out.read()
-        elif platform.system() == "Linux":
-     #      prefixSpan = "./exec/pspan" # it segfaults on my computer
-            prefixSpan = "./exec/prefixspan_linux_64" # compiled for 64bit Linux, tried on Ubuntu 14.04
-            if self.support <= 1:
-                fin = open(self.data, 'r')
-                supp = int(self.support * len(fin.readlines()))
-                options += '-min_sup {0}'.format(supp)
-            else:
-                options += '-S {0}'.format(self.support)
-            tmp_output = "tmp/seq_out"
-            command = '{0} {1} {2} > {3}'.format(prefixSpan, options, self.data, tmp_output) # MARKER_FOR_LOOKUP
-            print(command)
-            os.system(command)
-            with open(tmp_output,"r") as seq_out:
-                result = seq_out.read()
+      # if platform.system() == "Linux" and self.dominance == 'closed':
+      #     prefixSpan = './exec/clospan'
+      #     self.data = self.data.split('.')[0] + '.bin'
+      #     command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
+      #     print(command)
+      #     os.system(command)
+      #     with open('ClosedMaxset.txt', 'r') as seq_out:
+      #         result = seq_out.read()
+        if platform.system() == "Linux":
+     #    prefixSpan = "./exec/pspan" # it segfaults on my computer
+     #    prefixSpan = "./exec/prefixspan_linux_64" # compiled for 64bit Linux, tried on Ubuntu 14.04
+          tmp_output = "tmp/seq_out"
+          command = "java -jar exec/oscar.ppic.1.0.0.jar {data} 1 0 --minsup {support} -v > {tmp_output}".format(data=self.data, support=self.support, tmp_output=tmp_output)
+          print(command)
+          os.system(command)
+          with open(tmp_output,"r") as seq_out:
+              result = seq_out.read()
           # child = subprocess.Popen([prefixSpan, options, self.data], stdout=subprocess.PIPE)
         else:
             prefixSpan = "./exec/prefixspan"
@@ -209,16 +203,14 @@ class prefixSpan(Mining):
         patterns = []
         if path == "" or not path:
             lines = stdOutput.split('\n')
-            index = 1
-            for i in range(0, len(lines)/2):
-                if lines[2*i] == '':
-                    continue
-                coverage, freq = map(lambda x: x.strip(" ()"), lines[2*i+1].strip().split(':'))
-                coverage = map(lambda x: int(x),coverage.split())
-                seq = Sequence(index, lines[2*i].strip().split(' '), int(freq), coverage)
+            for index, line in enumerate(lines):
+                if "Summary" in line:
+                  break
+                items, support = line.split(":")
+                items = map(lambda x: int(x), items.strip("<> ").split(" "))
+                seq = Sequence(index, items, int(support))
                 patterns.append(seq) # coverage is the set of transactions covered by the
                 Pattern.id2pattern[index] = seq
-                index += 1
         else:
             with open(path, 'r') as fin:
                 pass
