@@ -198,7 +198,7 @@ if __name__ == "__main__":
     
     with open(params['output'], "w") as output_file:
       for pattern in closed_patterns:
-        output_file.write(pattern)
+        output_file.write(str(pattern))
         output_file.write("\n")
     print "\n*************************************"
 #   print "Number of frequent patterns: {0}".format(len(patterns))
