@@ -599,7 +599,7 @@ CLOSED
 <(651)>  Num= 7475554 Support = 104   ItemsetNumber = 1
 <(750)>  Num= 5845374 Support = 81   ItemsetNumber = 1
 <(920)>  Num= 6199567 Support = 85   ItemsetNumber = 1
-0.038 seconds (
+0.050 seconds (
 Total running time)
 
 Total # of TreeNode: 600
@@ -612,4 +612,4 @@ Closed/Max 5 : 1
 Total of 600 large items.
 # of projected datasets: 571
 Maximum memory usage: 0.222015MB
-0.164 seconds (Total running time after sort, and output.)
+0.052 seconds (Total running time after sort, and output.)

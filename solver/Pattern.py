@@ -254,11 +254,11 @@ class Sequence(Pattern):
       return self.coverage
 
     def __str__(self):
-        output = str(self.id) + ':'
-        for i in self.sequence:
-            output += ''.join(i) + ' '
-        output = output[:-1] + ':%s' % self.support
-        return output
+      output = "id: "+str(self.id) + ' items: '
+      for i in self.sequence:
+          output += ''.join(i) + ' '
+      output = output[:-1] + ' support :%s' % self.support
+      return output
 
     def __repr__(self):
       return "seq_"+str(self.id)
