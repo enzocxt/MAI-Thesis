@@ -26,28 +26,42 @@ class SubsumptionLattice:
       return self.subsumption_lattice_check_graph(patterns,params)
 
   def extract_parental_tree_itemset(self, patterns):
+
+    if isinstance(patterns[0], Itemset):
+      is_subpattern_of = self.itemset_is_subpattern_of
+    elif isinstance(patterns[0], Sequence):
+      is_subpattern_of = self.sequence_is_subpattern_of
     pattern_to_parent = defaultdict(set)
     pattern_to_set_of_children = defaultdict(set)
    #for pattern in patterns:
    #  print pattern.list_of_items
     max_upper = len(patterns)
     for i, pattern in tqdm(enumerate(patterns)):
-        self.add_pattern_to_the_tree(pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children,max_upper)
+        self.add_pattern_to_the_tree(pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children,max_upper, is_subpattern_of)
     return pattern_to_parent, pattern_to_set_of_children
         
-  def add_pattern_to_the_tree(self, pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children, max_upper):
-     epsilon = 5
+  def add_pattern_to_the_tree(self, pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children, max_upper, is_subpattern_of):
+     if isinstance(pattern, Itemset):
+        epsilon = 05
+     if isinstance(pattern, Sequence):
+        epsilon = 10
      upper_bound = min(i+epsilon+1, max_upper)
      lower_bound = max(i-epsilon, 0)
      for j in range (lower_bound, upper_bound):
        if i != j:
         candidate = patterns[j]
-        if (candidate.itemset).issubset(pattern.itemset):
+        if is_subpattern_of(candidate,pattern):
           pattern_to_parent[pattern].add(candidate)
           pattern_to_set_of_children[candidate].add(pattern)
+
+  def itemset_is_subpattern_of(self,candidate,pattern):
+    return (candidate.itemset).issubset(pattern.itemset)
+    
+  def sequence_is_subpattern_of(self,candidate,pattern):
+    return candidate.is_subsequence_of(pattern)
         
 
-  def prune_initial_tree_itemset(self, patterns, pattern_to_parent, pattern_to_set_of_children, params):
+  def prune_initial_tree(self, patterns, pattern_to_parent, pattern_to_set_of_children, params):
     skip_set = set()
     for pattern in sorted(patterns, key=lambda x: x.get_pattern_len()):
       if pattern in skip_set:
@@ -82,7 +96,7 @@ class SubsumptionLattice:
     all_candidate_sizes = []
     
     pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
-    skip_set = self.prune_initial_tree_itemset(patterns, pattern_to_parent, pattern_to_set_of_children, params)
+    skip_set = self.prune_initial_tree(patterns, pattern_to_parent, pattern_to_set_of_children, params)
 
     set_of_patterns = set(patterns) - skip_set
 
@@ -128,16 +142,24 @@ class SubsumptionLattice:
 
   def subsumption_lattice_check_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
+    
+    if params['dominance'] == "maximal":
+        pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
+        skip_set = self.prune_initial_tree(patterns, pattern_to_parent, pattern_to_set_of_children, params)
+    else:
+        skip_set = set()
+
+    set_of_patterns = set(patterns) - skip_set
+
     is_free = params['dominance'] == "free"
-
-
-    skip_set = set()
-    all_candidate_sizes = []
-    set_of_patterns = set(patterns)
-    ordered_sequences = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
-
     if params['dominance'] == "closed" or is_free:
       support_mapping = make_grouping_by_support(set_of_patterns)
+
+    print("initial skip set len", len(skip_set))
+
+    skip_set = set() #init again
+    all_candidate_sizes = []
+    ordered_sequences = sorted(set_of_patterns, key=lambda x: x.get_pattern_len(),reverse=True)
 
     for seq in tqdm(ordered_sequences): # maximal are not subsumed by anything
       if seq in skip_set:

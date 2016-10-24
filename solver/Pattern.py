@@ -109,7 +109,7 @@ class Graph(Pattern):
         if self.all_labeled_counter is None:
             self.compute_labeled_edges_with_vertices()
         return self.all_labeled_counter
-    
+
     
 
 
@@ -381,11 +381,11 @@ class Itemset(Pattern):
 
 
     def __str__(self):
-        output = str(self.id) + ':'
+        output = [ "id:" + str(self.id) + ' items: ']
         for i in self.itemset:
-            output += ''.join(i) + ' '
-        output = output[:-1] + ':%s' % self.support
-        return output
+            output.append(str(i) + ' ')
+        output += ' support :%s' % self.support
+        return "".join(output)
 
 def add_leadin_zeros(number):
   if number < 9:
