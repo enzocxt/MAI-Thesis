@@ -97,3 +97,14 @@ class CostConstraint(Constraint):
     overall = sum([cost[attr] for attr in graph.get_attributes()])
     return overall <= self.get_max_cost()
 
+def process_constraints(params, patterns):
+    constraints = params['constraints']
+
+    for pattern in patterns:
+      is_valid = pattern.is_valid(constraints)
+      if is_valid:
+        yield pattern
+
+
+
+

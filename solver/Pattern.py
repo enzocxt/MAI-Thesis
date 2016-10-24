@@ -49,6 +49,14 @@ class Pattern(object):
             min_attr_val = Pattern.stats[attr]
       return Pattern.attribute_mapping[min_attr]
 
+    def is_valid(self, constraints):
+      for constraint in constraints.values():
+        if not constraint.is_valid(self):
+          return False
+      return True
+
+
+
 
 
 # Edge class for Graph
@@ -327,15 +335,22 @@ class Itemset(Pattern):
         self.id2pattern = {}
         self.min_val = min(itemset)
         self.max_val = max(itemset)
+        self.list_of_items = sorted(list(self.itemset))
 #       binary = np.zeros(200, dtype=np.int)
 #       binary[itemset] = 1
 #       self.bitvector = np.packbits(binary)
 
 #   def is_subset(self, itemset):
 #       return all(~self.bitvector & itemset.bitvector == 255)
-
         
-
+    
+    def greater_than(self, other_item):
+      for i,j in zip(self.list_of_items, other_item.list_of_items):
+        if i < j:
+          return 1
+        elif j > i:
+          return -1
+      return self.size > other_item.size
 
     def get_pattern_len(self):
         return self.size
@@ -367,9 +382,18 @@ class Itemset(Pattern):
         print self.itemset
 
 
+
     def __str__(self):
         output = str(self.id) + ':'
         for i in self.itemset:
             output += ''.join(i) + ' '
         output = output[:-1] + ':%s' % self.support
         return output
+
+def add_leadin_zeros(number):
+  if number < 9:
+    return "00"+str(number)
+  if number < 99:
+    return "0" +str(number)
+  else:
+    return str(number)

@@ -9,7 +9,7 @@ import collections
 from solver.method import *
 from solver.utils import logger
 from solver.subsumption import SubsumptionLattice
-from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint
+from solver.Constraint import LengthConstraint, IfThenConstraint, CostConstraint, process_constraints
 
 default_parameters = 'config.ini'
 
@@ -115,18 +115,6 @@ def fpMining_postpro(inputs):
     print("step1: {0:.4f}, step2: {1:.4f}, step3: {2:.4f}".format(end1-start1, end2-start2, end3-start3))
     return final_patterns, end1-start1, end2-start2, end3-start3
 
-
-def process_constraints(params, patterns):
-    constraints = params['constraints']
-
-    for pattern in patterns:
-      is_valid = True
-      for constraint in constraints.values():
-        if not constraint.is_valid(pattern):
-          is_valid = False
-          break
-      if is_valid:
-        yield pattern
 
 
 def dominance_check(params, patterns):

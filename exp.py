@@ -10,6 +10,19 @@ from wrapper import fpMining_pure, fpMining_postpro
 def experiment(exp1=True, exp2=True, exp3=True):
     typeList = ['itemset', 'sequence', 'graph']
     supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
+    seq_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05, 0.025]
+    fifa_seq     = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2]
+
+    suppport = {("itemset",'zoo-1.txt') : supports
+                ("itemset",'vote.txt'): : supports 
+                ("itemset",'tic-tac-toe.txt'): supports,
+                ("itemset", 'splice-1.txt'): supports, 
+                ('itemset','soybean.txt'): supports, 
+                ("itemset", 'primary-tumor.txt'): supports,
+                ("itemset", 'mushroom.txt'): supports,
+                ("itemset", 'german-credit.txt') : [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20],
+                #TODO do the same for seq and graphs
+                }
     dominances = ['closed', 'maximal']
     it_datasets    = ['zoo-1.txt', 'vote.txt', 'tic-tac-toe.txt',
                       'splice-1.txt', 'soybean.txt', 'primary-tumor.txt',
@@ -42,7 +55,7 @@ def experiment(exp1=True, exp2=True, exp3=True):
                     params['output'] = dataset.split('.')[0]+'.output'
                     _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
                     results.append((params['data'].split('/')[-1], '{0:.4f}'.format(step1_tc),
-                                    '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc)))
+                                    '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc))) # TODO append the number of patterns
                 with open('{path}/{dominance}/{type}.csv'.format(path=exp1_path, dominance=d, type=t), 'wb') as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerow(['dataset', 'step1', 'step2', 'step3'])

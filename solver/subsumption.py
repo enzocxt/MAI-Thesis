@@ -26,34 +26,95 @@ class SubsumptionLattice:
     elif isinstance(patterns[0], Graph):
       return self.subsumption_lattice_check_graph(patterns,params)
 
+  def extract_parental_tree_itemset(self, patterns):
+    pattern_to_parent = defaultdict(set)
+    pattern_to_set_of_children = defaultdict(set)
+   #for pattern in patterns:
+   #  print pattern.list_of_items
+    max_upper = len(patterns)
+    for i, pattern in tqdm(enumerate(patterns)):
+        self.add_pattern_to_the_tree(pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children,max_upper)
+    return pattern_to_parent, pattern_to_set_of_children
+        
+  def add_pattern_to_the_tree(self, pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children, max_upper):
+     epsilon = 5
+     upper_bound = min(i+epsilon+1, max_upper)
+     lower_bound = max(i-epsilon, 0)
+     for j in range (lower_bound, upper_bound):
+       if i != j:
+        candidate = patterns[j]
+        if (candidate.itemset).issubset(pattern.itemset):
+          pattern_to_parent[pattern].add(candidate)
+          pattern_to_set_of_children[candidate].add(pattern)
+        
+
+  def prune_initial_tree_itemset(self, patterns, pattern_to_parent, pattern_to_set_of_children, params):
+    skip_set = set()
+    for pattern in sorted(patterns, key=lambda x: x.get_pattern_len()):
+      if pattern in skip_set:
+        continue
+      else:
+        if params['dominance'] == "maximal":
+          subpatterns = pattern_to_parent[pattern]
+          for subpattern in subpatterns:
+            skip_set.add(subpattern)
+
+        if params['dominance'] == 'closed':
+          subpatterns = pattern_to_parent[pattern]
+          for subpattern in subpatterns:
+            if subpattern.get_support() == pattern.get_support():
+              skip_set.add(subpattern)
+
+        if params['dominance'] == 'free':
+          superpatterns = pattern_to_set_of_children[pattern]
+          for superpattern in superpatterns:
+            if superpattern != "root" and superpattern.get_support() == pattern.get_support():
+              skip_set.add(superpattern)
+
+    return skip_set
+
+
+
+
   def subsumption_lattice_check_itemset(self, patterns,params):
     print('\nStarting dominance check for itemsets...')
     
     check = np.vectorize(check_candidate_constraints)
 
     is_free = params['dominance'] == "free"
-    if params['dominance'] == "closed" or is_free:
-      support_mapping = make_grouping_by_support(patterns)
 
-    skip_set = set()
     all_candidate_sizes = []
+    
+    if True:
+      pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
+      skip_set = self.prune_initial_tree_itemset(patterns, pattern_to_parent, pattern_to_set_of_children, params)
+    else:
+      skip_set = set()
+
+    set_of_patterns = set(patterns) - skip_set
+
+    if params['dominance'] == "closed" or is_free:
+      support_mapping = make_grouping_by_support(set_of_patterns)
+
    #map_of_maps = create_list_of_inverted_mappings(patterns, 3)
-    sorted_itemsets = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=(not is_free))
+    print('initial skip set size', len(skip_set))
+    sorted_itemsets = sorted(set_of_patterns, key=lambda x: x.get_pattern_len(),reverse=(not is_free))
+    skip_set = set()
     for itemset in tqdm(sorted_itemsets): # maximal are not subsumed by anything
       if itemset in skip_set:
         continue
-      
       if params['dominance'] == "closed" or is_free:
         candidates = support_mapping[itemset.get_support()] - skip_set
       if params['dominance'] == "maximal":
-        candidates = set(patterns) - skip_set
+        candidates = set_of_patterns - skip_set
 
       l = itemset.get_pattern_len()
       if params['dominance'] == "closed" or params['dominance'] == "maximal":
         candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
       if is_free:
         candidates = check_larger_and_out_bounds(l, itemset.min_val, itemset.max_val, candidates)
-
+      
+      all_candidate_sizes.append(len(candidates))
       for candidate in candidates:
         if params['dominance'] == "closed" or params['dominance'] == "maximal":
           if (candidate.itemset).issubset(itemset.itemset):
@@ -68,7 +129,7 @@ class SubsumptionLattice:
     if len(all_candidate_sizes) != 0:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
 
-    return set(patterns) - skip_set
+    return  set_of_patterns - skip_set
 
 
   def subsumption_lattice_check_sequence(self, patterns,params):
@@ -103,7 +164,9 @@ class SubsumptionLattice:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
     return set(patterns) - set(skip_set)                                               
 
+
   def subsumption_lattice_check_graph(self, patterns, params):
+
     print '\n Starting dominance check for graphs...\n'
    #self.mapping_by_len = group_by_len(patterns)
     
@@ -180,17 +243,18 @@ class SubsumptionLattice:
         continue
       else:
         if params['dominance'] == "maximal":
-          if subsumed_by.get(pattern.id, -5) != -5:
+          subpattern_id = subsumed_by.get(pattern.id, -5)
+          if subpattern_id != -5 and Graph.id2pattern[subpattern] in patterns:
             skip_set.add(pattern)
 
         if params['dominance'] == 'closed':
           superpattern = subsumed_by.get(pattern.id, -5)
-          if superpattern != -5 and (Graph.id2pattern[superpattern]).get_support() == pattern.get_support():
+          if superpattern != -5 and Graph.id2pattern[superpattern] in patterns and (Graph.id2pattern[superpattern]).get_support() == pattern.get_support():
             skip_set.add(pattern)
 
         if params['dominance'] == 'free':
           subpattern = subsumption_tree.get(pattern.id,-5)
-          if subpattern != -5 and (Graph.id2pattern[subpattern]).get_support() == pattern.get_support(): 
+          if subpattern != -5 and Graph.id2pattern[subpattern] in patterns and (Graph.id2pattern[subpattern]).get_support() == pattern.get_support(): 
             skip_set.add(pattern)
 
     return skip_set
