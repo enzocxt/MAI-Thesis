@@ -157,6 +157,7 @@ class prefixSpan(Mining):
             prefixSpan = './exec/clospan'
             self.data = self.data.split('.')[0] + '.bin'
             command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
+            print(command)
             os.system(command)
             with open('ClosedMaxset.txt', 'r') as seq_out:
                 result = seq_out.read()
@@ -171,6 +172,7 @@ class prefixSpan(Mining):
                 options += '-S {0}'.format(self.support)
             tmp_output = "tmp/seq_out"
             command = '{0} {1} {2} > {3}'.format(prefixSpan, options, self.data, tmp_output) # MARKER_FOR_LOOKUP
+            print(command)
             os.system(command)
             with open(tmp_output,"r") as seq_out:
                 result = seq_out.read()

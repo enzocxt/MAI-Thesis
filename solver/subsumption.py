@@ -79,20 +79,15 @@ class SubsumptionLattice:
   def subsumption_lattice_check_itemset(self, patterns,params):
     print('\nStarting dominance check for itemsets...')
     
-    check = np.vectorize(check_candidate_constraints)
-
-    is_free = params['dominance'] == "free"
 
     all_candidate_sizes = []
     
-    if True:
-      pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
-      skip_set = self.prune_initial_tree_itemset(patterns, pattern_to_parent, pattern_to_set_of_children, params)
-    else:
-      skip_set = set()
+    pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
+    skip_set = self.prune_initial_tree_itemset(patterns, pattern_to_parent, pattern_to_set_of_children, params)
 
     set_of_patterns = set(patterns) - skip_set
 
+    is_free = params['dominance'] == "free"
     if params['dominance'] == "closed" or is_free:
       support_mapping = make_grouping_by_support(set_of_patterns)
 
@@ -134,18 +129,26 @@ class SubsumptionLattice:
 
   def subsumption_lattice_check_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
-    mapping_by_len = group_by_len(patterns)
-    max_len = max(mapping_by_len.keys())
+    is_free = params['dominance'] == "free"
+
+
     skip_set = set()
     all_candidate_sizes = []
-    
+    set_of_patterns = set(patterns)
     ordered_sequences = sorted(patterns, key=lambda x: x.get_pattern_len(),reverse=True)
+
+    if params['dominance'] == "closed" or is_free:
+      support_mapping = make_grouping_by_support(set_of_patterns)
+
     for seq in tqdm(ordered_sequences): # maximal are not subsumed by anything
       if seq in skip_set:
         continue
 
-      
-      candidates = set(patterns) - skip_set
+      if params['dominance'] == "closed" or is_free:
+        candidates = support_mapping[seq.get_support()] - skip_set
+      elif params['dominance'] == "maximal":
+        candidates = set_of_patterns - skip_set
+
       candidates = get_smaller_patterns(seq.get_pattern_len(), candidates)
       candidates = get_attribute_subset(seq, candidates)
       all_candidate_sizes.append(len(candidates))
@@ -162,7 +165,7 @@ class SubsumptionLattice:
     print('dominance check done')
     if len(all_candidate_sizes) != 0:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
-    return set(patterns) - set(skip_set)                                               
+    return set_of_patterns - set(skip_set)                                               
 
 
   def subsumption_lattice_check_graph(self, patterns, params):
