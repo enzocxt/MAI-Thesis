@@ -1,4 +1,6 @@
-dataset,step1,step2,step3
-Chemical_340,0.6054,0.0432,0.2845
-Compound_422,1.0648,0.0453,1.6168
-graph.data,1.3388,0.0001,0.0001
+dataset,step1,step2,step3,num_of_freq_patterns,num_of_final_patterns
+Chemical_340,0.7491,0.0366,1.2100,844,632
+Compound_422,4.8741,0.0894,9.4397,14486,1248
+nctrer.gsp,4.0258,0.0114,37.8223,6406,2187
+yoshida.gsp,0.5701,0.0028,1.3906,1361,1021
+bloodbarr.gsp,1.1150,0.0450,3.4166,1817,1380

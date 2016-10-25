@@ -10,36 +10,41 @@ from wrapper import fpMining_pure, fpMining_postpro
 def experiment(exp1=True, exp2=True, exp3=True):
     typeList = ['itemset', 'sequence', 'graph']
     supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
-    seq_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05, 0.025]
-    fifa_seq     = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2]
-    graph_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05]
+    german_credit_supports = [0.5, 0.45, 0.4, 0.35, 0.3, 0.25]
+    seq_supports      = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05, 0.025]
+    unix_neg_supports = [0.20, 0.15, 0.10, 0.05, 0.025]
+    fifa_supports     = [0.4, 0.35, 0.3, 0.25, 0.2]
+    graph_supports    = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10, 0.05]
+    nctrer_supports   = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
+    compound_supports = [0.4, 0.35, 0.3, 0.25, 0.20, 0.15, 0.10]
 
     #TODO do the same for seq and graphs
-    suppport = {("itemset",'zoo-1.txt')             : supports,
+    support = {("itemset",'zoo-1.txt')             : supports,
                 ("itemset",'vote.txt')              : supports,
                 ("itemset",'tic-tac-toe.txt')       : supports,
                 ("itemset",'splice-1.txt')          : supports,
                 ('itemset','soybean.txt')           : supports,
                 ("itemset",'primary-tumor.txt')     : supports,
                 ("itemset",'mushroom.txt')          : supports,
-                ("itemset",'german-credit.txt')     : [0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.20],
+                ("itemset",'german-credit.txt')     : german_credit_supports,
                 ("sequence", 'jmlr.dat')            : seq_supports,
                 ("sequence", 'iprg_neg.dat')        : seq_supports,
                 ("sequence", 'iprg_pos.dat')        : seq_supports,
-                ("sequence", 'unix_users_neg.dat')  : seq_supports,
+                ("sequence", 'unix_users_neg.dat')  : unix_neg_supports,
                 ("sequence", 'unix_users_pos.dat')  : seq_supports,
+                ("sequence", 'fifa.dat')            : fifa_supports,
                 ("graph", 'Chemical_340')           : graph_supports,
-                ("graph", 'Compound_422')           : graph_supports,
-                ("graph", 'nctrer.gsp')             : graph_supports,
+                ("graph", 'Compound_422')           : compound_supports,
+                ("graph", 'nctrer.gsp')             : nctrer_supports,
                 ("graph", 'yoshida.gsp')            : graph_supports,
                 ("graph", 'bloodbarr.gsp')          : graph_supports
                 }
     dominances = ['closed', 'maximal']
     it_datasets    = ['zoo-1.txt', 'vote.txt', 'tic-tac-toe.txt',
                       'splice-1.txt', 'soybean.txt', 'primary-tumor.txt',
-                      'mushroom.txt'] # 'lymph.txt' is too large
+                      'mushroom.txt', 'german-credit.txt'] # 'lymph.txt' is too large
     seq_datasets   = ['iprg_neg.dat', 'iprg_pos.dat', 'jmlr.dat',
-                      'unix_users_neg.dat', 'unix_users_pos.dat']
+                      'unix_users_neg.dat', 'unix_users_pos.dat', 'fifa.dat']
     graph_datasets = ['Chemical_340', 'Compound_422', 'nctrer.gsp','yoshida.gsp', 'bloodbarr.gsp']
     datasets = {
         'itemset'  : it_datasets,
@@ -56,33 +61,45 @@ def experiment(exp1=True, exp2=True, exp3=True):
     if exp1:
         exp1_path = 'output/exp1'
         for t in typeList:
+            if t != 'graph': continue
             params['type'] = t
-            params['support'] = 0.2
+            params['support'] = 0.1
             for d in dominances:
+                if d != 'maximal': continue
                 results = []
                 params['dominance'] = d
                 for dataset in datasets[t]:
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'
-                    _, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
-                    results.append((params['data'].split('/')[-1], '{0:.4f}'.format(step1_tc),
-                                    '{0:.4f}'.format(step2_tc), '{0:.4f}'.format(step3_tc))) # TODO append the number of patterns
+                    if dataset == 'german-credit.txt' or dataset == 'fifa.dat':
+                        params['support'] = 0.25
+                    _, num_patterns, num_final_patterns, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
+                    results.append((params['data'].split('/')[-1],
+                                    '{0:.4f}'.format(step1_tc),
+                                    '{0:.4f}'.format(step2_tc),
+                                    '{0:.4f}'.format(step3_tc),
+                                    '{0}'.format(num_patterns),
+                                    '{0}'.format(num_final_patterns)
+                                    ))
                 with open('{path}/{dominance}/{type}.csv'.format(path=exp1_path, dominance=d, type=t), 'wb') as csvfile:
                     writer = csv.writer(csvfile)
-                    writer.writerow(['dataset', 'step1', 'step2', 'step3'])
+                    writer.writerow(['dataset', 'step1', 'step2', 'step3', 'num_of_freq_patterns', 'num_of_final_patterns'])
                     writer.writerows(results)
 
     # experiment 2
     if exp2:
         exp2_path = 'output/exp2'
         for t in typeList:
+            if t != 'graph': continue
             params['type'] = t
             for dataset in datasets[t]:
+                if dataset != 'Compound_422': continue
                 results = []
                 params['data'] = dataset
                 params['output'] = dataset.split('.')[0]+'.output'
                 params['dominance'] = 'closed'
-                for s in supports:
+                supps = support[(t, dataset)]
+                for s in supps:
                     params['support'] = s
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'

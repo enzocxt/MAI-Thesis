@@ -93,10 +93,6 @@ def fpMining_postpro(inputs):
     patterns = method.parser(output)
     end1     = time.time()
     print "# of patterns", len(patterns)
-    max_len = 0
-    for p in patterns:
-        max_len = max(max_len, p.get_pattern_len())
-    print "max len is : %s" % max_len
 
     # step 2 time cost
     start2   = time.time()
@@ -199,7 +195,8 @@ if __name__ == "__main__":
     #for i in range(10):
     #    print patterns[i].get_graphx().nodes(data=False)
     final_patterns, _1, _2, time_step1, time_step2, time_step3 = fpMining_postpro(params)
-    
+
+    '''
     with open(params['output'], "w") as output_file:
       for pattern in final_patterns:
         output_file.write(str(pattern))
@@ -208,6 +205,7 @@ if __name__ == "__main__":
       for pattern in patterns:
           output_file.write(str(pattern))
           output_file.write("\n")
+    '''
     print "\n*************************************"
 #   print "Number of frequent patterns: {0}".format(len(patterns))
 #   print "Number of {0} patterns: {1}".format(params['dominance'], len(closed_patterns))
