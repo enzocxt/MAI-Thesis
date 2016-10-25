@@ -153,15 +153,15 @@ class prefixSpan(Mining):
     def mining(self):
         """Mining frequent sequences by prefixSpan"""
         options = ''
-      # if platform.system() == "Linux" and self.dominance == 'closed':
-      #     prefixSpan = './exec/clospan'
-      #     self.data = self.data.split('.')[0] + '.bin'
-      #     command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
-      #     print(command)
-      #     os.system(command)
-      #     with open('ClosedMaxset.txt', 'r') as seq_out:
-      #         result = seq_out.read()
-        if platform.system() == "Linux":
+        if platform.system() == "Linux" and self.dominance == 'closed':
+            prefixSpan = './exec/clospan'
+            self.data = self.data.split('.')[0] + '.bin'
+            command = '{0} {1} {2} {3}'.format(prefixSpan, self.data, self.support, 10000)
+            print(command)
+            os.system(command)
+            with open('ClosedMaxset.txt', 'r') as seq_out:
+                result = seq_out.read()
+        elif platform.system() == "Linux":
      #    prefixSpan = "./exec/pspan" # it segfaults on my computer
      #    prefixSpan = "./exec/prefixspan_linux_64" # compiled for 64bit Linux, tried on Ubuntu 14.04
           tmp_output = "tmp/seq_out"
@@ -226,6 +226,7 @@ class prefixSpan(Mining):
                 continue
             line = lines[i].strip().split()
             seq = (line[0].replace('<', '').replace('>', '').replace('(', '')).split(')')[:-1]
+            seq = [int(i) for i in seq]
             seq = Sequence(index, seq, int(line[5]))
             patterns.append(seq)
             Pattern.id2pattern[index] = seq

@@ -1,8 +1,9 @@
-dataset,step1,step2,step3
-zoo-1.txt,0.3175,0.0352,1.6490
-vote.txt,0.0820,0.0017,3.5649
-tic-tac-toe.txt,0.0120,0.0001,0.0029
-splice-1.txt,0.0994,0.0022,0.0477
-soybean.txt,0.2382,0.0059,0.8142
-primary-tumor.txt,0.1528,0.0568,27.6326
-mushroom.txt,0.5550,0.0163,1.5532
+dataset,step1,step2,step3,num_of_freq_patterns,num_of_final_patterns
+zoo-1.txt,0.9180,0.1126,1.8477,133165,2910
+vote.txt,0.2815,0.0210,10.1302,47126,27120
+tic-tac-toe.txt,0.0464,0.0002,0.0377,336,334
+splice-1.txt,0.1799,0.0007,0.0867,2068,2067
+soybean.txt,0.2409,0.0235,0.9164,37419,4122
+primary-tumor.txt,0.6215,0.1719,26.3377,71946,44744
+mushroom.txt,1.8684,0.1606,2.7714,298751,4564
+german-credit.txt,1.7744,0.1431,36.6481,313890,65994
