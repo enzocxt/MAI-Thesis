@@ -42,7 +42,7 @@ class SubsumptionLattice:
         
   def add_pattern_to_the_tree(self, pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children, max_upper, is_subpattern_of):
      if isinstance(pattern, Itemset):
-        epsilon = 05
+        epsilon = 10
      if isinstance(pattern, Sequence):
         epsilon = 10
      upper_bound = min(i+epsilon+1, max_upper)
