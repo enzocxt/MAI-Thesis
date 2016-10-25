@@ -268,7 +268,7 @@ class SubsumptionLattice:
       else:
         if params['dominance'] == "maximal":
           subpattern_id = subsumed_by.get(pattern.id, -5)
-          if subpattern_id != -5 and Graph.id2pattern[subpattern] in patterns:
+          if subpattern_id != -5 and Graph.id2pattern[subpattern_id] in patterns:
             skip_set.add(pattern)
 
         if params['dominance'] == 'closed':

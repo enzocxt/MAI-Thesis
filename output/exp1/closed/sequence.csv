@@ -1,7 +1,7 @@
-dataset,step1,step2,step3
-fifa.dat,219.9985,0.1283,0.5326
-iprg_neg.dat,0.1182,0.0011,0.0140
-iprg_pos.dat,0.4052,0.0008,0.0063
-jmlr.dat,1.9575,0.0024,0.0126
-unix_users_neg.dat,0.7946,0.0002,0.0009
-unix_users_pos.dat,0.0534,0.0003,0.0026
+dataset,step1,step2,step3,num_of_freq_patterns,num_of_final_patterns
+iprg_neg.dat,0.1483,0.1436,0.1456,3404,3404
+iprg_pos.dat,0.0373,0.0105,0.0714,3404,3404
+jmlr.dat,0.0340,0.0144,0.0475,3404,3404
+unix_users_neg.dat,0.0338,0.0197,0.0377,3404,3404
+unix_users_pos.dat,0.0150,0.0097,0.0212,3404,3404
+fifa.dat,0.0202,0.0029,0.0335,3404,3404

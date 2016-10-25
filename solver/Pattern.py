@@ -252,8 +252,8 @@ class Sequence(Pattern):
 
     def __str__(self):
       output = "id: "+str(self.id) + ' items: '
-      for i in self.sequence:
-          output += ''.join(i) + ' '
+      for i in self.attribute_array:
+          output += '{}'.format(i) + ' '
       output = output[:-1] + ' support :%s' % self.support
       return output
 
