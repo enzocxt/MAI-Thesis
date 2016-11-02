@@ -1,0 +1,51 @@
+clingo version 4.5.4
+Reading from jmlr.lp ...
+Solving...
+Answer: 1
+pat(1,11)
+Answer: 2
+pat(1,137)
+Answer: 3
+pat(1,47)
+Answer: 4
+pat(1,200)
+Answer: 5
+pat(1,74)
+Answer: 6
+pat(1,123)
+Answer: 7
+pat(1,24)
+Answer: 8
+pat(1,218)
+Answer: 9
+pat(1,215)
+Answer: 10
+pat(1,113)
+Answer: 11
+pat(1,77)
+Answer: 12
+pat(1,152)
+Answer: 13
+pat(1,213)
+Answer: 14
+pat(1,2)
+Answer: 15
+pat(1,38)
+Answer: 16
+pat(1,8)
+Answer: 17
+pat(1,256)
+Answer: 18
+pat(1,114)
+Answer: 19
+pat(1,2) pat(2,2)
+Answer: 20
+pat(1,38) pat(2,2)
+*** Info : (clingo): INTERRUPTED by signal!
+SATISFIABLE
+
+INTERRUPTED  : 1
+Models       : 20+   
+Calls        : 1
+Time         : 44392.708s (Solving: 44249.81s 1st Model: 13.91s Unsat: 0.00s)
+CPU Time     : 44412.990s

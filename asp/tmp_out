@@ -1,0 +1,633 @@
+clingo version 4.5.4
+Reading from asp_datasets/large.lp ...
+Solving...
+Answer: 1
+pat(1,92)
+Answer: 2
+pat(1,84)
+Answer: 3
+pat(1,43)
+Answer: 4
+pat(1,82)
+Answer: 5
+pat(1,119)
+Answer: 6
+pat(1,16)
+Answer: 7
+pat(1,3)
+Answer: 8
+pat(1,9)
+Answer: 9
+pat(1,80)
+Answer: 10
+pat(1,25)
+Answer: 11
+pat(1,103)
+Answer: 12
+pat(1,28)
+Answer: 13
+pat(1,37)
+Answer: 14
+pat(1,13)
+Answer: 15
+pat(1,67)
+Answer: 16
+pat(1,6)
+Answer: 17
+pat(1,41)
+Answer: 18
+pat(1,56)
+Answer: 19
+pat(1,50)
+Answer: 20
+pat(1,104)
+Answer: 21
+pat(1,10)
+Answer: 22
+pat(1,115)
+Answer: 23
+pat(1,113)
+Answer: 24
+pat(1,75)
+Answer: 25
+pat(1,1)
+Answer: 26
+pat(1,17)
+Answer: 27
+pat(1,29)
+Answer: 28
+pat(1,110)
+Answer: 29
+pat(1,114)
+Answer: 30
+pat(1,97)
+Answer: 31
+pat(1,14)
+Answer: 32
+pat(1,0)
+Answer: 33
+pat(1,26)
+Answer: 34
+pat(1,78)
+Answer: 35
+pat(1,4)
+Answer: 36
+pat(1,20)
+Answer: 37
+pat(1,116)
+Answer: 38
+pat(1,74)
+Answer: 39
+pat(1,102)
+Answer: 40
+pat(1,88)
+Answer: 41
+pat(1,95)
+Answer: 42
+pat(1,68)
+Answer: 43
+pat(1,51)
+Answer: 44
+pat(1,55)
+Answer: 45
+pat(1,15)
+Answer: 46
+pat(1,118)
+Answer: 47
+pat(1,61)
+Answer: 48
+pat(1,11)
+Answer: 49
+pat(1,108)
+Answer: 50
+pat(1,76)
+Answer: 51
+pat(1,93)
+Answer: 52
+pat(1,27)
+Answer: 53
+pat(1,2)
+Answer: 54
+pat(1,106)
+Answer: 55
+pat(1,7)
+Answer: 56
+pat(1,85)
+Answer: 57
+pat(1,69)
+Answer: 58
+pat(1,49)
+Answer: 59
+pat(1,33)
+Answer: 60
+pat(1,112)
+Answer: 61
+pat(1,44)
+Answer: 62
+pat(1,26) pat(2,85)
+Answer: 63
+pat(1,1) pat(2,76)
+Answer: 64
+pat(1,41) pat(2,51)
+Answer: 65
+pat(1,97) pat(2,3)
+Answer: 66
+pat(1,104) pat(2,3)
+Answer: 67
+pat(1,14) pat(2,51)
+Answer: 68
+pat(1,112) pat(2,85)
+Answer: 69
+pat(1,112) pat(2,15)
+Answer: 70
+pat(1,102) pat(2,85)
+Answer: 71
+pat(1,102) pat(2,112)
+Answer: 72
+pat(1,93) pat(2,85)
+Answer: 73
+pat(2,49) pat(1,102)
+Answer: 74
+pat(1,102) pat(2,15)
+Answer: 75
+pat(1,102) pat(2,26)
+Answer: 76
+pat(1,110) pat(2,37)
+Answer: 77
+pat(1,110) pat(2,80)
+Answer: 78
+pat(1,110) pat(2,102)
+Answer: 79
+pat(1,49) pat(2,112)
+Answer: 80
+pat(1,15) pat(2,85)
+Answer: 81
+pat(1,49) pat(2,85)
+Answer: 82
+pat(1,49) pat(2,15)
+Answer: 83
+pat(1,110) pat(2,85)
+Answer: 84
+pat(1,97) pat(2,85)
+Answer: 85
+pat(2,85) pat(1,88)
+Answer: 86
+pat(1,44) pat(2,85)
+Answer: 87
+pat(1,33) pat(2,85)
+Answer: 88
+pat(1,68) pat(2,85)
+Answer: 89
+pat(1,11) pat(2,85)
+Answer: 90
+pat(1,69) pat(2,85)
+Answer: 91
+pat(1,76) pat(2,85)
+Answer: 92
+pat(1,2) pat(2,85)
+Answer: 93
+pat(1,7) pat(2,85)
+Answer: 94
+pat(1,106) pat(2,85)
+Answer: 95
+pat(1,27) pat(2,85)
+Answer: 96
+pat(1,108) pat(2,85)
+Answer: 97
+pat(1,95) pat(2,85)
+Answer: 98
+pat(1,11) pat(2,44)
+Answer: 99
+pat(1,11) pat(2,33)
+Answer: 100
+pat(1,44) pat(2,33)
+Answer: 101
+pat(2,106) pat(1,85)
+Answer: 102
+pat(1,69) pat(2,106)
+Answer: 103
+pat(2,106) pat(1,76)
+Answer: 104
+pat(1,2) pat(2,69)
+Answer: 105
+pat(1,2) pat(2,106)
+Answer: 106
+pat(1,95) pat(2,76)
+Answer: 107
+pat(1,27) pat(2,102)
+Answer: 108
+pat(1,27) pat(2,76)
+Answer: 109
+pat(1,27) pat(2,69)
+Answer: 110
+pat(1,27) pat(2,7)
+Answer: 111
+pat(1,11) pat(2,69)
+Answer: 112
+pat(2,69) pat(1,108)
+Answer: 113
+pat(1,49) pat(2,69)
+Answer: 114
+pat(1,20) pat(2,69)
+Answer: 115
+pat(1,49) pat(2,116)
+Answer: 116
+pat(1,27) pat(2,15)
+Answer: 117
+pat(1,49) pat(2,7)
+Answer: 118
+pat(1,49) pat(2,44)
+Answer: 119
+pat(1,2) pat(2,44)
+Answer: 120
+pat(1,2) pat(2,7)
+Answer: 121
+pat(1,2) pat(2,112)
+Answer: 122
+pat(1,27) pat(2,112)
+Answer: 123
+pat(1,27) pat(2,44)
+Answer: 124
+pat(1,108) pat(2,112)
+Answer: 125
+pat(1,108) pat(2,74)
+Answer: 126
+pat(1,11) pat(2,76)
+Answer: 127
+pat(1,2) pat(2,104)
+Answer: 128
+pat(1,27) pat(2,106)
+Answer: 129
+pat(1,11) pat(2,106)
+Answer: 130
+pat(1,49) pat(2,106)
+Answer: 131
+pat(2,106) pat(1,108)
+Answer: 132
+pat(1,20) pat(2,106)
+Answer: 133
+pat(1,44) pat(2,106)
+Answer: 134
+pat(2,106) pat(1,102)
+Answer: 135
+pat(1,7) pat(2,106)
+Answer: 136
+pat(1,102) pat(2,76)
+Answer: 137
+pat(1,102) pat(2,74)
+Answer: 138
+pat(2,44) pat(1,102)
+Answer: 139
+pat(2,69) pat(1,102)
+Answer: 140
+pat(1,44) pat(2,76)
+Answer: 141
+pat(1,44) pat(2,112)
+Answer: 142
+pat(1,112) pat(2,112)
+Answer: 143
+pat(1,44) pat(2,15)
+Answer: 144
+pat(1,33) pat(2,15)
+Answer: 145
+pat(1,69) pat(2,116)
+Answer: 146
+pat(1,7) pat(2,69)
+Answer: 147
+pat(1,33) pat(2,69)
+Answer: 148
+pat(1,93) pat(2,112)
+Answer: 149
+pat(1,106) pat(2,44)
+Answer: 150
+pat(1,69) pat(2,112)
+Answer: 151
+pat(1,33) pat(2,112)
+Answer: 152
+pat(2,44) pat(1,76)
+Answer: 153
+pat(1,44) pat(2,44)
+Answer: 154
+pat(1,69) pat(2,74)
+Answer: 155
+pat(1,116) pat(2,74)
+Answer: 156
+pat(1,55) pat(2,74)
+Answer: 157
+pat(1,69) pat(2,44)
+Answer: 158
+pat(1,33) pat(2,44)
+Answer: 159
+pat(1,7) pat(2,44)
+Answer: 160
+pat(1,93) pat(2,44)
+Answer: 161
+pat(1,69) pat(2,55)
+Answer: 162
+pat(1,33) pat(2,102)
+Answer: 163
+pat(1,69) pat(2,7)
+Answer: 164
+pat(1,69) pat(2,93)
+Answer: 165
+pat(1,11) pat(2,56)
+Answer: 166
+pat(1,20) pat(2,2)
+Answer: 167
+pat(1,50) pat(2,108)
+Answer: 168
+pat(1,27) pat(2,61)
+Answer: 169
+pat(2,95) pat(1,61)
+Answer: 170
+pat(1,49) pat(2,61)
+Answer: 171
+pat(1,108) pat(2,88)
+Answer: 172
+pat(1,102) pat(2,88)
+Answer: 173
+pat(1,50) pat(2,88)
+Answer: 174
+pat(1,11) pat(2,118)
+Answer: 175
+pat(2,17) pat(1,108)
+Answer: 176
+pat(1,108) pat(2,51)
+Answer: 177
+pat(1,49) pat(2,118)
+Answer: 178
+pat(1,49) pat(2,10)
+Answer: 179
+pat(1,49) pat(2,17)
+Answer: 180
+pat(1,44) pat(2,51)
+Answer: 181
+pat(1,112) pat(2,51)
+Answer: 182
+pat(1,55) pat(2,88)
+Answer: 183
+pat(1,7) pat(2,17)
+Answer: 184
+pat(1,44) pat(2,17)
+Answer: 185
+pat(1,7) pat(2,118)
+Answer: 186
+pat(1,44) pat(2,118)
+Answer: 187
+pat(1,68) pat(2,29)
+Answer: 188
+pat(1,11) pat(2,29)
+Answer: 189
+pat(1,7) pat(2,29)
+Answer: 190
+pat(1,44) pat(2,29)
+Answer: 191
+pat(1,44) pat(2,68)
+Answer: 192
+pat(1,33) pat(2,68)
+Answer: 193
+pat(1,44) pat(2,108)
+Answer: 194
+pat(1,69) pat(2,108)
+Answer: 195
+pat(2,68) pat(1,112)
+Answer: 196
+pat(2,68) pat(1,15)
+Answer: 197
+pat(1,27) pat(2,68)
+Answer: 198
+pat(2,68) pat(1,102)
+Answer: 199
+pat(1,116) pat(2,88)
+Answer: 200
+pat(2,17) pat(1,102)
+Answer: 201
+pat(2,17) pat(1,85)
+Answer: 202
+pat(1,69) pat(2,17)
+Answer: 203
+pat(1,69) pat(2,88)
+Answer: 204
+pat(1,2) pat(2,17)
+Answer: 205
+pat(2,17) pat(1,10)
+Answer: 206
+pat(1,27) pat(2,17)
+Answer: 207
+pat(1,27) pat(2,2)
+Answer: 208
+pat(1,49) pat(2,2)
+Answer: 209
+pat(1,11) pat(2,88)
+Answer: 210
+pat(1,49) pat(2,88)
+Answer: 211
+pat(1,44) pat(2,1)
+Answer: 212
+pat(1,44) pat(2,88)
+Answer: 213
+pat(1,102) pat(2,51)
+Answer: 214
+pat(1,85) pat(2,51)
+Answer: 215
+pat(1,2) pat(2,29)
+Answer: 216
+pat(1,2) pat(2,26)
+Answer: 217
+pat(1,27) pat(2,51)
+Answer: 218
+pat(1,7) pat(2,61)
+Answer: 219
+pat(1,118) pat(2,29)
+Answer: 220
+pat(1,118) pat(2,61)
+Answer: 221
+pat(1,61) pat(2,29)
+Answer: 222
+pat(1,33) pat(2,88)
+Answer: 223
+pat(1,27) pat(2,26)
+Answer: 224
+pat(1,69) pat(2,29)
+Answer: 225
+pat(1,69) pat(2,26)
+Answer: 226
+pat(1,0) pat(2,115)
+Answer: 227
+pat(1,0) pat(2,9)
+Answer: 228
+pat(1,61) pat(2,26)
+Answer: 229
+pat(1,95) pat(2,26)
+Answer: 230
+pat(1,49) pat(2,29)
+Answer: 231
+pat(1,112) pat(2,29)
+Answer: 232
+pat(1,13) pat(2,16)
+Answer: 233
+pat(1,44) pat(2,9)
+Answer: 234
+pat(1,44) pat(2,61)
+Answer: 235
+pat(1,75) pat(2,118)
+Answer: 236
+pat(1,85) pat(2,118)
+Answer: 237
+pat(1,33) pat(2,118)
+Answer: 238
+pat(2,49) pat(1,108)
+Answer: 239
+pat(2,49) pat(1,88)
+Answer: 240
+pat(1,27) pat(2,49)
+Answer: 241
+pat(1,11) pat(2,49)
+Answer: 242
+pat(1,7) pat(2,49)
+Answer: 243
+pat(1,44) pat(2,49)
+Answer: 244
+pat(1,33) pat(2,49)
+Answer: 245
+pat(1,69) pat(2,49)
+Answer: 246
+pat(3,49) pat(1,108) pat(2,88)
+Answer: 247
+pat(1,7) pat(2,49) pat(3,118)
+Answer: 248
+pat(1,7) pat(2,49) pat(3,17)
+Answer: 249
+pat(1,44) pat(2,112) pat(3,112)
+Answer: 250
+pat(1,7) pat(2,11) pat(3,49) pat(4,17)
+Answer: 251
+pat(1,55) pat(2,108) pat(3,88)
+Answer: 252
+pat(1,55) pat(4,55) pat(2,108) pat(3,88)
+Answer: 253
+pat(1,14) pat(3,17) pat(2,51)
+Answer: 254
+pat(3,17) pat(1,108) pat(2,88)
+Answer: 255
+pat(1,102) pat(2,26) pat(3,37)
+Answer: 256
+pat(1,114) pat(3,68) pat(2,15)
+Answer: 257
+pat(1,33) pat(3,44) pat(2,78)
+Answer: 258
+pat(1,2) pat(2,69) pat(3,85)
+Answer: 259
+pat(1,33) pat(2,69) pat(3,85)
+Answer: 260
+pat(1,20) pat(2,97) pat(3,85)
+Answer: 261
+pat(1,50) pat(2,108) pat(3,88)
+Answer: 262
+pat(1,27) pat(3,106) pat(2,102)
+Answer: 263
+pat(3,49) pat(1,102) pat(2,88)
+Answer: 264
+pat(1,102) pat(2,108) pat(3,88)
+Answer: 265
+pat(1,69) pat(3,106) pat(2,85)
+Answer: 266
+pat(1,33) pat(2,78) pat(3,85)
+Answer: 267
+pat(1,33) pat(3,106) pat(2,102)
+Answer: 268
+pat(1,2) pat(2,69) pat(3,106)
+Answer: 269
+pat(1,7) pat(3,17) pat(2,118)
+Answer: 270
+pat(1,49) pat(3,17) pat(2,118)
+Answer: 271
+pat(1,49) pat(3,17) pat(2,10)
+Answer: 272
+pat(1,33) pat(2,108) pat(3,88)
+Answer: 273
+pat(1,69) pat(2,108) pat(3,88)
+Answer: 274
+pat(1,116) pat(2,108) pat(3,88)
+Answer: 275
+pat(1,33) pat(2,78) pat(3,88)
+Answer: 276
+pat(1,108) pat(2,88) pat(3,74)
+Answer: 277
+pat(3,106) pat(1,108) pat(2,88)
+Answer: 278
+pat(1,33) pat(3,49) pat(2,78)
+Answer: 279
+pat(1,20) pat(2,2) pat(3,104)
+Answer: 280
+pat(1,55) pat(2,108) pat(3,74)
+Answer: 281
+pat(1,27) pat(3,104) pat(2,113)
+Answer: 282
+pat(1,68) pat(3,82) pat(2,29)
+Answer: 283
+pat(1,49) pat(2,112) pat(3,85)
+Answer: 284
+pat(1,33) pat(2,108) pat(3,74)
+Answer: 285
+pat(1,33) pat(2,102) pat(3,74)
+Answer: 286
+pat(1,27) pat(2,69) pat(3,106)
+Answer: 287
+pat(1,27) pat(2,69) pat(3,85)
+Answer: 288
+pat(1,27) pat(2,116) pat(3,74)
+Answer: 289
+pat(1,93) pat(3,7) pat(2,85)
+Answer: 290
+pat(1,49) pat(2,112) pat(3,15)
+Answer: 291
+pat(1,49) pat(2,93) pat(3,85)
+Answer: 292
+pat(1,49) pat(2,6) pat(3,85)
+Answer: 293
+pat(1,33) pat(2,93) pat(3,85)
+Answer: 294
+pat(1,69) pat(2,93) pat(3,85)
+Answer: 295
+pat(1,106) pat(2,67) pat(3,41) pat(4,51)
+Answer: 296
+pat(1,2) pat(2,0) pat(3,44) pat(4,115)
+Answer: 297
+pat(1,33) pat(3,69) pat(4,44) pat(2,78)
+Answer: 298
+pat(1,95) pat(4,13) pat(2,25) pat(3,76)
+Answer: 299
+pat(1,11) pat(3,44) pat(4,33) pat(2,56)
+Answer: 300
+pat(1,75) pat(4,28) pat(2,118) pat(3,61)
+Answer: 301
+pat(1,49) pat(2,6) pat(3,112) pat(4,15)
+Answer: 302
+pat(1,27) pat(4,49) pat(2,102) pat(3,50)
+Answer: 303
+pat(1,49) pat(2,6) pat(3,15) pat(4,85)
+Answer: 304
+pat(1,27) pat(4,106) pat(2,102) pat(3,50)
+Answer: 305
+pat(1,110) pat(2,102) pat(3,26) pat(4,85)
+Answer: 306
+pat(1,33) pat(3,69) pat(2,78) pat(4,112)
+Answer: 307
+pat(1,20) pat(4,104) pat(2,97) pat(3,113)
+Answer: 308
+pat(1,33) pat(2,78) pat(3,108) pat(4,88)
+Answer: 309
+pat(1,33) pat(3,69) pat(2,78) pat(4,88)
+Answer: 310
+pat(1,114) pat(3,68) pat(2,15) pat(4,92)
+Answer: 311
+pat(1,4) pat(2,27) pat(3,61) pat(4,26)
+Answer: 312
+pat(1,2) pat(2,69) pat(4,106) pat(3,85)
+SATISFIABLE
+
+Models       : 312   
+Calls        : 1
+Time         : 39.751s (Solving: 38.42s 1st Model: 0.03s Unsat: 0.44s)
+CPU Time     : 39.770s
