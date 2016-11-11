@@ -61,9 +61,11 @@ def experiment(exp1=True, exp2=True, exp3=True):
     if exp1:
         exp1_path = 'output/exp1'
         for t in typeList:
-            if t != 'graph': continue
             params['type'] = t
-            params['support'] = 0.1
+            if t != "sequence":
+              params['support'] = 0.1
+            else:
+              params['support'] = 0.05
             for d in dominances:
                 if d != 'maximal': continue
                 results = []
@@ -71,8 +73,8 @@ def experiment(exp1=True, exp2=True, exp3=True):
                 for dataset in datasets[t]:
                     params['data'] = dataset
                     params['output'] = dataset.split('.')[0]+'.output'
-                    if dataset == 'german-credit.txt' or dataset == 'fifa.dat':
-                        params['support'] = 0.25
+                    if dataset == 'german-credit.txt' or dataset == "fifa.dat":
+                        params['support'] = 0.20
                     _, num_patterns, num_final_patterns, step1_tc, step2_tc, step3_tc = fpMining_postpro(params)
                     results.append((params['data'].split('/')[-1],
                                     '{0:.4f}'.format(step1_tc),
@@ -121,4 +123,4 @@ def experiment(exp1=True, exp2=True, exp3=True):
 
 
 if __name__ == '__main__':
-    experiment(False, True, True)
+    experiment(True, False, False)

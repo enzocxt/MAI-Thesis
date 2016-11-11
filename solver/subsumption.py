@@ -42,7 +42,7 @@ class SubsumptionLattice:
         
   def add_pattern_to_the_tree(self, pattern, patterns, i, pattern_to_parent, pattern_to_set_of_children, max_upper, is_subpattern_of):
      if isinstance(pattern, Itemset):
-        epsilon = 05
+        epsilon = 15
      if isinstance(pattern, Sequence):
         epsilon = 10
      upper_bound = min(i+epsilon+1, max_upper)
@@ -92,41 +92,59 @@ class SubsumptionLattice:
   def subsumption_lattice_check_itemset(self, patterns,params):
     print('\nStarting dominance check for itemsets...')
     
+    is_3a_enabled = False
+    is_3b_enabled = True 
 
     all_candidate_sizes = []
     
-    pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
-    skip_set = self.prune_initial_tree(patterns, pattern_to_parent, pattern_to_set_of_children, params)
-
-    set_of_patterns = set(patterns) - skip_set
-
     is_free = params['dominance'] == "free"
-    if params['dominance'] == "closed" or is_free:
-      support_mapping = make_grouping_by_support(set_of_patterns)
+    if is_3a_enabled:
+        pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
+        skip_set = self.prune_initial_tree(patterns, pattern_to_parent, pattern_to_set_of_children, params)
 
-   #map_of_maps = create_list_of_inverted_mappings(patterns, 3)
-    print('initial skip set size', len(skip_set))
+        set_of_patterns = set(patterns) - skip_set
+
+
+        print('initial skip set size', len(skip_set))
+    else:
+        set_of_patterns = set(patterns)
+
+    if is_3b_enabled:
+        if params['dominance'] == "closed" or is_free:
+            support_mapping = make_grouping_by_support(set_of_patterns)
+
     sorted_itemsets = sorted(set_of_patterns, key=lambda x: x.get_pattern_len(),reverse=(not is_free))
     skip_set = set()
     for itemset in tqdm(sorted_itemsets): # maximal are not subsumed by anything
       if itemset in skip_set:
         continue
-      if params['dominance'] == "closed" or is_free:
-        candidates = support_mapping[itemset.get_support()] - skip_set
-      if params['dominance'] == "maximal":
-        candidates = set_of_patterns - skip_set
+      if is_3b_enabled:
+          if params['dominance'] == "closed" or is_free:
+            candidates = support_mapping[itemset.get_support()] - skip_set
+          if params['dominance'] == "maximal":
+            candidates = set_of_patterns - skip_set
+          
 
-      l = itemset.get_pattern_len()
-      if params['dominance'] == "closed" or params['dominance'] == "maximal":
-        candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
-      if is_free:
-        candidates = check_larger_and_out_bounds(l, itemset.min_val, itemset.max_val, candidates)
+          l = itemset.get_pattern_len()
+          if params['dominance'] == "closed" or params['dominance'] == "maximal":
+            candidates = check_bounds_and_size(l, itemset.min_val, itemset.max_val, candidates)
+          if is_free:
+            candidates = check_larger_and_out_bounds(l, itemset.min_val, itemset.max_val, candidates)
+      else:
+          candidates = (set(patterns) - skip_set) - set([pattern])
       
       all_candidate_sizes.append(len(candidates))
       for candidate in candidates:
-        if params['dominance'] == "closed" or params['dominance'] == "maximal":
-          if (candidate.itemset).issubset(itemset.itemset):
-              skip_set.add(candidate)
+        if params['dominance'] == "closed" :
+          if not is_3b_enabled and itemset.get_support() != candidate.get_support():
+              continue
+          if (candidate.itemset).issubset(itemset.itemset): 
+                skip_set.add(candidate)
+
+        if params['dominance'] == "maximal": 
+          if (candidate.itemset).issubset(itemset.itemset): 
+                skip_set.add(candidate)
+              
         if is_free:
           if (itemset.itemset).issubset(candidate.itemset):
               skip_set.add(candidate)
@@ -137,11 +155,13 @@ class SubsumptionLattice:
     if len(all_candidate_sizes) != 0:
         print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
 
-    return  set_of_patterns - skip_set
+    return set_of_patterns - skip_set
+
 
 
   def subsumption_lattice_check_sequence(self, patterns,params):
     print('\n Starting dominance check for sequences...')
+    
     
     if params['dominance'] == "maximal":
         pattern_to_parent, pattern_to_set_of_children = self.extract_parental_tree_itemset(patterns)
@@ -158,13 +178,13 @@ class SubsumptionLattice:
     print("initial skip set len", len(skip_set))
 
     skip_set = set() #init again
-    all_candidate_sizes = []
     ordered_sequences = sorted(set_of_patterns, key=lambda x: x.get_pattern_len(),reverse=True)
 
+    all_candidate_sizes = []
     for seq in tqdm(ordered_sequences): # maximal are not subsumed by anything
       if seq in skip_set:
         continue
-
+       
       if params['dominance'] == "closed" or is_free:
         candidates = support_mapping[seq.get_support()] - skip_set
       elif params['dominance'] == "maximal":
@@ -172,12 +192,13 @@ class SubsumptionLattice:
 
       candidates = get_smaller_patterns(seq.get_pattern_len(), candidates)
       candidates = get_attribute_subset(seq, candidates)
+
       all_candidate_sizes.append(len(candidates))
 
       for candidate in candidates:
         if candidate.is_subsequence_of(seq):
-          if params['dominance'] == "maximal" or params['dominance'] == 'closed':
-            skip_set.add(candidate)
+          if (params['dominance'] == "maximal" or params['dominance'] == 'closed'):
+                skip_set.add(candidate)
 
           if params['dominance'] == 'free':
             skip_set.add(seq)
@@ -193,20 +214,22 @@ class SubsumptionLattice:
 
     print '\n Starting dominance check for graphs...\n'
    #self.mapping_by_len = group_by_len(patterns)
-    
     initial_subsumption_tree, initial_subsumed_by_tree = self.create_initial_parent_tree(patterns)
     skip_set = self.initialize_skip_set_with_parent_info(patterns, initial_subsumption_tree, initial_subsumed_by_tree, params)
     print("initial skip set", len(skip_set))
-    all_candidate_sizes = []
     is_free = params['dominance'] == "free"
+
+    set_of_patterns = set(patterns) - skip_set
+    sorted_graphs = sorted(set_of_patterns, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+
     if params['dominance'] == "closed" or is_free:
-      support_mapping = make_grouping_by_support(patterns)
-    #TODO rewrite free dominance part or should I leave it like that? probably can be optimized
-    sorted_graphs = sorted(patterns, cmp=lambda x,y: self.pareto_front_pair(x.get_pattern_len(),y.get_pattern_len()),reverse=True)
+      support_mapping = make_grouping_by_support(set_of_patterns)
+
+    skip_set = set()
+    all_candidate_sizes = []
     for graph in tqdm(sorted_graphs): # maximal are not subsumed by anything
       if graph in skip_set:
           continue
-        
       if params['dominance'] == "closed" or is_free:
         candidates = support_mapping[graph.get_support()] - skip_set
       if params['dominance'] == "maximal":
@@ -227,11 +250,13 @@ class SubsumptionLattice:
             if params['dominance'] == 'free':
               skip_set.add(graph)
               break
+             
+
 
 
     print 'done dominance check'
     print 'AVG candidate size:', float(sum(all_candidate_sizes))/float(len(all_candidate_sizes))
-    return set(patterns) - set(skip_set)                                               
+    return set_of_patterns - skip_set                                               
 
   @staticmethod
   def create_initial_parent_tree(patterns):
